@@ -31,4 +31,19 @@ public class GameManager : MonoBehaviour
 
     // Player:
     [SerializeField] public PlayerController Player;
+
+    // ResourceManager
+    public static ResourceManager Resources;
+    // Start is called before the first frame update
+    void Start()
+    {
+        Resources = new ResourceManager();
+        Resources.Initialize();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
 }
