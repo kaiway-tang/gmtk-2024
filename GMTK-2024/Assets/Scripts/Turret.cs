@@ -4,6 +4,7 @@ public class Turret : MonoBehaviour
 {
     [SerializeField] public int Damage = 1;
     [SerializeField] public float Velocity = 5f;
+    [SerializeField] Transform playerTrfm;
 
     void Update()
     {
@@ -12,7 +13,7 @@ public class Turret : MonoBehaviour
     }
 
     #region Rotation
-    public int RotationSpeed = 1;
+    public float aimSpeed = 0.1f;
     [SerializeField] private Transform turretTrfm, firepointTrfm;
     Vector3 mousePos;
 
@@ -20,7 +21,15 @@ public class Turret : MonoBehaviour
     {
         // Rotate head to mouse position:
         mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
+        //Tools.LerpRotation(turretTrfm, 45, aimSpeed);
+        if (playerTrfm.position.x < mousePos.x)
+        {
+            Tools.LerpRotation(turretTrfm, mousePos, aimSpeed);
+        }
+        else
+        {
+            Tools.LerpRotation(turretTrfm, mousePos, aimSpeed);
+        }
     }
     #endregion Rotation
 
@@ -40,9 +49,9 @@ public class Turret : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            GameObject attackOb = Instantiate(_attackPrefabs[(int)CurrentAttackType], _base.position, _base.rotation);
+            GameObject attackOb = Instantiate(_attackPrefabs[(int)CurrentAttackType], firepointTrfm.position, firepointTrfm.rotation);
             IAttack attack = attackOb.GetComponent<IAttack>();
-            attack.Initialize(_base, Damage, Velocity);
+            attack.Initialize(firepointTrfm, Damage, Velocity);
         }
     }
 

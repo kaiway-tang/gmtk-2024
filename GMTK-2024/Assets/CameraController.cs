@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] Transform camTargetPos;
+    [SerializeField] Transform camTargetPos, turretTrfm;
     [SerializeField] float lerpRate;
 
     Transform trfm;

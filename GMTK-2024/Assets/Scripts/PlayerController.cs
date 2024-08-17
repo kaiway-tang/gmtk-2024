@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PlayerController : MobileEntity
 {
+    [SerializeField] GameObject[] gatlingBullets;
 
-    [SerializeField] PlayerValues valRef;
+    [SerializeField] int tier;
+    [SerializeField] PlayerValues[] valRef;
     // Start is called before the first frame update
     new void Start()
     {
@@ -22,7 +24,76 @@ public class PlayerController : MobileEntity
     {
         base.FixedUpdate();
 
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos.z = 0;
+
         HandleMovement();
+        HandleAiming();
+        HandleAttacking();
+        HandleFacing();        
+    }
+
+    [SerializeField] Transform turretTrfm;
+    Vector3 mousePos;
+    bool turretFacingLeft;
+    void HandleAiming()
+    {
+        turretTrfm.right = mousePos - turretTrfm.position;
+        return;
+        Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed);
+
+        if (trfm.position.x < mousePos.x)
+        {
+            vect3 = turretTrfm.localScale;
+            vect3.y = Mathf.Abs(vect3.y);
+            turretTrfm.localScale = vect3;
+        }
+        else
+        {
+            vect3 = turretTrfm.localScale;
+            vect3.y = -Mathf.Abs(vect3.y);
+            turretTrfm.localScale = vect3;
+        }
+
+        return;
+        if (trfm.position.x < mousePos.x)
+        {
+            Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed);
+        }
+        else
+        {
+            Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed, 180);
+        }
+    }
+
+    [SerializeField] Transform firepointTrfm;
+    int fireCD;
+    void HandleAttacking()
+    {
+        if (fireCD < 0)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                Instantiate(gatlingBullets[0], firepointTrfm.position, firepointTrfm.rotation);
+                fireCD = 3;
+            }
+        }
+        else
+        {
+            fireCD--;
+        }
+    }
+
+    void HandleFacing()
+    {
+        if (trfm.position.x < mousePos.x)
+        {
+            FaceRight();
+        }
+        else
+        {
+            FaceLeft();
+        }
     }
 
     #region MOVEMENT
@@ -40,11 +111,11 @@ public class PlayerController : MobileEntity
         {
             if (IsTouchingGround())
             {
-                SetYVelocity(valRef.jumpPower);
+                SetYVelocity(valRef[tier].jumpPower);
             }
             else if (hasDJump)
             {
-                SetYVelocity(valRef.doubleJumpPower);
+                SetYVelocity(valRef[tier].doubleJumpPower);
                 hasDJump = false;
             }
         }
@@ -56,14 +127,12 @@ public class PlayerController : MobileEntity
         {
             if (!Input.GetKey(KeyCode.D))
             {
-                FaceLeft();
-                AddXVelocity(-valRef.acceleration, -valRef.maxSpeed);
+                AddXVelocity(-valRef[tier].acceleration, -valRef[tier].maxSpeed);
             }
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            FaceRight();
-            AddXVelocity(valRef.acceleration, valRef.maxSpeed);
+            AddXVelocity(valRef[tier].acceleration, valRef[tier].maxSpeed);
         }
     }
 
@@ -71,12 +140,12 @@ public class PlayerController : MobileEntity
     {
         if (IsTouchingGround())
         {
-            ApplyXFriction(valRef.groundedFriction);
+            ApplyXFriction(valRef[tier].groundedFriction);
             hasDJump = true;
         }
         else
         {            
-            ApplyXFriction(valRef.aerialFriction);
+            ApplyXFriction(valRef[tier].aerialFriction);
         }
     }
 
