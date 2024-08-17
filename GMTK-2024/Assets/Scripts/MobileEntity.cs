@@ -228,13 +228,18 @@ public class MobileEntity : HPEntity
     }
     protected void FaceRight()
     {
-        reflectionTrfm.localScale = Vector3.one;
+        if (facing == FACING_RIGHT) { return; }
+        vect3 = reflectionTrfm.localScale;
+        vect3.x = Mathf.Abs(vect3.x);
+        reflectionTrfm.localScale = vect3;
         facing = FACING_RIGHT;
     }
     protected void FaceLeft()
     {
-        vect2.x = -1; vect2.y = 1;
-        reflectionTrfm.localScale = vect2;
+        if (facing == FACING_LEFT) { return; }
+        vect3 = reflectionTrfm.localScale;
+        vect3.x = -Mathf.Abs(vect3.x);
+        reflectionTrfm.localScale = vect3;
         facing = FACING_LEFT;
     }
 

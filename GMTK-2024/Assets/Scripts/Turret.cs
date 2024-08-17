@@ -13,16 +13,14 @@ public class Turret : MonoBehaviour
 
     #region Rotation
     public int RotationSpeed = 1;
-    [SerializeField] private Transform _base;
+    [SerializeField] private Transform turretTrfm, firepointTrfm;
+    Vector3 mousePos;
 
     private void HandleRotation()
     {
         // Rotate head to mouse position:
-        Vector3 mousePos = Input.mousePosition;
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(_base.position);
-        Vector3 direction = mousePos - screenPos;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        _base.rotation = Quaternion.Slerp(_base.rotation, Quaternion.Euler(new Vector3(0, 0, angle)), Time.deltaTime * RotationSpeed);
+        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
     }
     #endregion Rotation
 
