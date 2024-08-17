@@ -3,15 +3,14 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     // Interface:
-    public void SetTrauma(int trauma)
+    public static void SetTrauma(int trauma)
     {
         _trauma = Mathf.Max(_trauma, trauma);
     }
-    public void AddTrauma(int trauma)
+    public static void AddTrauma(int trauma)
     {
         _trauma += trauma;
     }
-
 
     void FixedUpdate()
     {
@@ -43,7 +42,7 @@ public class CameraManager : MonoBehaviour
 
 
     #region ScreenShake
-    [SerializeField] private int _trauma;
+    [SerializeField] private static int _trauma;
 
     private void HandleTrauma()
     {
