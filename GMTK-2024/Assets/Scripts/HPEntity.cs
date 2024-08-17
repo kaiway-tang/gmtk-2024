@@ -9,7 +9,7 @@ public class HPEntity : MonoBehaviour
     [SerializeField] protected Transform trfm;
     [SerializeField] int objectID;
 
-    [SerializeField] GameObject deathFX;
+    [SerializeField] GameObject damageFX, deathFX;
 
     protected void Start()
     {
@@ -31,6 +31,10 @@ public class HPEntity : MonoBehaviour
         {
             Instantiate(deathFX, trfm.position, Quaternion.identity);
             Destroy(gameObject);
+        }
+        else
+        {
+            Instantiate(damageFX, trfm.position, Quaternion.identity);
         }
     }
 }

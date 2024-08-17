@@ -6,6 +6,8 @@ public class PlayerController : MobileEntity
     [SerializeField] GameObject[] rockets;
 
     [SerializeField] int tier;
+    [SerializeField] int type;
+    const int GUNNER = 0, REAPER = 1, CONTROLLER = 2;
     [SerializeField] PlayerValues[] valRef;
     // Start is called before the first frame update
     new void Start()
@@ -100,8 +102,15 @@ public class PlayerController : MobileEntity
         {
             if (Input.GetMouseButton(0))
             {
-                Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
-                primaryCD = 4;
+                if (type == GUNNER)
+                {
+                    Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    primaryCD = 4;
+                }
+                else
+                {
+
+                }      
             }
         }
         else
@@ -113,8 +122,16 @@ public class PlayerController : MobileEntity
         {
             if (Input.GetMouseButton(1))
             {
-                Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
-                primaryCD = 150;
+                if (type == GUNNER)
+                {
+                    Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    primaryCD = 150;
+                }
+                else
+                {
+                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, 4, Tools.terrainMask);                    
+
+                }
             }
         }
         else

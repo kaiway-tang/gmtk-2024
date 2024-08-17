@@ -10,7 +10,10 @@ public class Tools : MonoBehaviour
     private void Start()
     {
         emptyTrfm = transform;
+        transform.parent = null;
     }
+
+    public static int terrainMask = 1 << 8;
 
     #region ROTATION
 
