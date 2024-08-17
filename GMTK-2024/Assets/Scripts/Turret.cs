@@ -1,14 +1,15 @@
 using UnityEngine;
 
-public class HeadRotator : MonoBehaviour
+public class Turret : MonoBehaviour
 {
+    [SerializeField] public int Damage = 1;
+    [SerializeField] public float Velocity = 5f;
+
     void Update()
     {
         HandleRotation();
         HandleAttacks();
     }
-
-
 
     #region Rotation
     public int RotationSpeed = 1;
@@ -34,26 +35,16 @@ public class HeadRotator : MonoBehaviour
     }
     public AttackType CurrentAttackType = AttackType.Slash;
 
-    [SerializeField] private IAttack[] _attackPrefabs;
+    [SerializeField] private GameObject[] _attackPrefabs;
 
 
     private void HandleAttacks()
     {
-        // test for input mouse down:
         if (Input.GetMouseButtonDown(0))
         {
-            switch (CurrentAttackType)
-            {
-                case AttackType.Slash:
-                    Debug.Log("Slash attack!");
-                    break;
-                case AttackType.Bullet:
-                    Debug.Log("Bullet attack!");
-                    break;
-                case AttackType.Spray:
-                    Debug.Log("Spray attack!");
-                    break;
-            }
+            GameObject attackOb = Instantiate(_attackPrefabs[(int)CurrentAttackType], _base.position, _base.rotation);
+            IAttack attack = attackOb.GetComponent<IAttack>();
+            attack.Initialize(_base, Damage, Velocity);
         }
     }
 
