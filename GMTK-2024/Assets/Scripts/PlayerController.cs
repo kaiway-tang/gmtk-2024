@@ -17,6 +17,7 @@ public class PlayerController : MobileEntity
     void Update()
     {
         HandleJump();
+        HandleSizeKeys();
     }
 
     new void FixedUpdate()
@@ -32,14 +33,39 @@ public class PlayerController : MobileEntity
         HandleFacing();        
     }
 
+    void HandleSizeKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            tier = 0;
+            transform.localScale = Vector3.one;
+            CameraManager.SetSize(5);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            tier = 1;
+            transform.localScale = Vector3.one * 2;
+            CameraManager.SetSize(7);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            tier = 2;
+            transform.localScale = Vector3.one * 4;
+            CameraManager.SetSize(11);
+        }
+    }
+
+    #region AIMING
+
     [SerializeField] Transform turretTrfm;
     Vector3 mousePos;
     bool turretFacingLeft;
     void HandleAiming()
     {
-        turretTrfm.right = mousePos - turretTrfm.position;
-        return;
+        //turretTrfm.right = mousePos - turretTrfm.position;
         Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed);
+
+        return;
 
         if (trfm.position.x < mousePos.x)
         {
@@ -73,7 +99,7 @@ public class PlayerController : MobileEntity
         {
             if (Input.GetMouseButton(0))
             {
-                Instantiate(gatlingBullets[0], firepointTrfm.position, firepointTrfm.rotation);
+                Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
                 fireCD = 3;
             }
         }
@@ -83,17 +109,7 @@ public class PlayerController : MobileEntity
         }
     }
 
-    void HandleFacing()
-    {
-        if (trfm.position.x < mousePos.x)
-        {
-            FaceRight();
-        }
-        else
-        {
-            FaceLeft();
-        }
-    }
+    #endregion    
 
     #region MOVEMENT
 
@@ -149,4 +165,16 @@ public class PlayerController : MobileEntity
     }
 
     #endregion
+
+    void HandleFacing()
+    {
+        if (trfm.position.x < mousePos.x)
+        {
+            FaceRight();
+        }
+        else
+        {
+            FaceLeft();
+        }
+    }
 }

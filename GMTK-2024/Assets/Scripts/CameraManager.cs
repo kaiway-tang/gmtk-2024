@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class CameraManager : MonoBehaviour
 {
+    [SerializeField] Camera cam;
+    static CameraManager self;
+
     // Interface:
     public static void SetTrauma(int trauma)
     {
@@ -12,20 +15,40 @@ public class CameraManager : MonoBehaviour
         _trauma += trauma;
     }
 
-    void FixedUpdate()
-    {
-        HandleFollow();
-        HandleTrauma();
-    }
 
-    #region Follow
     private Transform _camera;
     private Transform _player;
     [SerializeField] private float FollowSpeed;
     private void Start()
     {
         _camera = Camera.main.transform;
+        self = GetComponent<CameraManager>();
+        targetSize = 5;
     }
+
+    void FixedUpdate()
+    {
+        HandleFollow();
+        HandleTrauma();
+        HandleSizing();
+    }
+
+    float targetSize;
+    void HandleSizing()
+    {
+        if (Mathf.Abs(cam.orthographicSize - targetSize) > 0.02f)
+        {
+            cam.orthographicSize += (targetSize - cam.orthographicSize) * 0.2f;
+            if (Mathf.Abs(cam.orthographicSize - targetSize) < 0.02f) { cam.orthographicSize = targetSize; }
+        }
+    }
+    public static void SetSize(int size)
+    {
+        self.targetSize = size;
+    }
+
+    #region Follow
+    
     private void HandleFollow()
     {
         if (GameManager.Instance.Player != null)
@@ -39,7 +62,6 @@ public class CameraManager : MonoBehaviour
     }
 
     #endregion Follow
-
 
     #region ScreenShake
     [SerializeField] private static int _trauma;

@@ -214,40 +214,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1951149855}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &83840062
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 83840063}
-  m_Layer: 0
-  m_Name: Sprites
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &83840063
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 83840062}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 495104237}
-  - {fileID: 533705831}
-  m_Father: {fileID: 918849125}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &215364451
 GameObject:
@@ -285,7 +252,15 @@ MonoBehaviour:
   knockbackFactor: 1
   touchingTerrain:
   - {fileID: 78243031}
-  valRef: {fileID: 11400000, guid: 5f52e5c93e45e174ab02345d230c6c82, type: 2}
+  gatlingBullets:
+  - {fileID: 8983903726094835682, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
+  tier: 0
+  valRef:
+  - {fileID: 11400000, guid: 800538f7fc92f0542beaa6f2c1a6e1e1, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  turretTrfm: {fileID: 918849125}
+  firepointTrfm: {fileID: 1352984825}
 --- !u!4 &215364453
 Transform:
   m_ObjectHideFlags: 0
@@ -517,11 +492,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 495104236}
   m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -1.47, y: -0.21, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.120000005}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.59999996, y: 0.59999996, z: 0.120000005}
   m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 83840063}
+  m_Children:
+  - {fileID: 1352984825}
+  m_Father: {fileID: 918849125}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &495104238
@@ -676,7 +652,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &533705831
 Transform:
   m_ObjectHideFlags: 0
@@ -684,12 +660,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 533705830}
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -2.85, y: 1.07, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -2.8499997, y: 1.0699999, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 83840063}
+  m_Father: {fileID: 918849125}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!212 &533705832
@@ -884,7 +860,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1951149855}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &918849123
 GameObject:
@@ -895,7 +871,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 918849125}
-  - component: {fileID: 918849124}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -903,28 +878,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &918849124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 918849123}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c130aa315cb044644bf60eac49d7f306, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Damage: 1
-  Velocity: 5
-  RotationSpeed: 24
-  turretTrfm: {fileID: 0}
-  firepointTrfm: {fileID: 0}
-  CurrentAttackType: 1
-  _attackPrefabs:
-  - {fileID: 2254749687379624334, guid: a7db2354b80684b48bdf84989850f69a, type: 3}
-  - {fileID: 3305496056059854538, guid: 091326688d47cf647acaaaa95bdea9a7, type: 3}
-  - {fileID: 6180323228755307692, guid: c9642a74b250f4741b1dd136868c5807, type: 3}
 --- !u!4 &918849125
 Transform:
   m_ObjectHideFlags: 0
@@ -932,15 +885,47 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 918849123}
-  m_LocalRotation: {x: 0, y: 0, z: 0.7080318, w: 0.7061806}
-  m_LocalPosition: {x: 0.912, y: 0.212, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.4, y: 0.4, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 83840063}
+  - {fileID: 495104237}
+  - {fileID: 533705831}
   m_Father: {fileID: 1951149855}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90.15}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1352984824
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1352984825}
+  m_Layer: 0
+  m_Name: Firepoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1352984825
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1352984824}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 8.15, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 495104237}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1572892826
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,9 +1177,9 @@ Transform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 918849125}
   - {fileID: 78243034}
   - {fileID: 693993675}
-  - {fileID: 918849125}
   m_Father: {fileID: 215364453}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
