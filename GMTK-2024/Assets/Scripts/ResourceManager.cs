@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourceManager : MonoBehaviour
+public class ResourceManager
 {
     public enum Resource
     {
@@ -15,18 +15,8 @@ public class ResourceManager : MonoBehaviour
     Queue<Resource> materialQueue;
     Dictionary<Resource, int> numMats;
 
-    public static ResourceManager instance;
-
-    // Start is called before the first frame update
-    void Start()
+    public void Initialize()
     {
-        if (instance == null)
-        {
-            instance = this;
-        } else
-        {
-            Destroy(this);
-        }
         materialQueue = new Queue<Resource> ();
         numMats = new Dictionary<Resource, int> ();
     }

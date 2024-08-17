@@ -26,10 +26,13 @@ public class GameManager : MonoBehaviour
 
     }
     #endregion Singleton
+
+    public static ResourceManager Resources;
     // Start is called before the first frame update
     void Start()
     {
-
+        Resources = new ResourceManager();
+        Resources.Initialize();
     }
 
     // Update is called once per frame
