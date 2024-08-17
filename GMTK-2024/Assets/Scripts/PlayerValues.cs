@@ -4,6 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewData", menuName = "Custom/DataObject")]
 public class PlayerValues : ScriptableObject
 {
-    public int intValue;
-    public float floatValue;
+    public float acceleration, maxSpeed;
+    public float groundedFriction, aerialFriction;
+    public float jumpPower, doubleJumpPower;    
 }
