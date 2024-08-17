@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     #region Singleton
     public static GameManager Instance;
     public static DisplayManager DisplayManager;
+    public static CameraManager CameraManager;
+
     private void Awake()
     {
         if (Instance == null)
@@ -23,18 +25,10 @@ public class GameManager : MonoBehaviour
         }
         //
         DisplayManager = GetComponentInChildren<DisplayManager>();
-
+        CameraManager = GetComponentInChildren<CameraManager>();
     }
     #endregion Singleton
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    // Player:
+    [SerializeField] public PlayerController Player;
 }

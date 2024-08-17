@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MobileEntity
@@ -10,6 +8,7 @@ public class PlayerController : MobileEntity
     new void Start()
     {
         base.Start();
+        GameManager.Instance.Player = this;
     }
 
     // Update is called once per frame
@@ -30,7 +29,7 @@ public class PlayerController : MobileEntity
     void HandleMovement()
     {
         HandleHorizontalMovement();
-        HandleFriction();        
+        HandleFriction();
     }
 
     bool hasDJump;
@@ -75,7 +74,7 @@ public class PlayerController : MobileEntity
             hasDJump = true;
         }
         else
-        {            
+        {
             ApplyXFriction(valRef.aerialFriction);
         }
     }
