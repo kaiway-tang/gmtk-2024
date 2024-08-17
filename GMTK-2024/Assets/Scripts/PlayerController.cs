@@ -56,11 +56,13 @@ public class PlayerController : MobileEntity
         {
             if (!Input.GetKey(KeyCode.D))
             {
+                FaceLeft();
                 AddXVelocity(-valRef.acceleration, -valRef.maxSpeed);
             }
         }
         else if (Input.GetKey(KeyCode.D))
         {
+            FaceRight();
             AddXVelocity(valRef.acceleration, valRef.maxSpeed);
         }
     }

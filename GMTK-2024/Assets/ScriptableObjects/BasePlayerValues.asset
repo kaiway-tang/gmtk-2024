@@ -12,5 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e40a05f9bb502147b63e7a508f163d9, type: 3}
   m_Name: BasePlayerValues
   m_EditorClassIdentifier: 
-  intValue: 0
-  floatValue: 0
+  acceleration: 1
+  maxSpeed: 8
+  groundedFriction: 0.6
+  aerialFriction: 0.2
+  jumpPower: 16
+  doubleJumpPower: 12
