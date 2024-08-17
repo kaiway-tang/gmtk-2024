@@ -12,10 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e40a05f9bb502147b63e7a508f163d9, type: 3}
   m_Name: T3PlayerValues
   m_EditorClassIdentifier: 
-  acceleration: 1
-  maxSpeed: 8
-  groundedFriction: 0.6
-  aerialFriction: 0.2
-  jumpPower: 16
-  doubleJumpPower: 12
-  aimSpeed: 0.2
+  scale: 2.4
+  cameraSize: 11
+  groundedAcceleration: 0.3
+  aerialAcceleration: 0.2
+  maxSpeed: 7
+  groundedFriction: 0.2
+  aerialFriction: 0.1
+  jumpPower: 14
+  doubleJumpPower: 8
+  aimSpeed: 0.1

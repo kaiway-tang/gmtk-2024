@@ -3,6 +3,7 @@ using UnityEngine;
 public class PlayerController : MobileEntity
 {
     [SerializeField] GameObject[] gatlingBullets;
+    [SerializeField] GameObject[] rockets;
 
     [SerializeField] int tier;
     [SerializeField] PlayerValues[] valRef;
@@ -38,20 +39,20 @@ public class PlayerController : MobileEntity
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             tier = 0;
-            transform.localScale = Vector3.one;
-            CameraManager.SetSize(5);
+            transform.localScale = Vector3.one * valRef[tier].scale;
+            CameraManager.SetSize(valRef[tier].cameraSize);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             tier = 1;
-            transform.localScale = Vector3.one * 2;
-            CameraManager.SetSize(7);
+            transform.localScale = Vector3.one * valRef[tier].scale;
+            CameraManager.SetSize(valRef[tier].cameraSize);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             tier = 2;
-            transform.localScale = Vector3.one * 4;
-            CameraManager.SetSize(11);
+            transform.localScale = Vector3.one * valRef[tier].scale;
+            CameraManager.SetSize(valRef[tier].cameraSize);
         }
     }
 
@@ -92,20 +93,33 @@ public class PlayerController : MobileEntity
     }
 
     [SerializeField] Transform firepointTrfm;
-    int fireCD;
+    int primaryCD, secondaryCD;
     void HandleAttacking()
     {
-        if (fireCD < 0)
+        if (primaryCD < 0)
         {
             if (Input.GetMouseButton(0))
             {
                 Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
-                fireCD = 3;
+                primaryCD = 4;
             }
         }
         else
         {
-            fireCD--;
+            primaryCD--;
+        }
+
+        if (secondaryCD < 0)
+        {
+            if (Input.GetMouseButton(1))
+            {
+                Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                primaryCD = 150;
+            }
+        }
+        else
+        {
+            secondaryCD--;
         }
     }
 
@@ -142,12 +156,26 @@ public class PlayerController : MobileEntity
         {
             if (!Input.GetKey(KeyCode.D))
             {
-                AddXVelocity(-valRef[tier].acceleration, -valRef[tier].maxSpeed);
+                if (IsTouchingGround())
+                {
+                    AddXVelocity(-valRef[tier].groundedAcceleration, -valRef[tier].maxSpeed);
+                }
+                else
+                {
+                    AddXVelocity(-valRef[tier].aerialAcceleration, -valRef[tier].maxSpeed);
+                }
             }
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            AddXVelocity(valRef[tier].acceleration, valRef[tier].maxSpeed);
+            if (IsTouchingGround())
+            {
+                AddXVelocity(valRef[tier].groundedAcceleration, valRef[tier].maxSpeed);
+            }
+            else
+            {
+                AddXVelocity(valRef[tier].aerialAcceleration, valRef[tier].maxSpeed);
+            }
         }
     }
 

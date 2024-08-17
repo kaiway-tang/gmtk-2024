@@ -12,6 +12,8 @@ public class Tools : MonoBehaviour
         emptyTrfm = transform;
     }
 
+    #region ROTATION
+
     public static void LerpRotation(Transform trfm, float targetz, float rate)
     {
         vect3 = trfm.eulerAngles;
@@ -47,4 +49,5 @@ public class Tools : MonoBehaviour
         }
     }
 
+    #endregion
 }

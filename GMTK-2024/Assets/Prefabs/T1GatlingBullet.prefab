@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 4461499043571994460}
   - component: {fileID: 7819479531992859273}
   - component: {fileID: 3802814134419671841}
-  m_Layer: 0
+  - component: {fileID: -8617958504012956641}
+  m_Layer: 6
   m_Name: T1GatlingBullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,3 +100,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 20
   velocity: 0.7
+--- !u!70 &-8617958504012956641
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8983903726094835682}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 1}
+  m_Size: {x: 1, y: 4}
+  m_Direction: 0

@@ -42,7 +42,7 @@ public class CameraManager : MonoBehaviour
             if (Mathf.Abs(cam.orthographicSize - targetSize) < 0.02f) { cam.orthographicSize = targetSize; }
         }
     }
-    public static void SetSize(int size)
+    public static void SetSize(float size)
     {
         self.targetSize = size;
     }
