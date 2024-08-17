@@ -9,7 +9,7 @@ public class Turret : MonoBehaviour
     void Update()
     {
         HandleRotation();
-        HandleAttacks();
+        //HandleAttacks();
     }
 
     #region Rotation
@@ -45,15 +45,15 @@ public class Turret : MonoBehaviour
     [SerializeField] private GameObject[] _attackPrefabs;
 
 
-    private void HandleAttacks()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            GameObject attackOb = Instantiate(_attackPrefabs[(int)CurrentAttackType], firepointTrfm.position, firepointTrfm.rotation);
-            IAttack attack = attackOb.GetComponent<IAttack>();
-            attack.Initialize(firepointTrfm, Damage, Velocity);
-        }
-    }
+    //private void HandleAttacks()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        GameObject attackOb = Instantiate(_attackPrefabs[(int)CurrentAttackType], _base.position, _base.rotation);
+    //        IAttack attack = attackOb.GetComponent<IAttack>();
+    //        attack.Initialize(_base, Damage, Velocity);
+    //    }
+    //}
 
     #endregion Attack
 
