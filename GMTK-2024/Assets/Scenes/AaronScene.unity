@@ -426,7 +426,7 @@ MonoBehaviour:
   CurrentAttackType: 0
   _attackPrefabs:
   - {fileID: 2254749687379624334, guid: a7db2354b80684b48bdf84989850f69a, type: 3}
-  - {fileID: 5534580787059855054, guid: 091326688d47cf647acaaaa95bdea9a7, type: 3}
+  - {fileID: 3305496056059854538, guid: 091326688d47cf647acaaaa95bdea9a7, type: 3}
   - {fileID: 6180323228755307692, guid: c9642a74b250f4741b1dd136868c5807, type: 3}
 --- !u!1 &1710437727
 GameObject:
