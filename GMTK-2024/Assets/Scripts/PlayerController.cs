@@ -37,7 +37,7 @@ public class PlayerController : MobileEntity
         HandleAiming();
         HandleAttackInput();
         HandleAttacking();
-        HandleFacing();        
+        HandleFacing();
     }
 
     void HandleSizeKeys()
@@ -130,7 +130,7 @@ public class PlayerController : MobileEntity
                 else
                 {
 
-                }      
+                }
             }
         }
         else
@@ -150,7 +150,7 @@ public class PlayerController : MobileEntity
                 }
                 else
                 {
-                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[tier].blinkDistance, Tools.terrainMask);                    
+                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[tier].blinkDistance, Tools.terrainMask);
                     if (rayHit.collider != null)
                     {
                         trfm.position += (mousePos - trfm.position).normalized * rayHit.distance;
@@ -180,9 +180,9 @@ public class PlayerController : MobileEntity
                 {
                     Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
                 }
-            }            
+            }
         }
-        
+
     }
 
     #endregion    
@@ -249,7 +249,7 @@ public class PlayerController : MobileEntity
             hasDJump = true;
         }
         else
-        {            
+        {
             ApplyXFriction(valRef[tier].aerialFriction);
         }
     }
@@ -267,4 +267,23 @@ public class PlayerController : MobileEntity
             FaceLeft();
         }
     }
+
+
+    #region COLLIDING
+    public void OnEnter(Collision2D collision)
+    {
+        // Resource Drops:
+        if (collision.gameObject.layer == ResourceDrop.Layer)
+        {
+            ResourceDrop resourceDrop = collision.gameObject.GetComponent<ResourceDrop>();
+            if (resourceDrop != null)
+            {
+                resourceDrop.OnPickup();
+                GameManager.ResourceManager.AddResource(resourceDrop.GetResource());
+            }
+        }
+    }
+
+
+    #endregion COLLIDING
 }
