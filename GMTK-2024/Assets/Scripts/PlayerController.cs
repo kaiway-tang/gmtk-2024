@@ -5,10 +5,17 @@ public class PlayerController : MobileEntity
     [SerializeField] GameObject[] gatlingBullets;
     [SerializeField] GameObject[] rockets;
 
-    public int tier;
+    [SerializeField] ParticleSystem tpPop;
+
     public int type;
     const int GUNNER = 0, REAPER = 1, CONTROLLER = 2;
     public PlayerValues[] valRef;
+
+    [SerializeField] GameObject[] gunnerObjs;
+    [SerializeField] GameObject[] reaperObjs;
+    [SerializeField] GameObject[] controllerObjs;
+
+    [SerializeField] GameObject[] ejectShells;
 
     public static PlayerController self;
     // Start is called before the first frame update
@@ -24,6 +31,9 @@ public class PlayerController : MobileEntity
     {
         HandleJump();
         HandleSizeKeys();
+        HandleEjecting();
+
+        HandleCrafting();
     }
 
     new void FixedUpdate()
@@ -40,32 +50,112 @@ public class PlayerController : MobileEntity
         HandleFacing();
     }
 
+    void HandleCrafting()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (GameManager.ResourceManager.HandleCraft(GameManager.ResourceManager.CheckCraftable()))
+            {
+                SetTier(tier + 1);
+            }
+        }
+    }
+
+    #region EJECTING
+
+    void HandleEjecting()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if (tier > 0)
+            {
+                Instantiate(ejectShells[tier], trfm.position, Quaternion.identity);
+                SetTier(tier - 1);
+                SetYVelocity(valRef[tier].ejectPower);
+            }
+        }
+    }
+
+    #endregion
+
+    #region MECH_TYPES
+
     void HandleSizeKeys()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            type = type == GUNNER ? REAPER : GUNNER;
+            if (type == GUNNER) { SetType(REAPER); }
+            else if (type == REAPER) { SetType(GUNNER); }
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            tier = 0;
-            transform.localScale = Vector3.one * valRef[tier].scale;
-            CameraManager.SetSize(valRef[tier].cameraSize);
+            SetTier(0);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            tier = 1;
-            transform.localScale = Vector3.one * valRef[tier].scale;
-            CameraManager.SetSize(valRef[tier].cameraSize);
+            SetTier(1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            tier = 2;
-            transform.localScale = Vector3.one * valRef[tier].scale;
-            CameraManager.SetSize(valRef[tier].cameraSize);
+            SetTier(2);
         }
     }
+
+    void SetTier(int pTier)
+    {
+        tier = pTier;
+        transform.localScale = Vector3.one * valRef[tier].scale;
+        CameraManager.SetSize(valRef[tier].cameraSize);
+
+        primaryCD = 0;
+        secondaryCD = 0;
+        secondaryTimer = 0;
+    }
+
+    void SetType(int newType)
+    {
+        if (type != newType)
+        {
+            if (type == GUNNER)
+            {
+                for (int i = 0; i < gunnerObjs.Length; i++)
+                {
+                    gunnerObjs[i].SetActive(false);
+                }
+            }
+
+            if (type == REAPER)
+            {
+                for (int i = 0; i < reaperObjs.Length; i++)
+                {
+                    reaperObjs[i].SetActive(false);
+                }
+            }
+
+
+
+            if (newType == GUNNER)
+            {
+                for (int i = 0; i < gunnerObjs.Length; i++)
+                {
+                    gunnerObjs[i].SetActive(true);
+                }
+            }
+
+            if (newType == REAPER)
+            {
+                for (int i = 0; i < reaperObjs.Length; i++)
+                {
+                    reaperObjs[i].SetActive(true);
+                }
+            }
+
+            type = newType;
+        }
+    }
+
+    #endregion
 
     #region AIMING
 
@@ -125,6 +215,7 @@ public class PlayerController : MobileEntity
                 if (type == GUNNER)
                 {
                     Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    CameraManager.SetTrauma(1);
                     primaryCD = 4;
                 }
                 else
@@ -145,8 +236,8 @@ public class PlayerController : MobileEntity
                 if (type == GUNNER)
                 {
                     Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
-                    secondaryCD = 100;
-                    secondaryTimer = 40;
+                    secondaryCD = 200;
+                    secondaryTimer = 28;
                 }
                 else
                 {
@@ -159,6 +250,9 @@ public class PlayerController : MobileEntity
                     {
                         trfm.position += (mousePos - trfm.position).normalized * valRef[tier].blinkDistance;
                     }
+
+                    tpPop.Play();
+                    secondaryCD = 150;
                 }
             }
         }
@@ -174,7 +268,7 @@ public class PlayerController : MobileEntity
         {
             secondaryTimer--;
 
-            if (secondaryTimer % 10 == 0)
+            if (secondaryTimer % 7 == 0)
             {
                 if (type == GUNNER)
                 {
@@ -220,7 +314,10 @@ public class PlayerController : MobileEntity
             {
                 if (IsTouchingGround())
                 {
-                    AddXVelocity(-valRef[tier].groundedAcceleration, -valRef[tier].maxSpeed);
+                    if (rb.velocity.x < valRef[tier].groundedAcceleration)
+                    {
+                        AddXVelocity(-valRef[tier].groundedAcceleration, -valRef[tier].maxSpeed);
+                    }                    
                 }
                 else
                 {
@@ -232,7 +329,10 @@ public class PlayerController : MobileEntity
         {
             if (IsTouchingGround())
             {
-                AddXVelocity(valRef[tier].groundedAcceleration, valRef[tier].maxSpeed);
+                if (rb.velocity.x > -valRef[tier].groundedAcceleration)
+                {
+                    AddXVelocity(valRef[tier].groundedAcceleration, valRef[tier].maxSpeed);
+                }                    
             }
             else
             {
@@ -279,7 +379,7 @@ public class PlayerController : MobileEntity
             if (resourceDrop != null)
             {
                 resourceDrop.OnPickup();
-                GameManager.ResourceManager.AddResource(resourceDrop.GetResource());
+                GameManager.ResourceManager.AddResource(resourceDrop.GetResource(), collision.gameObject.transform.position);
             }
         }
     }

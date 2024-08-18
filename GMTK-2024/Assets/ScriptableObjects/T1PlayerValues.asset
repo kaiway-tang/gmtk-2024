@@ -16,11 +16,12 @@ MonoBehaviour:
   cameraSize: 5
   groundedAcceleration: 3
   aerialAcceleration: 1
-  maxSpeed: 7
+  maxSpeed: 10
   groundedFriction: 1
   aerialFriction: 0.2
-  jumpPower: 15
-  doubleJumpPower: 12
+  jumpPower: 18
+  doubleJumpPower: 16
+  ejectPower: 28
   aimSpeed: 0.5
-  damageMultiplier: 0
-  blinkDistance: 0
+  damageMultiplier: 1
+  blinkDistance: 4

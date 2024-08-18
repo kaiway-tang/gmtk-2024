@@ -11,10 +11,5 @@ public interface ISmartEnemy
 public class Enemy : HPEntity
 {
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
 }

@@ -8,7 +8,7 @@ public class PlayerValues : ScriptableObject
 
     public float groundedAcceleration, aerialAcceleration, maxSpeed;
     public float groundedFriction, aerialFriction;
-    public float jumpPower, doubleJumpPower;
+    public float jumpPower, doubleJumpPower, ejectPower;
 
     public float aimSpeed;
     public float damageMultiplier;

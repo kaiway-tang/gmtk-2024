@@ -7,10 +7,14 @@ public class Rocket : MonoBehaviour
     [SerializeField] GameObject explosion;
     [SerializeField] float speed, acceleration, maxSpeed;
     Transform trfm;
+
+    bool started;
     // Start is called before the first frame update
     void Start()
     {
+        if (started) { return; }
         trfm = transform;
+        started = true;
     }
 
     // Update is called once per frame
@@ -22,6 +26,8 @@ public class Rocket : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
+        if (!started) { Start(); }
+
         if (col.gameObject.layer == 8 || col.gameObject.layer == 7)
         {
             Instantiate(explosion, trfm.position, Quaternion.identity);
