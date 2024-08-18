@@ -395,7 +395,7 @@ public class PlayerController : MobileEntity
 
 
     #region COLLIDING
-    public void OnEnter(Collision2D collision)
+    public void OnEnter(Collider2D collision)
     {
         // Resource Drops:
         if (collision.gameObject.layer == ResourceDrop.Layer)
