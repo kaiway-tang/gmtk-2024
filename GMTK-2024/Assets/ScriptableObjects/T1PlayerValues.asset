@@ -21,6 +21,7 @@ MonoBehaviour:
   aerialFriction: 0.2
   jumpPower: 18
   doubleJumpPower: 16
+  ejectPower: 28
   aimSpeed: 0.5
   damageMultiplier: 1
   blinkDistance: 4

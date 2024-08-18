@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4329002265020556811
+--- !u!1001 &1193547186087052502
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -9,11 +9,23 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1288258540518704331, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
       propertyPath: m_Name
-      value: T1Explosion
+      value: T1EjectExplosion
       objectReference: {fileID: 0}
     - target: {fileID: 3947557293261122699, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3947557293261122699, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3947557293261122699, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3947557293261122699, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 3947557293261122699, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
       propertyPath: m_LocalPosition.x
@@ -53,6 +65,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3947557293261122699, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6919092255793850307, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
+      propertyPath: damage
+      value: 240
+      objectReference: {fileID: 0}
+    - target: {fileID: 6919092255793850307, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
+      propertyPath: autoScale
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

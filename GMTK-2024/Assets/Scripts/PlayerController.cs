@@ -16,6 +16,8 @@ public class PlayerController : MobileEntity
     [SerializeField] GameObject[] reaperObjs;
     [SerializeField] GameObject[] controllerObjs;
 
+    [SerializeField] GameObject[] ejectShells;
+
     public static PlayerController self;
     // Start is called before the first frame update
     new void Start()
@@ -30,6 +32,7 @@ public class PlayerController : MobileEntity
     {
         HandleJump();
         HandleSizeKeys();
+        HandleEjecting();
     }
 
     new void FixedUpdate()
@@ -46,6 +49,23 @@ public class PlayerController : MobileEntity
         HandleFacing();
     }
 
+    #region EJECTING
+
+    void HandleEjecting()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if (tier > 0)
+            {
+                Instantiate(ejectShells[tier], trfm.position, Quaternion.identity);
+                SetTier(tier - 1);
+                SetYVelocity(valRef[tier].ejectPower);
+            }
+        }
+    }
+
+    #endregion
+
     #region MECH_TYPES
 
     void HandleSizeKeys()
@@ -58,22 +78,27 @@ public class PlayerController : MobileEntity
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            tier = 0;
-            transform.localScale = Vector3.one * valRef[tier].scale;
-            CameraManager.SetSize(valRef[tier].cameraSize);
+            SetTier(0);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            tier = 1;
-            transform.localScale = Vector3.one * valRef[tier].scale;
-            CameraManager.SetSize(valRef[tier].cameraSize);
+            SetTier(1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            tier = 2;
-            transform.localScale = Vector3.one * valRef[tier].scale;
-            CameraManager.SetSize(valRef[tier].cameraSize);
+            SetTier(2);
         }
+    }
+
+    void SetTier(int pTier)
+    {
+        tier = pTier;
+        transform.localScale = Vector3.one * valRef[tier].scale;        
+        CameraManager.SetSize(valRef[tier].cameraSize);
+
+        primaryCD = 0;
+        secondaryCD = 0;
+        secondaryTimer = 0;
     }
 
     void SetType(int newType)
@@ -200,7 +225,7 @@ public class PlayerController : MobileEntity
                 {
                     Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
                     secondaryCD = 200;
-                    secondaryTimer = 40;
+                    secondaryTimer = 28;
                 }
                 else
                 {
@@ -231,7 +256,7 @@ public class PlayerController : MobileEntity
         {
             secondaryTimer--;
 
-            if (secondaryTimer % 10 == 0)
+            if (secondaryTimer % 7 == 0)
             {
                 if (type == GUNNER)
                 {

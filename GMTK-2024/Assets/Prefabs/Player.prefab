@@ -5311,6 +5311,10 @@ MonoBehaviour:
   reaperObjs:
   - {fileID: 849699343677254709}
   controllerObjs: []
+  ejectShells:
+  - {fileID: 3378612866010163552, guid: 39f309d7f1bab9942958cf7ab74bd550, type: 3}
+  - {fileID: 8814846354128712373, guid: b87617c94e1201841bdc96247f2c00f5, type: 3}
+  - {fileID: 7409898987784960299, guid: 9409ab64d9d4280498717d956f28a4d3, type: 3}
   turretTrfm: {fileID: 4485768158103621717}
   firepointTrfm: {fileID: 4485768159821184713}
 --- !u!50 &4485768158809220438
