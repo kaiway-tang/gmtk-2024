@@ -22,3 +22,5 @@ MonoBehaviour:
   jumpPower: 17
   doubleJumpPower: 12
   aimSpeed: 0.3
+  damageMultiplier: 2
+  blinkDistance: 5
