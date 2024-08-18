@@ -20,6 +20,12 @@ public class PlayerController : MobileEntity
     [SerializeField] GameObject[] ejectShells;
 
     public static PlayerController self;
+
+    // Controls:
+    private KeyCode EJECT = KeyCode.Space;
+    private KeyCode JUMP = KeyCode.W;
+    private KeyCode CRAFT = KeyCode.LeftShift;
+
     // Start is called before the first frame update
     new void Start()
     {
@@ -54,11 +60,11 @@ public class PlayerController : MobileEntity
 
     void HandleCrafting()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(CRAFT))
         {
             if (GameManager.ResourceManager.HandleCraft(GameManager.ResourceManager.CheckCraftable()))
             {
-                SetTier(tier + 1);
+                SetTier(Mathf.Min(tier + 1, 2));
             }
         }
     }
@@ -67,7 +73,7 @@ public class PlayerController : MobileEntity
 
     void HandleEjecting()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(EJECT))
         {
             if (tier > 0)
             {
@@ -301,7 +307,6 @@ public class PlayerController : MobileEntity
     #endregion    
 
     #region MOVEMENT
-
     void HandleMovement()
     {
         HandleHorizontalMovement();
@@ -311,7 +316,7 @@ public class PlayerController : MobileEntity
     bool hasDJump;
     void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(JUMP))
         {
             if (IsTouchingGround())
             {
@@ -336,7 +341,7 @@ public class PlayerController : MobileEntity
                     if (rb.velocity.x < valRef[tier].groundedAcceleration)
                     {
                         AddXVelocity(-valRef[tier].groundedAcceleration, -valRef[tier].maxSpeed);
-                    }                    
+                    }
                 }
                 else
                 {
@@ -351,7 +356,7 @@ public class PlayerController : MobileEntity
                 if (rb.velocity.x > -valRef[tier].groundedAcceleration)
                 {
                     AddXVelocity(valRef[tier].groundedAcceleration, valRef[tier].maxSpeed);
-                }                    
+                }
             }
             else
             {

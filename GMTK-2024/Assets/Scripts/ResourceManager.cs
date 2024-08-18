@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -108,6 +109,11 @@ public class ResourceManager : MonoBehaviour
     public Color GetResourceColor(Resource resource)
     {
         return resourceSprites[(int)resource].color;
+    }
+    public static Resource GetRandom()
+    {
+        int random = UnityEngine.Random.Range(1, Enum.GetValues(typeof(ResourceManager.Resource)).Length);
+        return (Resource)random;
     }
     private void OnAdd(Resource newResource, Vector2 position)
     {
