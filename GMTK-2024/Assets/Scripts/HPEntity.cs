@@ -9,7 +9,7 @@ public class HPEntity : MonoBehaviour
     [SerializeField] protected Transform trfm;
     [SerializeField] int objectID;
 
-    [SerializeField] int tier;
+    public int tier;
 
     [SerializeField] GameObject damageFX, deathFX;
 
@@ -23,9 +23,9 @@ public class HPEntity : MonoBehaviour
         
     }
 
-    public void TakeDamage(int amount = 0, int sourceID = 0)
+    public bool TakeDamage(int amount = 0, int sourceID = 0)
     {
-        if (sourceID != 0 && sourceID == objectID) { return; }
+        if (sourceID != 0 && sourceID == objectID) { return false; }
 
         HP -= amount;
 
@@ -39,12 +39,14 @@ public class HPEntity : MonoBehaviour
             else
             {
                 tier--;
-                HP = 2;
+                HP = 1;
             }
         }
         else
         {
             Instantiate(damageFX, trfm.position, Quaternion.identity);
         }
+
+        return true;
     }
 }

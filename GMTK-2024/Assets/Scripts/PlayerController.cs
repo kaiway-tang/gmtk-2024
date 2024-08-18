@@ -7,7 +7,6 @@ public class PlayerController : MobileEntity
 
     [SerializeField] ParticleSystem tpPop;
 
-    public int tier;
     public int type;
     const int GUNNER = 0, REAPER = 1, CONTROLLER = 2;
     public PlayerValues[] valRef;
@@ -315,7 +314,10 @@ public class PlayerController : MobileEntity
             {
                 if (IsTouchingGround())
                 {
-                    AddXVelocity(-valRef[tier].groundedAcceleration, -valRef[tier].maxSpeed);
+                    if (rb.velocity.x < valRef[tier].groundedAcceleration)
+                    {
+                        AddXVelocity(-valRef[tier].groundedAcceleration, -valRef[tier].maxSpeed);
+                    }                    
                 }
                 else
                 {
@@ -327,7 +329,10 @@ public class PlayerController : MobileEntity
         {
             if (IsTouchingGround())
             {
-                AddXVelocity(valRef[tier].groundedAcceleration, valRef[tier].maxSpeed);
+                if (rb.velocity.x > -valRef[tier].groundedAcceleration)
+                {
+                    AddXVelocity(valRef[tier].groundedAcceleration, valRef[tier].maxSpeed);
+                }                    
             }
             else
             {
