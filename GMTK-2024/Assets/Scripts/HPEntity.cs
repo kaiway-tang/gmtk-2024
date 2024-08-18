@@ -9,6 +9,8 @@ public class HPEntity : MonoBehaviour
     [SerializeField] protected Transform trfm;
     [SerializeField] int objectID;
 
+    [SerializeField] int tier;
+
     [SerializeField] GameObject damageFX, deathFX;
 
     protected void Start()
@@ -29,8 +31,16 @@ public class HPEntity : MonoBehaviour
 
         if (HP <= 0)
         {
-            Instantiate(deathFX, trfm.position, Quaternion.identity);
-            Destroy(gameObject);
+            if (tier < 1)
+            {
+                Instantiate(deathFX, trfm.position, Quaternion.identity);
+                Destroy(gameObject);
+            }
+            else
+            {
+                tier--;
+                HP = 2;
+            }
         }
         else
         {

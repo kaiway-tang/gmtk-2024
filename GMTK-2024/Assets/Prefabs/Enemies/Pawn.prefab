@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9038853616964939768}
   - component: {fileID: 9038853616964939771}
   - component: {fileID: 9038853616964939764}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Pawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa7c14a6c51779e4695c0f28735eec39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HP: 300
   trfm: {fileID: 9038853616964939770}
+  objectID: 0
+  damageFX: {fileID: 6913746034329785171, guid: 9d19854dd9a519a44a9fcd05ab1cc466, type: 3}
+  deathFX: {fileID: 6913746034329785171, guid: d0e051912b661694c979cfa432db5f1b, type: 3}
   target: {fileID: 0}
 --- !u!195 &9038853616964939771
 NavMeshAgent:
@@ -111,7 +115,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 4
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120

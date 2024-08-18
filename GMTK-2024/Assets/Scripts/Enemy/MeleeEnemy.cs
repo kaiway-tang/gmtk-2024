@@ -18,6 +18,7 @@ public class MeleeEnemy : Enemy
         navigation.updateRotation = false;
         navigation.updateUpAxis = false;
         prevPos = transform.position;
+        target = PlayerController.self.transform;
     }
 
     // Update is called once per frame

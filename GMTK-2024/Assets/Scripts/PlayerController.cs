@@ -49,6 +49,17 @@ public class PlayerController : MobileEntity
         HandleFacing();
     }
 
+    void HandleCrafting()
+    {
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            if (GameManager.ResourceManager.HandleCraft(GameManager.ResourceManager.CheckCraftable()))
+            {
+                SetTier(tier + 1);
+            }
+        }
+    }
+
     #region EJECTING
 
     void HandleEjecting()
