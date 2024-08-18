@@ -42,11 +42,11 @@ public class DisplayManager : MonoBehaviour
     {
         if (_activeAnimation == null)
         {
-            _activeAnimation = StartCoroutine(AnimateHotbar(type));
+            _activeAnimation = StartCoroutine(HotbarAdd());
         }
         else
         {
-            _pendingAnimations.Enqueue(AnimateHotbar(type));
+            _pendingAnimations.Enqueue(HotbarAdd());
         }
     }
     private IEnumerator AnimateHotbar(AnimationType type)
@@ -71,32 +71,44 @@ public class DisplayManager : MonoBehaviour
         Debug.Log("DONE");
         _activeAnimation = null;
     }
+    private IEnumerator HotbarAdd()
+    {
+        int timer = 0;
+        while (timer < 50)
+        {
+            Debug.Log("adding");
+            yield return new WaitForSeconds(0.02f);
+            timer++;
+        }
+        Debug.Log("DONE");
+        _activeAnimation = null;
+    }
 
     public void UpdateIcons(ResourceManager.Resource[] inventory)
     {
-        for (int i = 0; i < _resourceIcons.Length; i++)
+        //for (int i = 0; i < _resourceIcons.Length; i++)
+        //{
+        //    if (i < inventory.Length)
+        //    {
+        //        _resourceIcons[i].sprite = GameManager.ResourceManager.GetResourceSprite(inventory[i]);
+        //        _resourceIcons[i].color = GameManager.ResourceManager.GetResourceColor(inventory[i]);
+        //        _resourceIcons[i].enabled = true;
+        //    }
+        //    else
+        //    {
+        //        _resourceIcons[i].enabled = false;
+        //    }
+        //}
+        if (_resourceIcons.Length >= inventory.Length)
         {
-            if (i < inventory.Length)
-            {
-                _resourceIcons[i].sprite = GameManager.ResourceManager.GetResourceSprite(inventory[i]);
-                _resourceIcons[i].color = GameManager.ResourceManager.GetResourceColor(inventory[i]);
-                _resourceIcons[i].enabled = true;
-            }
-            else
-            {
-                _resourceIcons[i].enabled = false;
-            }
+            // Add:
+            QueueAnimation(AnimationType.ADD);
         }
-        //if (_resourceIcons.Length >= inventory.Length)
-        //{
-        //    // Add:
-        //    QueueAnimation(AnimationType.ADD);
-        //}
-        //else
-        //{
-        //    // Remove:
-        //    QueueAnimation(AnimationType.CRAFT);
-        //}
+        else
+        {
+            // Remove:
+            QueueAnimation(AnimationType.CRAFT);
+        }
     }
 
 
