@@ -8,28 +8,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 3802814134419671841, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
-      propertyPath: damage
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 3802814134419671841, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
       propertyPath: velocity
-      value: 10
+      value: 2.3
       objectReference: {fileID: 0}
     - target: {fileID: 4461499043571994460, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4461499043571994460, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4461499043571994460, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 4461499043571994460, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 4461499043571994460, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
       propertyPath: m_LocalPosition.x
@@ -73,7 +57,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8983903726094835682, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
       propertyPath: m_Name
-      value: T3GatlingBullet Variant
+      value: T3GatlingBullet
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}

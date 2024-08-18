@@ -3,20 +3,27 @@ using UnityEngine;
 public class PlayerController : MobileEntity
 {
     [SerializeField] GameObject[] gatlingBullets;
+    [SerializeField] GameObject[] rockets;
 
-    [SerializeField] int tier;
-    [SerializeField] PlayerValues[] valRef;
+    public int tier;
+    public int type;
+    const int GUNNER = 0, REAPER = 1, CONTROLLER = 2;
+    public PlayerValues[] valRef;
+
+    public static PlayerController self;
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
         GameManager.Instance.Player = this;
+        self = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
     void Update()
     {
         HandleJump();
+        HandleSizeKeys();
     }
 
     new void FixedUpdate()
@@ -28,18 +35,49 @@ public class PlayerController : MobileEntity
 
         HandleMovement();
         HandleAiming();
+        HandleAttackInput();
         HandleAttacking();
         HandleFacing();        
     }
+
+    void HandleSizeKeys()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            type = type == GUNNER ? REAPER : GUNNER;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            tier = 0;
+            transform.localScale = Vector3.one * valRef[tier].scale;
+            CameraManager.SetSize(valRef[tier].cameraSize);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            tier = 1;
+            transform.localScale = Vector3.one * valRef[tier].scale;
+            CameraManager.SetSize(valRef[tier].cameraSize);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            tier = 2;
+            transform.localScale = Vector3.one * valRef[tier].scale;
+            CameraManager.SetSize(valRef[tier].cameraSize);
+        }
+    }
+
+    #region AIMING
 
     [SerializeField] Transform turretTrfm;
     Vector3 mousePos;
     bool turretFacingLeft;
     void HandleAiming()
     {
-        turretTrfm.right = mousePos - turretTrfm.position;
-        return;
+        //turretTrfm.right = mousePos - turretTrfm.position;
         Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed);
+
+        return;
 
         if (trfm.position.x < mousePos.x)
         {
@@ -65,35 +103,89 @@ public class PlayerController : MobileEntity
         }
     }
 
-    [SerializeField] Transform firepointTrfm;
-    int fireCD;
-    void HandleAttacking()
+    public static float GetRelativeScaleFactor()
     {
-        if (fireCD < 0)
+        return self.valRef[self.tier].scale / self.valRef[0].scale;
+    }
+
+    public static float GetDamageMultiplier()
+    {
+        return self.valRef[self.tier].damageMultiplier;
+    }
+
+    [SerializeField] Transform firepointTrfm;
+    int primaryCD, secondaryCD;
+    int secondaryTimer;
+    void HandleAttackInput()
+    {
+        if (primaryCD < 0)
         {
             if (Input.GetMouseButton(0))
             {
-                Instantiate(gatlingBullets[0], firepointTrfm.position, firepointTrfm.rotation);
-                fireCD = 3;
+                if (type == GUNNER)
+                {
+                    Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    primaryCD = 4;
+                }
+                else
+                {
+
+                }      
             }
         }
         else
         {
-            fireCD--;
+            primaryCD--;
         }
-    }
 
-    void HandleFacing()
-    {
-        if (trfm.position.x < mousePos.x)
+        if (secondaryCD < 0)
         {
-            FaceRight();
+            if (Input.GetMouseButton(1))
+            {
+                if (type == GUNNER)
+                {
+                    Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    secondaryCD = 100;
+                    secondaryTimer = 40;
+                }
+                else
+                {
+                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[tier].blinkDistance, Tools.terrainMask);                    
+                    if (rayHit.collider != null)
+                    {
+                        trfm.position += (mousePos - trfm.position).normalized * rayHit.distance;
+                    }
+                    else
+                    {
+                        trfm.position += (mousePos - trfm.position).normalized * valRef[tier].blinkDistance;
+                    }
+                }
+            }
         }
         else
         {
-            FaceLeft();
+            secondaryCD--;
         }
     }
+
+    void HandleAttacking()
+    {
+        if (secondaryTimer > 0)
+        {
+            secondaryTimer--;
+
+            if (secondaryTimer % 10 == 0)
+            {
+                if (type == GUNNER)
+                {
+                    Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                }
+            }            
+        }
+        
+    }
+
+    #endregion    
 
     #region MOVEMENT
 
@@ -126,12 +218,26 @@ public class PlayerController : MobileEntity
         {
             if (!Input.GetKey(KeyCode.D))
             {
-                AddXVelocity(-valRef[tier].acceleration, -valRef[tier].maxSpeed);
+                if (IsTouchingGround())
+                {
+                    AddXVelocity(-valRef[tier].groundedAcceleration, -valRef[tier].maxSpeed);
+                }
+                else
+                {
+                    AddXVelocity(-valRef[tier].aerialAcceleration, -valRef[tier].maxSpeed);
+                }
             }
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            AddXVelocity(valRef[tier].acceleration, valRef[tier].maxSpeed);
+            if (IsTouchingGround())
+            {
+                AddXVelocity(valRef[tier].groundedAcceleration, valRef[tier].maxSpeed);
+            }
+            else
+            {
+                AddXVelocity(valRef[tier].aerialAcceleration, valRef[tier].maxSpeed);
+            }
         }
     }
 
@@ -149,4 +255,16 @@ public class PlayerController : MobileEntity
     }
 
     #endregion
+
+    void HandleFacing()
+    {
+        if (trfm.position.x < mousePos.x)
+        {
+            FaceRight();
+        }
+        else
+        {
+            FaceLeft();
+        }
+    }
 }

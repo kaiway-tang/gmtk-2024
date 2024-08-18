@@ -1,18 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour, IAttack
+public class Explosion : MonoBehaviour
 {
-    public void Initialize(Transform relative, int damage, float velocity)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    [SerializeField] int damage;
-    [SerializeField] float velocity;
-    [SerializeField] int sourceID;
-
+    [SerializeField] CircleCollider2D cirCol;
+    [SerializeField] int damage, activeTicks, sourceID;
+    int timer;
     // Start is called before the first frame update
-    protected void Start()
+    void Start()
     {
         Destroy(gameObject, 5);
         damage = Mathf.RoundToInt(damage * PlayerController.GetDamageMultiplier());
@@ -20,19 +16,21 @@ public class Bullet : MonoBehaviour, IAttack
     }
 
     // Update is called once per frame
-    protected void FixedUpdate()
+    void FixedUpdate()
     {
-        transform.position += transform.up * velocity;
+        if (activeTicks > 0)
+        {
+            activeTicks--;
+            if (activeTicks == 0)
+            {
+                cirCol.enabled = false;
+            }
+        }
     }
 
     HPEntity hitEntity;
-    protected void OnTriggerEnter2D(Collider2D col)
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.layer == 8)
-        {
-            Destroy(gameObject);
-        }
-
         if (col.gameObject.layer == 7)
         {
             hitEntity = col.GetComponent<HPEntity>();
@@ -40,7 +38,6 @@ public class Bullet : MonoBehaviour, IAttack
             {
                 hitEntity.TakeDamage(damage, sourceID);
             }
-            Destroy(gameObject);
         }
     }
 }
