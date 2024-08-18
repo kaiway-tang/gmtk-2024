@@ -35,7 +35,7 @@ public class ForceField : HPEntity
         {
             if (shieldTrfm.localScale.x < 1)
             {
-                shieldTrfm.localScale += Vector3.right * 0.04f;
+                shieldTrfm.localScale += Vector3.right * 0.08f;
             }
             else
             {
@@ -54,7 +54,7 @@ public class ForceField : HPEntity
             if (hitEnemy != null)
             {
                 hitEnemy.TakeDamage(contactDamage);
-                hitEnemy.Slow(50);
+                hitEnemy.Slow(100);
                 TakeDamage(1);
             }            
         }        
