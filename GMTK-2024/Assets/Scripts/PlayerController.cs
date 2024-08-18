@@ -6,6 +6,7 @@ public class PlayerController : MobileEntity
     [SerializeField] GameObject[] gatlingBullets;
     [SerializeField] GameObject[] rockets;
 
+    [SerializeField] GameObject[] flameObjs;
     [SerializeField] GameObject[] forceFields;
 
     [SerializeField] ParticleSystem tpPop;
