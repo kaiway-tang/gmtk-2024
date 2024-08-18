@@ -33,6 +33,8 @@ public class PlayerController : MobileEntity
         HandleJump();
         HandleSizeKeys();
         HandleEjecting();
+
+        HandleCrafting();
     }
 
     new void FixedUpdate()

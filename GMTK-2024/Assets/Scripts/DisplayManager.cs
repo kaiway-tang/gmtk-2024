@@ -83,6 +83,7 @@ public class DisplayManager : MonoBehaviour
 
         // Update refs:
         _isAnimating = false;
+        yield return null;
     }
     public void AddResource(ResourceManager.Resource[] inventory, ResourceManager.Resource newResource, Vector2 worldPos)
     {
