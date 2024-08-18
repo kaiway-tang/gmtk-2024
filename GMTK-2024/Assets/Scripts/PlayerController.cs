@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MobileEntity
@@ -9,10 +10,13 @@ public class PlayerController : MobileEntity
 
     [SerializeField] ParticleSystem tpPop;
 
-    public int type;
-    const int GUNNER = 0, REAPER = 1, CONTROLLER = 2;
+    public enum MechType { INVALID, GUNNER, REAPER, CONTROLLER }; // this enum corresponds 1:1 with ResourceManager.Resources.
+    public List<MechType> activeMechs;
+    [SerializeField] public MechType DefaultType;
+
     public PlayerValues[] valRef;
 
+    [SerializeField] SpriteRenderer capsuleSprite;
     [SerializeField] GameObject[] gunnerObjs;
     [SerializeField] GameObject[] reaperObjs;
     [SerializeField] GameObject[] controllerObjs;
@@ -33,6 +37,9 @@ public class PlayerController : MobileEntity
         base.Start();
         GameManager.Instance.Player = this;
         self = GetComponent<PlayerController>();
+
+        // Set Default Type:
+        CraftMech(DefaultType);
     }
 
     // Update is called once per frame
@@ -63,9 +70,11 @@ public class PlayerController : MobileEntity
     {
         if (Input.GetKeyDown(CRAFT))
         {
-            if (GameManager.ResourceManager.HandleCraft(GameManager.ResourceManager.CheckCraftable()))
+            ResourceManager.Resource resource = GameManager.ResourceManager.CheckCraftable();
+            if (resource != ResourceManager.Resource.Invalid)
             {
-                SetTier(Mathf.Min(tier + 1, 2));
+                GameManager.ResourceManager.HandleCraft(resource);
+                CraftMech((MechType)resource);
             }
         }
     }
@@ -76,11 +85,13 @@ public class PlayerController : MobileEntity
     {
         if (Input.GetKeyDown(EJECT))
         {
+            int tier = GetTier();
             if (tier > 0)
             {
                 Instantiate(ejectShells[tier], trfm.position, Quaternion.identity);
-                SetTier(tier - 1);
                 SetYVelocity(valRef[tier].ejectPower);
+                activeMechs.RemoveAt(activeMechs.Count - 1);
+                OnTypeChange();
             }
         }
     }
@@ -91,25 +102,50 @@ public class PlayerController : MobileEntity
 
     void HandleSizeKeys()
     {
+        // Duplicate current outmost shell:
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            SetTier(tier + 1);
+            CraftMech(GetOuterType());
         }
-
+        // Add new outer shell:
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SetType(GUNNER);
+            CraftMech(MechType.GUNNER);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            SetType(REAPER);
+            CraftMech(MechType.REAPER);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            SetType(CONTROLLER);
+            CraftMech(MechType.CONTROLLER);
         }
     }
+    private void CraftMech(MechType type)
+    {
+        if (type == MechType.INVALID)
+        {
+            type = (MechType)ResourceManager.GetRandom();
+        }
+        // Add outer shell of type if possible:
+        int tier = GetTier();
+        if (tier < 2)
+        {
+            activeMechs.Add(type);
+            OnTypeChange();
+        }
+    }
+    private void OnTypeChange()
+    {
+        // Update abilities based on outer shell:
+        int tier = GetTier();
+        MechType type = GetOuterType();
+        SetTier(tier);
+        SetType(type);
+    }
 
+
+    #region Utils
     void SetTier(int pTier)
     {
         if (pTier > 2) { pTier = 2; return; }
@@ -121,60 +157,66 @@ public class PlayerController : MobileEntity
         secondaryCD = 0;
         secondaryTimer = 0;
     }
-
-    void SetType(int newType)
+    void SetType(MechType newType)
     {
-        if (type != newType)
+        MechType currentType = GetOuterType();
+        if (currentType == MechType.GUNNER)
         {
-            if (type == GUNNER)
+            for (int i = 0; i < gunnerObjs.Length; i++)
             {
-                for (int i = 0; i < gunnerObjs.Length; i++)
-                {
-                    gunnerObjs[i].SetActive(false);
-                }
+                gunnerObjs[i].SetActive(false);
             }
-            if (type == REAPER)
-            {
-                for (int i = 0; i < reaperObjs.Length; i++)
-                {
-                    reaperObjs[i].SetActive(false);
-                }
-            }
-            if (type == CONTROLLER)
-            {
-                for (int i = 0; i < controllerObjs.Length; i++)
-                {
-                    controllerObjs[i].SetActive(false);
-                }
-            }
-
-
-
-            if (newType == GUNNER)
-            {
-                for (int i = 0; i < gunnerObjs.Length; i++)
-                {
-                    gunnerObjs[i].SetActive(true);
-                }
-            }
-            if (newType == REAPER)
-            {
-                for (int i = 0; i < reaperObjs.Length; i++)
-                {
-                    reaperObjs[i].SetActive(true);
-                }
-            }
-            if (newType == CONTROLLER)
-            {
-                for (int i = 0; i < controllerObjs.Length; i++)
-                {
-                    controllerObjs[i].SetActive(true);
-                }
-            }
-
-            type = newType;
         }
+        if (currentType == MechType.REAPER)
+        {
+            for (int i = 0; i < reaperObjs.Length; i++)
+            {
+                reaperObjs[i].SetActive(false);
+            }
+        }
+        if (currentType == MechType.CONTROLLER)
+        {
+            for (int i = 0; i < controllerObjs.Length; i++)
+            {
+                controllerObjs[i].SetActive(false);
+            }
+        }
+        //
+        if (newType == MechType.GUNNER)
+        {
+            for (int i = 0; i < gunnerObjs.Length; i++)
+            {
+                gunnerObjs[i].SetActive(true);
+            }
+        }
+        if (newType == MechType.REAPER)
+        {
+            for (int i = 0; i < reaperObjs.Length; i++)
+            {
+                reaperObjs[i].SetActive(true);
+            }
+        }
+        if (newType == MechType.CONTROLLER)
+        {
+            for (int i = 0; i < controllerObjs.Length; i++)
+            {
+                controllerObjs[i].SetActive(true);
+            }
+        }
+        //
+        capsuleSprite.color = GameManager.ResourceManager.GetResourceColor((ResourceManager.Resource)newType);
     }
+    private MechType GetOuterType()
+    {
+        // Gets type of the outmost shell:
+        return activeMechs[activeMechs.Count - 1];
+    }
+    private int GetTier()
+    {
+        return activeMechs.Count - 1; // tiers are 0 - 2.
+    }
+
+    #endregion Utils
 
     #endregion
 
@@ -233,7 +275,7 @@ public class PlayerController : MobileEntity
         {
             if (Input.GetMouseButton(0))
             {
-                if (type == GUNNER)
+                if (GetOuterType() == MechType.GUNNER)
                 {
                     Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
                     CameraManager.SetTrauma(1);
@@ -254,13 +296,13 @@ public class PlayerController : MobileEntity
         {
             if (Input.GetMouseButton(1))
             {
-                if (type == GUNNER)
+                if (GetOuterType() == MechType.GUNNER)
                 {
                     Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
                     secondaryCD = 200;
                     secondaryTimer = 28;
                 }
-                else if (type == REAPER)
+                else if (GetOuterType() == MechType.REAPER)
                 {
                     RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[tier].blinkDistance, Tools.terrainMask);
                     if (rayHit.collider != null)
@@ -275,7 +317,7 @@ public class PlayerController : MobileEntity
                     tpPop.Play();
                     secondaryCD = 150;
                 }
-                else if (type == CONTROLLER)
+                else if (GetOuterType() == MechType.CONTROLLER)
                 {
                     Instantiate(forceFields[tier], firepointTrfm.position, firepointTrfm.rotation);
                     secondaryCD = 20;
@@ -296,7 +338,7 @@ public class PlayerController : MobileEntity
 
             if (secondaryTimer % 7 == 0)
             {
-                if (type == GUNNER)
+                if (GetOuterType() == MechType.GUNNER)
                 {
                     Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
                 }
