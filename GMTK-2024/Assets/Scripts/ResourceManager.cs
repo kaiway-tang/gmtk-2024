@@ -14,6 +14,7 @@ public class ResourceManager : MonoBehaviour
     Queue<Resource> materialQueue;
     Dictionary<Resource, int> numMats;
     public const int MAX_INVENTORY_SIZE = 5;
+    public const int CRAFT_REQUIREMENT = 2;
     [SerializeField] ResourceDrop resourceDropPrefab;
     [SerializeField] SpriteRenderer[] resourceSprites;
 
@@ -44,7 +45,7 @@ public class ResourceManager : MonoBehaviour
     {
         foreach (KeyValuePair<Resource, int> resCount in numMats)
         {
-            if (resCount.Value >= 2)
+            if (resCount.Value >= CRAFT_REQUIREMENT)
             {
                 return resCount.Key;
             }
@@ -54,11 +55,15 @@ public class ResourceManager : MonoBehaviour
 
     public bool HandleCraft(Resource resourceType)
     {
+        if (resourceType == Resource.Invalid)
+        {
+            return false;
+        }
         Resource[] resources = materialQueue.ToArray();
         Queue<Resource> newQueue = new Queue<Resource>();
         int r1 = -1;
         int r2 = -1;
-        int ct = 2;
+        int ct = CRAFT_REQUIREMENT;
         for (int i = 0; i < resources.Length; i++)
         {
             Resource resource = resources[i];
@@ -79,9 +84,9 @@ public class ResourceManager : MonoBehaviour
         }
         if (numMats.ContainsKey(resourceType) && ct == 0)
         {
-            numMats[resourceType] -= 3;
+            numMats[resourceType] -= CRAFT_REQUIREMENT;
+            OnCraft(r1, r2, materialQueue.ToArray(), newQueue.ToArray());
             materialQueue = newQueue;
-            OnCraft(r1, r2);
             return true;
         }
         return false;
@@ -106,13 +111,11 @@ public class ResourceManager : MonoBehaviour
     }
     private void OnAdd(Resource newResource, Vector2 position)
     {
-        Debug.Log("inventory add!");
         GameManager.DisplayManager.AddResource(materialQueue.ToArray(), newResource, position);
     }
-    private void OnCraft(int r1, int r2)
+    private void OnCraft(int r1, int r2, Resource[] beforeCraft, Resource[] afterCraft)
     {
-        Debug.Log("inventory craft!");
-        GameManager.DisplayManager.CraftMech(r1, r2, materialQueue.ToArray());
+        GameManager.DisplayManager.CraftMech(r1, r2, beforeCraft, afterCraft);
     }
     #endregion Utils
 }
