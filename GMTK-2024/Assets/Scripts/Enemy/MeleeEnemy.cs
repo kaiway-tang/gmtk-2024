@@ -11,8 +11,9 @@ public class MeleeEnemy : Enemy
 
     Vector3 prevPos = Vector3.zero;
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
+        base.Start();
         navigation = GetComponent<NavMeshAgent>();
         navigation.updateRotation = false;
         navigation.updateUpAxis = false;
