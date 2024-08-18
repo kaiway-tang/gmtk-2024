@@ -5090,7 +5090,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 5
-  m_Sprite: {fileID: 21300000, guid: 865468ac57ecc63418d302a0670f2601, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 610737f329f21284e82e07231f5fc767, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5175,7 +5175,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 8
-  m_Sprite: {fileID: 21300000, guid: 8226160bae575ac49ac347bbeff2c9c0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 610737f329f21284e82e07231f5fc767, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5283,6 +5283,7 @@ MonoBehaviour:
   HP: 0
   trfm: {fileID: 4485768158809220437}
   objectID: 0
+  tier: 0
   damageFX: {fileID: 0}
   deathFX: {fileID: 0}
   reflectionTrfm: {fileID: 4485768159203096879}
@@ -5299,7 +5300,6 @@ MonoBehaviour:
   - {fileID: 5014600565230215634, guid: 3bdd4d3a8f5a9334fa6b28857d159e09, type: 3}
   - {fileID: 1638193306209273922, guid: 058a2df40da13b24e9910a7ef384ed1f, type: 3}
   tpPop: {fileID: 7408155087991296554}
-  tier: 0
   type: 0
   valRef:
   - {fileID: 11400000, guid: 800538f7fc92f0542beaa6f2c1a6e1e1, type: 2}
@@ -5571,7 +5571,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: 207ee8102dd4143d288186ef0be518ee, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c346b880b113313429d79777733cc158, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
