@@ -48,6 +48,16 @@ public class Enemy : HPEntity
                 speed = baseSpeed;
             }
         }
+        if (burnTick > 0) { burnTick--; }
+        else
+        {
+            if (burnStacks > 0)
+            {
+                TakeDamage(burnStacks);
+                burnStacks--;
+                burnTick = 25;
+            }
+        }        
     }
 
     protected bool IsStunned()
@@ -68,6 +78,15 @@ public class Enemy : HPEntity
     {
         slowed = ticks;
         SetSpeed(0.1f);
+    }
+
+    int burnStacks, burnTick;
+    public void Burn(int intensity)
+    {
+        if (burnStacks < intensity * 8)
+        {
+            burnStacks += intensity;
+        }        
     }
 
     public void Stun(int ticks)
