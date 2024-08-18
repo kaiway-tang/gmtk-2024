@@ -159,29 +159,20 @@ public class PlayerController : MobileEntity
     }
     void SetType(MechType newType)
     {
-        MechType currentType = GetOuterType();
-        if (currentType == MechType.GUNNER)
+        // Disable old sprites:
+        for (int i = 0; i < gunnerObjs.Length; i++)
         {
-            for (int i = 0; i < gunnerObjs.Length; i++)
-            {
-                gunnerObjs[i].SetActive(false);
-            }
+            gunnerObjs[i].SetActive(false);
         }
-        if (currentType == MechType.REAPER)
+        for (int i = 0; i < reaperObjs.Length; i++)
         {
-            for (int i = 0; i < reaperObjs.Length; i++)
-            {
-                reaperObjs[i].SetActive(false);
-            }
+            reaperObjs[i].SetActive(false);
         }
-        if (currentType == MechType.CONTROLLER)
+        for (int i = 0; i < controllerObjs.Length; i++)
         {
-            for (int i = 0; i < controllerObjs.Length; i++)
-            {
-                controllerObjs[i].SetActive(false);
-            }
+            controllerObjs[i].SetActive(false);
         }
-        //
+        // Enable new:
         if (newType == MechType.GUNNER)
         {
             for (int i = 0; i < gunnerObjs.Length; i++)
