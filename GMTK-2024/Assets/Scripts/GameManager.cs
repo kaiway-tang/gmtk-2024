@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
     public static DisplayManager DisplayManager;
     public static CameraManager CameraManager;
+    public static ResourceManager ResourceManager;
+
 
     private void Awake()
     {
@@ -26,20 +28,12 @@ public class GameManager : MonoBehaviour
         //
         DisplayManager = GetComponentInChildren<DisplayManager>();
         CameraManager = GetComponentInChildren<CameraManager>();
+        ResourceManager = GetComponentInChildren<ResourceManager>();
     }
     #endregion Singleton
 
     // Player:
-    [SerializeField] public PlayerController Player;
-
-    // ResourceManager
-    public static ResourceManager Resources;
-    // Start is called before the first frame update
-    void Start()
-    {
-        Resources = new ResourceManager();
-        Resources.Initialize();
-    }
+    [SerializeField] public PlayerController Player; // set by player upon Start
 
     // Update is called once per frame
     void Update()
