@@ -107,7 +107,8 @@ MonoBehaviour:
   tier: 0
   damageFX: {fileID: 6913746034329785171, guid: 9d19854dd9a519a44a9fcd05ab1cc466, type: 3}
   deathFX: {fileID: 6913746034329785171, guid: d0e051912b661694c979cfa432db5f1b, type: 3}
-  stunKnockbackFactor: 10
+  speed: 0
+  baseSpeed: 4
   target: {fileID: 0}
 --- !u!195 &9038853616964939771
 NavMeshAgent:
@@ -170,7 +171,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0
+  m_LinearDrag: 99
   m_AngularDrag: 0.05
   m_GravityScale: 0
   m_Material: {fileID: 0}

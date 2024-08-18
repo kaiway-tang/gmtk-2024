@@ -65,11 +65,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2270064021826392501, guid: e0fd9aea5e784cf42b7e41449c2f380a, type: 3}
       propertyPath: HP
-      value: 2
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2270064021826392501, guid: e0fd9aea5e784cf42b7e41449c2f380a, type: 3}
       propertyPath: speed
-      value: 0.3
+      value: 0.45
       objectReference: {fileID: 0}
     - target: {fileID: 2270064021826392501, guid: e0fd9aea5e784cf42b7e41449c2f380a, type: 3}
       propertyPath: deathFX

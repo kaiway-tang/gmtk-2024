@@ -22,9 +22,10 @@ public class PlayerController : MobileEntity
     public static PlayerController self;
 
     // Controls:
-    private KeyCode EJECT = KeyCode.Space;
-    private KeyCode JUMP = KeyCode.W;
-    private KeyCode CRAFT = KeyCode.LeftShift;
+    private KeyCode EJECT = KeyCode.LeftShift;
+    private KeyCode JUMP = KeyCode.Space;
+    private KeyCode JUMP_ALT = KeyCode.W;
+    private KeyCode CRAFT = KeyCode.Q;
 
     // Start is called before the first frame update
     new void Start()
@@ -180,7 +181,7 @@ public class PlayerController : MobileEntity
     #region AIMING
 
     [SerializeField] Transform turretTrfm;
-    Vector3 mousePos;
+    public Vector3 mousePos;
     bool turretFacingLeft;
     void HandleAiming()
     {
@@ -277,7 +278,7 @@ public class PlayerController : MobileEntity
                 else if (type == CONTROLLER)
                 {
                     Instantiate(forceFields[tier], firepointTrfm.position, firepointTrfm.rotation);
-                    secondaryCD = 200;
+                    secondaryCD = 20;
                 }
             }
         }
@@ -316,7 +317,7 @@ public class PlayerController : MobileEntity
     bool hasDJump;
     void HandleJump()
     {
-        if (Input.GetKeyDown(JUMP))
+        if (Input.GetKeyDown(JUMP) || Input.GetKeyDown(JUMP_ALT))
         {
             if (IsTouchingGround())
             {
