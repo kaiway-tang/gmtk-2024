@@ -24,7 +24,7 @@ public class Spawner : MonoBehaviour
         else
         {
             SpawnEnemy();
-            if (spawnRate > 50)
+            if (spawnRate > 30)
             {
                 spawnRate--;
             }            

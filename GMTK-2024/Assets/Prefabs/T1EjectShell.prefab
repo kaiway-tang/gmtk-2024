@@ -100,10 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   type: 0
-  explosion:
-  - {fileID: 103728505696141341, guid: 36cb7a3382191244db66960aca3b773c, type: 3}
-  - {fileID: 5874828748870073346, guid: d842d5d5af464f54dbcb53ef10226018, type: 3}
-  - {fileID: 1098869880374459735, guid: 8d67fd0289e06c24c9e314eefa194d58, type: 3}
+  explosion: {fileID: 103728505696141341, guid: 36cb7a3382191244db66960aca3b773c, type: 3}
 --- !u!50 &3378612866010163547
 Rigidbody2D:
   serializedVersion: 4

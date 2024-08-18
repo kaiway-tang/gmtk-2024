@@ -5,6 +5,8 @@ public class PlayerController : MobileEntity
     [SerializeField] GameObject[] gatlingBullets;
     [SerializeField] GameObject[] rockets;
 
+    [SerializeField] GameObject[] forceFields;
+
     [SerializeField] ParticleSystem tpPop;
 
     public int type;
@@ -84,26 +86,26 @@ public class PlayerController : MobileEntity
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (type == GUNNER) { SetType(REAPER); }
-            else if (type == REAPER) { SetType(GUNNER); }
+            SetTier(tier + 1);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SetTier(0);
+            SetType(GUNNER);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            SetTier(1);
+            SetType(REAPER);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            SetTier(2);
+            SetType(CONTROLLER);
         }
     }
 
     void SetTier(int pTier)
     {
+        if (pTier > 2) { pTier = 2; return; }
         tier = pTier;
         transform.localScale = Vector3.one * valRef[tier].scale;
         CameraManager.SetSize(valRef[tier].cameraSize);
@@ -124,12 +126,18 @@ public class PlayerController : MobileEntity
                     gunnerObjs[i].SetActive(false);
                 }
             }
-
             if (type == REAPER)
             {
                 for (int i = 0; i < reaperObjs.Length; i++)
                 {
                     reaperObjs[i].SetActive(false);
+                }
+            }
+            if (type == CONTROLLER)
+            {
+                for (int i = 0; i < controllerObjs.Length; i++)
+                {
+                    controllerObjs[i].SetActive(false);
                 }
             }
 
@@ -142,12 +150,18 @@ public class PlayerController : MobileEntity
                     gunnerObjs[i].SetActive(true);
                 }
             }
-
             if (newType == REAPER)
             {
                 for (int i = 0; i < reaperObjs.Length; i++)
                 {
                     reaperObjs[i].SetActive(true);
+                }
+            }
+            if (newType == CONTROLLER)
+            {
+                for (int i = 0; i < controllerObjs.Length; i++)
+                {
+                    controllerObjs[i].SetActive(true);
                 }
             }
 
@@ -239,7 +253,7 @@ public class PlayerController : MobileEntity
                     secondaryCD = 200;
                     secondaryTimer = 28;
                 }
-                else
+                else if (type == REAPER)
                 {
                     RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[tier].blinkDistance, Tools.terrainMask);
                     if (rayHit.collider != null)
@@ -253,6 +267,11 @@ public class PlayerController : MobileEntity
 
                     tpPop.Play();
                     secondaryCD = 150;
+                }
+                else if (type == CONTROLLER)
+                {
+                    Instantiate(forceFields[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    secondaryCD = 200;
                 }
             }
         }
