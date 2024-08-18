@@ -7,9 +7,9 @@ public class ResourceManager : MonoBehaviour
     public enum Resource
     {
         Invalid,
-        Red,
-        Blue,
-        Yellow
+        Red, // slasher
+        Blue, // gunner
+        Yellow // controller
     };
 
     Queue<Resource> materialQueue;

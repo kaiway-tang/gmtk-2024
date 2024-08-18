@@ -5337,11 +5337,13 @@ MonoBehaviour:
   - {fileID: 6559737568038632976, guid: 54b54da66c8734a4f89e3029bf03ce7e, type: 3}
   - {fileID: 8284841429793593355, guid: 1fabf475017f7324290c40f298ea9210, type: 3}
   tpPop: {fileID: 7408155087991296554}
-  type: 0
+  activeMechs: 
+  DefaultType: 1
   valRef:
   - {fileID: 11400000, guid: 800538f7fc92f0542beaa6f2c1a6e1e1, type: 2}
   - {fileID: 11400000, guid: 98c9bdceed64e5448b170ebf7f961e27, type: 2}
   - {fileID: 11400000, guid: 5f52e5c93e45e174ab02345d230c6c82, type: 2}
+  capsuleSprite: {fileID: 4485768159203096848}
   gunnerObjs:
   - {fileID: 4485768158560413404}
   - {fileID: 4485768158523515478}
