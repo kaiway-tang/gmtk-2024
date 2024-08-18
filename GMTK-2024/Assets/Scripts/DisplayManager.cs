@@ -30,7 +30,6 @@ public class DisplayManager : MonoBehaviour
     private Queue<Action> _pendingAnimations = new Queue<Action>();
     private bool _isAnimating = false;
     private ResourceManager.Resource[] _inventory = new ResourceManager.Resource[0];
-    private static WaitForSeconds _delay = new WaitForSeconds(0.02f);
     private void FixedUpdate()
     {
         if (!_isAnimating && _pendingAnimations.Count > 0)
@@ -63,7 +62,7 @@ public class DisplayManager : MonoBehaviour
                 _resources[0].anchoredPosition = Vector2.Lerp(_resources[0].anchoredPosition, _resources[0].anchoredPosition + new Vector2(0, -50), 0.2f);
             }
             timer++;
-            yield return _delay;
+            yield return new WaitForSeconds(0.02f / Mathf.Max(_pendingAnimations.Count * 4, 1));
         }
         // Update refs:
         if (newLength == oldLength)
@@ -125,29 +124,12 @@ public class DisplayManager : MonoBehaviour
                 _resources[i].anchoredPosition = Vector2.Lerp(_resources[i].anchoredPosition, _resourceAnchors[i].anchoredPosition, 0.2f);
             }
             timer++;
-            yield return _delay;
+            yield return new WaitForSeconds(0.02f / Mathf.Max(_pendingAnimations.Count * 4, 1));
         }
         // Update refs:
         Destroy(rect1.gameObject);
         Destroy(rect2.gameObject);
         _isAnimating = false;
-        yield return null;
-
-        //for (int i = 0; i < _inventory.Length; i++)
-        //{
-        //    if (_resources[i] != null)
-        //        Destroy(_resources[i].gameObject);
-        //}
-        //for (int i = 0; i < _inventory.Length; i++)
-        //{
-        //    Image newResource = Instantiate(_resourcePrefab, _resourceAnchors[i].transform.position, Quaternion.identity, _hotbar);
-        //    newResource.sprite = GameManager.ResourceManager.GetResourceSprite(inventory[i]);
-        //    newResource.color = GameManager.ResourceManager.GetResourceColor(inventory[i]);
-        //    newResource.enabled = true;
-        //    _resources[i] = newResource.rectTransform;
-        //}
-        //yield return null;
-        //_isAnimating = false;
     }
     public void AddResource(ResourceManager.Resource[] inventory, ResourceManager.Resource newResource, Vector2 worldPos)
     {
