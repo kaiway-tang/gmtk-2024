@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,12 +8,15 @@ public class DisplayManager : MonoBehaviour
 {
     //
     [SerializeField] private Image _crosshair;
-    [SerializeField] private RectTransform _hotbarResources;
-    private Image[] _resourceIcons;
+    [SerializeField] private RectTransform _hotbar;
+    [SerializeField] private Image _resourcePrefab;
+    private RectTransform[] _resourceAnchors;
+    private RectTransform[] _resources = new RectTransform[ResourceManager.MAX_INVENTORY_SIZE];
 
     void Start()
     {
-        _resourceIcons = _hotbarResources.GetComponentsInChildren<Image>();
+        _resourceAnchors = _hotbar.GetComponentsInChildren<RectTransform>();
+        _resourceAnchors = _resourceAnchors[1..]; // cuts off the parent rect transform.
     }
 
     // Update is called once per frame
@@ -23,92 +27,84 @@ public class DisplayManager : MonoBehaviour
     }
 
     #region Hotbar
-    private enum AnimationType
-    {
-        CRAFT,
-        ADD,
-    }
-    // Queue animations for the hotbar:
-    private Queue<IEnumerator> _pendingAnimations = new Queue<IEnumerator>();
-    private Coroutine _activeAnimation;
+    private Queue<Action> _pendingAnimations = new Queue<Action>();
+    private bool _isAnimating = false;
+    private ResourceManager.Resource[] _inventory = new ResourceManager.Resource[0];
+    private static WaitForSeconds _delay = new WaitForSeconds(0.02f);
     private void FixedUpdate()
     {
-        if (_activeAnimation == null && _pendingAnimations.Count > 0)
+        if (!_isAnimating && _pendingAnimations.Count > 0)
         {
-            _activeAnimation = StartCoroutine(_pendingAnimations.Peek());
+            _isAnimating = true;
+            _pendingAnimations.Dequeue().Invoke();
         }
     }
-    private void QueueAnimation(AnimationType type)
+    private IEnumerator AddResource(int oldLength, int newLength, ResourceManager.Resource resource, Vector2 pos)
     {
-        if (_activeAnimation == null)
-        {
-            _activeAnimation = StartCoroutine(HotbarAdd());
-        }
-        else
-        {
-            _pendingAnimations.Enqueue(HotbarAdd());
-        }
-    }
-    private IEnumerator AnimateHotbar(AnimationType type)
-    {
+        // Create resource:
+        Image newResource = Instantiate(_resourcePrefab, pos, Quaternion.identity, _hotbar);
+        newResource.sprite = GameManager.ResourceManager.GetResourceSprite(resource);
+        newResource.color = GameManager.ResourceManager.GetResourceColor(resource);
+        newResource.enabled = true;
+        int index = newLength - 1; // 0 -> 4
         int timer = 0;
-        while (timer < 50)
+        while (timer < 20)
         {
-            if (type == AnimationType.ADD)
+            // New Resource => Hotbar Slot
+            newResource.rectTransform.anchoredPosition = Vector2.Lerp(newResource.rectTransform.anchoredPosition, _resourceAnchors[index].anchoredPosition, 0.2f);
+            if (oldLength == newLength)
             {
-                // Add animation:
-                Debug.Log("adding");
-                yield return new WaitForSeconds(0.02f);
-            }
-            else
-            {
-                // Craft animation:
-                Debug.Log("crafting");
-                yield return new WaitForSeconds(0.02f);
+                // Old Resources => Shift Left:
+                for (int i = 1; i < oldLength; i++)
+                {
+                    _resources[i].anchoredPosition = Vector2.Lerp(_resources[i].anchoredPosition, _resourceAnchors[i - 1].anchoredPosition, 0.2f);
+                }
+                // Oldest Resource => Fall Down:
+                _resources[0].anchoredPosition = Vector2.Lerp(_resources[0].anchoredPosition, _resources[0].anchoredPosition + new Vector2(0, -50), 0.2f);
             }
             timer++;
+            yield return _delay;
         }
-        Debug.Log("DONE");
-        _activeAnimation = null;
-    }
-    private IEnumerator HotbarAdd()
-    {
-        int timer = 0;
-        while (timer < 50)
+        // Update refs:
+        if (newLength == oldLength)
         {
-            Debug.Log("adding");
-            yield return new WaitForSeconds(0.02f);
-            timer++;
+            // Destroy Oldest, Update _resources:
+            Destroy(_resources[0].gameObject);
+            for (int i = 0; i < newLength - 1; i++)
+            {
+                _resources[i] = _resources[i + 1];
+            }
         }
-        Debug.Log("DONE");
-        _activeAnimation = null;
+        _resources[index] = newResource.rectTransform;
+        _isAnimating = false;
     }
+    private IEnumerator CraftMech(int r1, int r2)
+    {
 
-    public void UpdateIcons(ResourceManager.Resource[] inventory)
+        // Update refs:
+        _isAnimating = false;
+    }
+    public void AddResource(ResourceManager.Resource[] inventory, ResourceManager.Resource newResource, Vector2 worldPos)
     {
-        //for (int i = 0; i < _resourceIcons.Length; i++)
-        //{
-        //    if (i < inventory.Length)
-        //    {
-        //        _resourceIcons[i].sprite = GameManager.ResourceManager.GetResourceSprite(inventory[i]);
-        //        _resourceIcons[i].color = GameManager.ResourceManager.GetResourceColor(inventory[i]);
-        //        _resourceIcons[i].enabled = true;
-        //    }
-        //    else
-        //    {
-        //        _resourceIcons[i].enabled = false;
-        //    }
-        //}
-        if (_resourceIcons.Length >= inventory.Length)
+        Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+        Action action = () =>
         {
-            // Add:
-            QueueAnimation(AnimationType.ADD);
+            StartCoroutine(AddResource(_inventory.Length, inventory.Length, newResource, screenPos));
+            _inventory = inventory;
+        };
+        if (_isAnimating)
+        {
+            _pendingAnimations.Enqueue(action);
         }
         else
         {
-            // Remove:
-            QueueAnimation(AnimationType.CRAFT);
+            _isAnimating = true; // set back to false inside animation; can't do inside action due to scoping issues
+            action.Invoke();
         }
+    }
+    public void CraftMech(int r1, int r2, ResourceManager.Resource[] inventory)
+    {
+        Debug.Log(r1 + " " + r2 + " ");
     }
 
 

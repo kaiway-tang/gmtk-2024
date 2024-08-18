@@ -93,7 +93,7 @@ public class PlayerController : MobileEntity
     void SetTier(int pTier)
     {
         tier = pTier;
-        transform.localScale = Vector3.one * valRef[tier].scale;        
+        transform.localScale = Vector3.one * valRef[tier].scale;
         CameraManager.SetSize(valRef[tier].cameraSize);
 
         primaryCD = 0;
@@ -361,7 +361,7 @@ public class PlayerController : MobileEntity
             if (resourceDrop != null)
             {
                 resourceDrop.OnPickup();
-                GameManager.ResourceManager.AddResource(resourceDrop.GetResource());
+                GameManager.ResourceManager.AddResource(resourceDrop.GetResource(), collision.gameObject.transform.position);
             }
         }
     }
