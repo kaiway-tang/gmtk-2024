@@ -5,15 +5,18 @@ public class PlayerController : MobileEntity
     [SerializeField] GameObject[] gatlingBullets;
     [SerializeField] GameObject[] rockets;
 
-    [SerializeField] int tier;
-    [SerializeField] int type;
+    public int tier;
+    public int type;
     const int GUNNER = 0, REAPER = 1, CONTROLLER = 2;
-    [SerializeField] PlayerValues[] valRef;
+    public PlayerValues[] valRef;
+
+    public static PlayerController self;
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
         GameManager.Instance.Player = this;
+        self = GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -32,12 +35,18 @@ public class PlayerController : MobileEntity
 
         HandleMovement();
         HandleAiming();
+        HandleAttackInput();
         HandleAttacking();
         HandleFacing();        
     }
 
     void HandleSizeKeys()
     {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            type = type == GUNNER ? REAPER : GUNNER;
+        }
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             tier = 0;
@@ -94,9 +103,20 @@ public class PlayerController : MobileEntity
         }
     }
 
+    public static float GetRelativeScaleFactor()
+    {
+        return self.valRef[self.tier].scale / self.valRef[0].scale;
+    }
+
+    public static float GetDamageMultiplier()
+    {
+        return self.valRef[self.tier].damageMultiplier;
+    }
+
     [SerializeField] Transform firepointTrfm;
     int primaryCD, secondaryCD;
-    void HandleAttacking()
+    int secondaryTimer;
+    void HandleAttackInput()
     {
         if (primaryCD < 0)
         {
@@ -125,12 +145,20 @@ public class PlayerController : MobileEntity
                 if (type == GUNNER)
                 {
                     Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
-                    primaryCD = 150;
+                    secondaryCD = 100;
+                    secondaryTimer = 40;
                 }
                 else
                 {
-                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, 4, Tools.terrainMask);                    
-
+                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[tier].blinkDistance, Tools.terrainMask);                    
+                    if (rayHit.collider != null)
+                    {
+                        trfm.position += (mousePos - trfm.position).normalized * rayHit.distance;
+                    }
+                    else
+                    {
+                        trfm.position += (mousePos - trfm.position).normalized * valRef[tier].blinkDistance;
+                    }
                 }
             }
         }
@@ -138,6 +166,23 @@ public class PlayerController : MobileEntity
         {
             secondaryCD--;
         }
+    }
+
+    void HandleAttacking()
+    {
+        if (secondaryTimer > 0)
+        {
+            secondaryTimer--;
+
+            if (secondaryTimer % 10 == 0)
+            {
+                if (type == GUNNER)
+                {
+                    Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                }
+            }            
+        }
+        
     }
 
     #endregion    

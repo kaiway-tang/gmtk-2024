@@ -11,4 +11,7 @@ public class PlayerValues : ScriptableObject
     public float jumpPower, doubleJumpPower;
 
     public float aimSpeed;
+    public float damageMultiplier;
+
+    public float blinkDistance;
 }

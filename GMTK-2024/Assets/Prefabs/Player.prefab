@@ -328,6 +328,7 @@ MonoBehaviour:
   HP: 0
   trfm: {fileID: 4485768158809220437}
   objectID: 0
+  damageFX: {fileID: 0}
   deathFX: {fileID: 0}
   reflectionTrfm: {fileID: 4485768159203096879}
   rb: {fileID: 4485768158809220438}
@@ -338,8 +339,12 @@ MonoBehaviour:
   - {fileID: 8983903726094835682, guid: 0f0b9fe102a06184f9616bdb7e22e400, type: 3}
   - {fileID: 7947758751651961886, guid: e1cd0fcf3fe61a24ca765c66deeb048c, type: 3}
   - {fileID: 8034891307919033750, guid: 5e84cfda2b4f7bc41af831b6a613fe87, type: 3}
-  rockets: []
+  rockets:
+  - {fileID: 3553913288691531171, guid: dd3a81afd20004f409f2e471a2de07aa, type: 3}
+  - {fileID: 5014600565230215634, guid: 3bdd4d3a8f5a9334fa6b28857d159e09, type: 3}
+  - {fileID: 1638193306209273922, guid: 058a2df40da13b24e9910a7ef384ed1f, type: 3}
   tier: 0
+  type: 0
   valRef:
   - {fileID: 11400000, guid: 800538f7fc92f0542beaa6f2c1a6e1e1, type: 2}
   - {fileID: 11400000, guid: 98c9bdceed64e5448b170ebf7f961e27, type: 2}
