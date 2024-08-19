@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundEnemy : MonoBehaviour, ISmartEnemy
+public class GroundEnemy : HPEntity, ISmartEnemy
 {
     public enum EnemyState
     {
@@ -31,15 +31,20 @@ public class GroundEnemy : MonoBehaviour, ISmartEnemy
     protected PathNode targetNode; 
 
     // Start is called before the first frame update
-    void Start()
+    protected new void Start()
     {
+        base.Start();
+
         nextId = startingNodeId;
         state = EnemyState.Idling;
         if (targetNodeId > 0)
         {
             SetTarget(EnemyPathfinder.Instance.GetNodeFromId(targetNodeId).position);
         }
+        Initialize();
     }
+    
+    protected virtual void Initialize() { }
 
     // Update is called once per frame
     void Update()
@@ -61,12 +66,13 @@ public class GroundEnemy : MonoBehaviour, ISmartEnemy
         if (targetNode != null && nextNode == null && nearestNode != null)
         {
             nextNode = nearestNode;
+            
         }
         if (nextNode != null && Vector2.SqrMagnitude(nextNode.position - transform.position) < 0.1f)  // Close enough to target
         {
             nearestNode = nextNode; 
-            nextNode = nextNode.optimalPaths[targetNode.slotId].Item1;
-            OnNodeReached(nearestNode, nextNode);
+            // nextNode = nextNode.optimalPaths[targetNode.slotId].Item1;
+            OnNodeReached(nearestNode, targetNode);
         }
     }
 
@@ -81,7 +87,7 @@ public class GroundEnemy : MonoBehaviour, ISmartEnemy
     
     protected virtual void OnJump() { }
 
-    protected virtual void OnNodeReached(PathNode prevNode, PathNode newNode) { }
+    protected virtual void OnNodeReached(PathNode currentNode, PathNode destinationNode) { }
 
     public void SetTarget(Vector2 target)
     {
@@ -91,10 +97,12 @@ public class GroundEnemy : MonoBehaviour, ISmartEnemy
             Debug.LogError("No nodes near the location specified!");
             return;
         }
-        if (nearestNode != null)
-        {
-            nextNode = nearestNode;
-        }
+        targetNode = node;
+        //if (nearestNode != null)
+        //{
+        //    nextNode = nearestNode;
+        //    state = EnemyState.Walking; // assume nearest
+        //} 
     }
 
     public int EvaluatePosition(Vector2 position)
@@ -108,18 +116,11 @@ public class GroundEnemy : MonoBehaviour, ISmartEnemy
         PathfindingDebugDisplay waypoint = collision.transform.GetComponent<PathfindingDebugDisplay>();
         if (waypoint != null)
         {
+            Debug.Log("Nearest updated");
             nearestNode = waypoint.pathNode;
+            OnNodeReached(nearestNode, targetNode);
         }
 
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log("Collision collided");
-        PathfindingDebugDisplay waypoint = collision.transform.GetComponent<PathfindingDebugDisplay>();
-        if (waypoint != null)
-        {
-            nearestNode = waypoint.pathNode;
-        }
-    }
 }
