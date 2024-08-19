@@ -212,7 +212,6 @@ public class PlayerController : MobileEntity
     }
 
     #endregion Utils
-
     #endregion
 
     #region AIMING
@@ -264,13 +263,17 @@ public class PlayerController : MobileEntity
     [SerializeField] Transform firepointTrfm;
     int primaryCD, secondaryCD;
     int secondaryTimer;
+
+    Vector2 REAPER_blinkTargetPos;
+
     void HandleAttackInput()
     {
+        MechType type = GetOuterType();
         if (primaryCD < 0)
         {
             if (Input.GetMouseButton(0))
             {
-                if (GetOuterType() == MechType.GUNNER)
+                if (type == MechType.GUNNER)
                 {
                     Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
                     CameraManager.SetTrauma(1);
@@ -292,28 +295,27 @@ public class PlayerController : MobileEntity
         {
             if (Input.GetMouseButton(1))
             {
-                if (GetOuterType() == MechType.GUNNER)
+                if (type == MechType.GUNNER)
                 {
                     Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
                     secondaryCD = 200;
                     secondaryTimer = 28;
                 }
-                else if (GetOuterType() == MechType.REAPER)
+                else if (type == MechType.REAPER)
                 {
                     RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[tier].blinkDistance, Tools.terrainMask);
                     if (rayHit.collider != null)
                     {
-                        trfm.position += (mousePos - trfm.position).normalized * rayHit.distance;
+                        REAPER_blinkTargetPos = (mousePos - trfm.position).normalized * rayHit.distance;
                     }
                     else
                     {
-                        trfm.position += (mousePos - trfm.position).normalized * valRef[tier].blinkDistance;
+                        REAPER_blinkTargetPos = (mousePos - trfm.position).normalized * valRef[tier].blinkDistance;
                     }
-
-                    tpPop.Play();
-                    secondaryCD = 150;
+                    secondaryTimer = 5;
+                    secondaryCD = 15;
                 }
-                else if (GetOuterType() == MechType.CONTROLLER)
+                else if (type == MechType.CONTROLLER)
                 {
                     Instantiate(forceFields[tier], firepointTrfm.position, firepointTrfm.rotation);
                     secondaryCD = 20;
@@ -337,6 +339,30 @@ public class PlayerController : MobileEntity
                 if (GetOuterType() == MechType.GUNNER)
                 {
                     Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                }
+            }
+            if (GetOuterType() == MechType.REAPER)
+            {
+                // Whirlpool slash:
+                int tier = GetTier();
+                tpPop.transform.localScale = Vector3.one * (tier + 1);
+                tpPop.Emit(3);
+                transform.position += (Vector3)REAPER_blinkTargetPos * 0.2f;
+                SetYVelocity(0);
+                SetXVelocity(0);
+                // Get collider overlap:
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(trfm.position, 1.5f * tier, Tools.hurtMask);
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    HPEntity hpEntity = colliders[i].GetComponent<HPEntity>();
+                    if (hpEntity != null)
+                    {
+                        hpEntity.TakeDamage((int)(30 * valRef[tier].damageMultiplier));
+                        if (hpEntity.HP <= 0)
+                        {
+                            secondaryCD = secondaryTimer;
+                        }
+                    }
                 }
             }
         }
@@ -449,4 +475,18 @@ public class PlayerController : MobileEntity
 
 
     #endregion COLLIDING
+
+    #region HP Entity Overrides
+    public override bool TakeDamage(int amount = 0, int sourceID = 0)
+    {
+        CameraManager.SetTrauma(4);
+        // Reaper dash ignores damage:
+        if (GetOuterType() == MechType.REAPER && secondaryTimer > 0)
+        {
+            return false;
+        }
+        return base.TakeDamage(amount, sourceID);
+    }
+
+    #endregion HP Entity Overrides
 }

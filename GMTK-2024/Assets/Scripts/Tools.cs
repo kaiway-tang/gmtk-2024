@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tools : MonoBehaviour
@@ -14,6 +12,7 @@ public class Tools : MonoBehaviour
     }
 
     public static int terrainMask = 1 << 8;
+    public static int hurtMask = 1 << 7;
 
     #region ROTATION
 
