@@ -202,7 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   intensity: 4
   scale: 0.04
-  time: 1
+  time: 0.6
   speed: 0.3
 --- !u!50 &941611870883173478
 Rigidbody2D:
