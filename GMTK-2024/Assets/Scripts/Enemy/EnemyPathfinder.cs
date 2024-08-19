@@ -309,6 +309,34 @@ public class EnemyPathfinder : MonoBehaviour
         return nodeDict[id];
     }
 
+    public PathNode GetClosestNode(Vector2 position)
+    {
+        int xind = (int)Mathf.Floor(position.x / 10) + 20;
+        int yind = (int)Mathf.Floor(position.y / 10) + 20;
+        PathNode closestNode = null;
+        float dist = Mathf.Infinity;
+        for (int xoff = -1; xoff < 2; xoff++)
+        {
+            for (int yoff = -1; yoff < 2; yoff++)
+            {
+                if (xind + xoff < 0 || yind + yoff < 0 || xind + xoff >= 40 || yind + yoff >= 40)
+                {
+                    continue;
+                }
+                foreach (PathNode node in nodesMap[xind+xoff, yind+yoff])
+                {
+                    float curdist = Vector2.Distance(node.position, position);
+                    if (curdist < dist)
+                    {
+                        closestNode = node;
+                        dist = curdist;
+                    }
+                }
+            }
+        }
+        return closestNode;
+    }
+
     public void OnDrawGizmos()
     {
         if (edges == null) return;
