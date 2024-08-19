@@ -272,7 +272,7 @@ public class PlayerController : MobileEntity
 
     Vector2 REAPER_blinkTargetPos;
     List<HPEntity> REAPER_blinkHits = new List<HPEntity>();
-    [SerializeField] Collider2D REAPER_dashCollider;
+    public override bool IsInvulnerable => (GetOuterType() == MechType.REAPER && secondaryTimer > 0);
 
     void HandleAttackInput()
     {
@@ -397,7 +397,9 @@ public class PlayerController : MobileEntity
                 SetYVelocity(0);
                 SetXVelocity(0);
                 // Get collider overlap:
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(trfm.position, 2f * tier, Tools.hurtMask);
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(trfm.position, 1f * (tier + 1), Tools.hurtMask);
+                // draw radius:
+                Debug.DrawLine(trfm.position, trfm.position + (1f * (tier + 1)) * Vector3.up, Color.red, 100f);
                 for (int i = 0; i < colliders.Length; i++)
                 {
                     HPEntity hpEntity = colliders[i].GetComponent<HPEntity>();
@@ -539,7 +541,7 @@ public class PlayerController : MobileEntity
     public override bool TakeDamage(int amount = 0, int sourceID = 0)
     {
         // Reaper dash ignores damage:
-        if (GetOuterType() == MechType.REAPER && secondaryTimer > 0)
+        if (IsInvulnerable)
         {
             return false;
         }

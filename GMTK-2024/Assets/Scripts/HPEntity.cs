@@ -8,6 +8,9 @@ public class HPEntity : MonoBehaviour
     [SerializeField] protected int objectID;
     [SerializeField] int deathTrauma = 40;
 
+    public virtual bool IsInvulnerable => _isInvulnerable;
+    private bool _isInvulnerable = false;
+
     public int Tier;
 
     [SerializeField] protected GameObject damageFX, deathFX;

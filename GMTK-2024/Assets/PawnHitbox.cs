@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PawnHitbox : MonoBehaviour
@@ -12,7 +10,7 @@ public class PawnHitbox : MonoBehaviour
         if (col.gameObject.layer == 7)
         {
             playerScript = col.GetComponent<PlayerController>();
-            if (playerScript)
+            if (playerScript && !playerScript.IsInvulnerable)
             {
                 playerScript.TakeDamage(1, 0);
                 hpScript.TakeDamage(999, 0);
