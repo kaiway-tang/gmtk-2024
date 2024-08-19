@@ -23,7 +23,8 @@ public class LevelManager : MonoBehaviour
 
         self = GetComponent<LevelManager>();
         currentLevel = startLevel;
-        Invoke("Init", 2);
+        navSurface.BuildNavMeshAsync();
+        Invoke("Init", 1);
     }
 
     // Update is called once per frame
@@ -38,18 +39,23 @@ public class LevelManager : MonoBehaviour
             {
                 Destroy(currentLevel.gameObject);
             }
-            if (ejectNextTimer == 20)
+            if (ejectNextTimer == 30)
             {
                 InstantiateRandomLevel(PlayerController.self.transform.position + Vector3.up * 15);
                 navSurface.BuildNavMeshAsync();
                 spawnPoints = currentLevel.spawnPoints;
+                for (int i = 0; i < keys.Length; i++)
+                {
+                    keys[i].transform.position = currentLevel.keyPos.position;
+                }
             }
+            if (ejectNextTimer == 10) { currentLevel.CloseDoors(); }
             if (ejectNextTimer == 0)
             {
-                ScatterKeys(currentLevel);
+                ScatterKeys(currentLevel);                
             }
 
-            if (ejectNextTimer < 20)
+            if (ejectNextTimer < 30)
             {
                 PlayerController.self.SetXVelocity(0);
             }
@@ -103,6 +109,15 @@ public class LevelManager : MonoBehaviour
 
     #region LEVEL_TRANSITION
 
+    public static void OnKeyCollect()
+    {
+        keysCompleted++;
+        if (keysCompleted >= self.keys.Length)
+        {
+            self.currentLevel.LevelCleared();
+        }
+    }
+
     public static void OnEject()
     {
         if (keysCompleted > 2 && PlayerController.self.transform.position.y > self.currentLevel.topBound.position.y - 4)
@@ -128,21 +143,21 @@ public class LevelManager : MonoBehaviour
         currentLevel = Instantiate(levels[Random.Range(0,levels.Length)], pos, Quaternion.identity).GetComponent<Level>();
     }
 
+    
+    HashSet<int> keyPosIDs = new HashSet<int>();
     void ScatterKeys(Level level)
     {
-        int[] keyNodeIDs = { -1, -1, -1 };
+        keyPosIDs.Clear();
         keyNodes = level.keyNodes;
+        int selectedNode = -1;
 
-        keyNodeIDs[0] = Random.Range(0, keyNodes.Length);
-        keys[0].Scatter(keyNodes[keyNodeIDs[0]], level.gatherNodes[0]);
-
-        do { keyNodeIDs[1] = Random.Range(0, keyNodes.Length); }
-        while (keyNodeIDs[1] == keyNodeIDs[0]);
-        keys[1].Scatter(keyNodes[keyNodeIDs[1]], level.gatherNodes[1]);
-
-        do { keyNodeIDs[2] = Random.Range(0, keyNodes.Length); }
-        while (keyNodeIDs[2] == keyNodeIDs[0] || keyNodeIDs[2] == keyNodeIDs[1]);
-        keys[2].Scatter(keyNodes[keyNodeIDs[2]], level.gatherNodes[2]);
+        for (int i = 0; i < keys.Length; i++)
+        {
+            do { selectedNode = Random.Range(0, keyNodes.Length); }
+            while (keyPosIDs.Contains(selectedNode));
+            keys[i].Scatter(keyNodes[selectedNode], level.gatherNodes[0]);
+            keyPosIDs.Add(selectedNode);
+        }
     }
 
     #endregion

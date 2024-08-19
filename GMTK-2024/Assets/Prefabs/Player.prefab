@@ -5318,6 +5318,7 @@ MonoBehaviour:
   HP: 1
   trfm: {fileID: 4485768158809220437}
   objectID: 1
+  deathTrauma: 40
   Tier: 0
   damageFX: {fileID: 6913746034329785171, guid: 9d19854dd9a519a44a9fcd05ab1cc466, type: 3}
   deathFX: {fileID: 6913746034329785171, guid: d0e051912b661694c979cfa432db5f1b, type: 3}
@@ -5348,7 +5349,7 @@ MonoBehaviour:
   - {fileID: 8284841429793593355, guid: 1fabf475017f7324290c40f298ea9210, type: 3}
   tpPop: {fileID: 7408155087991296554}
   activeMechs: 
-  DefaultType: 2
+  DefaultType: 1
   valRef:
   - {fileID: 11400000, guid: 800538f7fc92f0542beaa6f2c1a6e1e1, type: 2}
   - {fileID: 11400000, guid: 98c9bdceed64e5448b170ebf7f961e27, type: 2}
@@ -5497,7 +5498,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.7, y: 1}
   m_EdgeRadius: 0
 --- !u!1 &4485768159172622332
 GameObject:

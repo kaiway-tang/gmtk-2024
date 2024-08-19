@@ -30,7 +30,7 @@ public class Key : MonoBehaviour
             if ((PlayerController.self.transform.position - transform.position).sqrMagnitude < 1)
             {
                 status = GATHERING;
-                LevelManager.keysCompleted++;
+                LevelManager.OnKeyCollect();
             }
         }
         if (status == GATHERING)

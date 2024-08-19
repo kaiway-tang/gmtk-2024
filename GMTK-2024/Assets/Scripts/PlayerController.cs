@@ -92,6 +92,8 @@ public class PlayerController : MobileEntity
             {
                 Instantiate(ejectShells[tier], trfm.position, Quaternion.identity);
                 SetYVelocity(valRef[tier].ejectPower);
+
+                HP = GetTier();
                 activeMechs.RemoveAt(activeMechs.Count - 1);
                 OnTypeChange();
 
