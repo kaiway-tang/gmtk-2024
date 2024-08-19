@@ -26,6 +26,17 @@ public class CameraManager : MonoBehaviour
         targetSize = 5;
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftAlt))
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha1)) { SetTrauma(10); }
+            if (Input.GetKeyDown(KeyCode.Alpha2)) { SetTrauma(20); }
+            if (Input.GetKeyDown(KeyCode.Alpha3)) { SetTrauma(40); }
+            if (Input.GetKeyDown(KeyCode.Alpha4)) { SetTrauma(80); }
+        }
+    }
+
     void FixedUpdate()
     {
         HandleFollow();
@@ -65,14 +76,17 @@ public class CameraManager : MonoBehaviour
 
     #region ScreenShake
     [SerializeField] private static int _trauma;
+    [SerializeField] public float shakeStrength;
 
+    Vector3 translateVect;
     private void HandleTrauma()
     {
         if (_trauma > 0)
         {
             _trauma--;
-            Vector2 shake = Random.insideUnitCircle * _trauma;
-            _camera.position += (Vector3)shake;
+            translateVect = Random.insideUnitCircle.normalized * _trauma * _trauma * shakeStrength;
+            translateVect.z = 0;
+            _camera.position += translateVect;
         }
     }
 

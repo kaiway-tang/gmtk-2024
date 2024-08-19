@@ -132,12 +132,14 @@ public class PlayerController : MobileEntity
             type = (MechType)ResourceManager.GetRandom();
         }
         // Add outer shell of type if possible:
-        int tier = GetTier();
+        int tier = GetTier();        
         if (tier < 2)
         {
             activeMechs.Add(type);
             OnTypeChange();
         }
+
+        HP = Tier * 2;
     }
     private void OnTypeChange()
     {
@@ -277,7 +279,7 @@ public class PlayerController : MobileEntity
                 if (type == MechType.GUNNER)
                 {
                     Instantiate(gatlingBullets[Tier], firepointTrfm.position, firepointTrfm.rotation);
-                    CameraManager.SetTrauma(1);
+                    CameraManager.SetTrauma(5);
                     primaryCD = 4;
                 }
                 else if (GetOuterType() == MechType.CONTROLLER)
@@ -480,13 +482,46 @@ public class PlayerController : MobileEntity
     #region HP Entity Overrides
     public override bool TakeDamage(int amount = 0, int sourceID = 0)
     {
-        CameraManager.SetTrauma(4);
+        CameraManager.SetTrauma(40);
         // Reaper dash ignores damage:
         if (GetOuterType() == MechType.REAPER && secondaryTimer > 0)
         {
             return false;
         }
-        return base.TakeDamage(amount, sourceID);
+
+
+
+        if (sourceID != 0 && sourceID == objectID) { return false; }
+
+        HP -= amount;
+
+        if (HP <= 0 && Tier < 1)
+        {
+            Instantiate(deathFX, trfm.position, Quaternion.identity);
+            Destroy(gameObject);
+        }
+        else
+        {
+            if (HP <= 0)
+            {
+                if (Tier == 1)
+                {
+                    HP = 1;
+                    activeMechs.RemoveAt(activeMechs.Count - 1);
+                    OnTypeChange();
+                }
+                else if (Tier == 2)
+                {
+                    HP = 2;
+                    activeMechs.RemoveAt(activeMechs.Count - 1);
+                    OnTypeChange();
+                }
+            }
+
+            Instantiate(damageFX, trfm.position, Quaternion.identity);
+        }
+
+        return true;
     }
 
     #endregion HP Entity Overrides

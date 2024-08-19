@@ -66,7 +66,7 @@ MonoBehaviour:
   cirCol: {fileID: 6776578279570316733}
   damage: 60
   activeTicks: 5
-  sourceID: 0
+  sourceID: 1
   rend: {fileID: 8954908609416012766}
   darkenCol: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 0}
   fadeCol: {r: 0, g: 0, b: 0, a: 0.023529412}

@@ -72,6 +72,10 @@ PrefabInstance:
       value: 240
       objectReference: {fileID: 0}
     - target: {fileID: 6919092255793850307, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
+      propertyPath: sourceID
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6919092255793850307, guid: 88d97095e63a9b74da5ece57185620ce, type: 3}
       propertyPath: autoScale
       value: 0
       objectReference: {fileID: 0}

@@ -69,7 +69,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8181026298815324272, guid: d4929569229d3e14390518c36f13b4c8, type: 3}
       propertyPath: m_Name
-      value: T3ForceField
+      value: T3ForceFieldExplosion
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d4929569229d3e14390518c36f13b4c8, type: 3}

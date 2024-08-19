@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 20
   velocity: 0.7
-  sourceID: 0
+  sourceID: 1
 --- !u!70 &-8617958504012956641
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
