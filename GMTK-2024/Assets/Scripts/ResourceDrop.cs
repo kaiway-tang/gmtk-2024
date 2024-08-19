@@ -6,6 +6,12 @@ public class ResourceDrop : MonoBehaviour
     [SerializeField] int LifetimeTicks;
     [SerializeField] int FlickerTicks;
     [SerializeField] ResourceManager.Resource _resource = ResourceManager.Resource.Invalid;
+    // Add tooltip description of these values:
+    [Tooltip("Drops = average + random(min)+random(max).")]
+    [SerializeField] float _dropAverage;
+    [SerializeField] float _dropChanceRange;
+    [SerializeField] float _dropChanceMin;
+    [SerializeField] float _dropChanceMax;
 
     // Layers
     public static int Layer => LayerMask.NameToLayer("ResourceDrop");
@@ -72,8 +78,13 @@ public class ResourceDrop : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (!Standalone && !IsQuitting && Random.Range(0,2) == 1)
+        if (!Standalone && !IsQuitting)
         {
+            // Drop chance:
+            if (Random.Range(0f, 1f) > _dropAverage)
+            {
+                return;
+            }
             // Drop resource:
             ResourceManager.Resource drop = (_resource == ResourceManager.Resource.Invalid ? ResourceManager.GetRandom() : _resource);
             GameManager.ResourceManager.SpawnResource(drop, transform.position);
