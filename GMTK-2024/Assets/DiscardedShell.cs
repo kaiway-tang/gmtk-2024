@@ -5,7 +5,7 @@ using UnityEngine;
 public class DiscardedShell : MonoBehaviour
 {
     [SerializeField] int type;
-    [SerializeField] GameObject[] explosion;
+    [SerializeField] GameObject explosion;
     const int GUNNER = 0, REAPER = 1, CONTROLLER = 2;
     int timer;
     // Start is called before the first frame update
@@ -24,7 +24,7 @@ public class DiscardedShell : MonoBehaviour
         {
             if (timer == 30)
             {
-                Instantiate(explosion[PlayerController.self.tier], transform.position, Quaternion.identity);
+                Instantiate(explosion, transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
         }

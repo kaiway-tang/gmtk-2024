@@ -33,15 +33,24 @@ public class ResourceDrop : MonoBehaviour
     #endregion Interface
 
     #region Utils
+    bool Standalone => (gameObject.layer == ResourceDrop.Layer);
+    bool IsQuitting = false;
     private void Start()
     {
-        // Random velocity:
-        _rb = GetComponent<Rigidbody2D>();
-        _rb.velocity = new Vector2(Random.Range(-2f, 2f), Random.Range(6f, 10f));
+        // Standalone drop:
+        if (Standalone)
+        {
+            // Random velocity:
+            _rb = GetComponent<Rigidbody2D>();
+            _rb.velocity = new Vector2(Random.Range(-2f, 2f), Random.Range(6f, 10f));
+        }
+        // Attached to enemy:
+
     }
     int _deathTimer = 0;
     private void FixedUpdate()
     {
+        if (!Standalone) return;
         // Flicker animation near death:
         _deathTimer++;
         if (_deathTimer >= LifetimeTicks)
@@ -54,6 +63,20 @@ public class ResourceDrop : MonoBehaviour
             {
                 _renderer.enabled = !_renderer.enabled;
             }
+        }
+    }
+
+    void OnApplicationQuit()
+    {
+        IsQuitting = true;
+    }
+    private void OnDestroy()
+    {
+        if (!Standalone && !IsQuitting && Random.Range(0,2) == 1)
+        {
+            // Drop resource:
+            ResourceManager.Resource drop = (_resource == ResourceManager.Resource.Invalid ? ResourceManager.GetRandom() : _resource);
+            GameManager.ResourceManager.SpawnResource(drop, transform.position);
         }
     }
     #endregion Utils

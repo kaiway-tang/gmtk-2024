@@ -1,16 +1,24 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MobileEntity
 {
     [SerializeField] GameObject[] gatlingBullets;
     [SerializeField] GameObject[] rockets;
+    [SerializeField] GameObject[] slashes;
+
+    [SerializeField] GameObject[] flameObjs;
+    [SerializeField] GameObject[] forceFields;
 
     [SerializeField] ParticleSystem tpPop;
 
-    public int type;
-    const int GUNNER = 0, REAPER = 1, CONTROLLER = 2;
+    public enum MechType { INVALID, GUNNER, REAPER, CONTROLLER }; // this enum corresponds 1:1 with ResourceManager.Resources.
+    public List<MechType> activeMechs;
+    [SerializeField] public MechType DefaultType;
+
     public PlayerValues[] valRef;
 
+    [SerializeField] SpriteRenderer capsuleSprite;
     [SerializeField] GameObject[] gunnerObjs;
     [SerializeField] GameObject[] reaperObjs;
     [SerializeField] GameObject[] controllerObjs;
@@ -18,12 +26,22 @@ public class PlayerController : MobileEntity
     [SerializeField] GameObject[] ejectShells;
 
     public static PlayerController self;
+
+    // Controls:
+    private KeyCode EJECT = KeyCode.LeftShift;
+    private KeyCode JUMP = KeyCode.Space;
+    private KeyCode JUMP_ALT = KeyCode.W;
+    private KeyCode CRAFT = KeyCode.Q;
+
     // Start is called before the first frame update
     new void Start()
     {
         base.Start();
         GameManager.Instance.Player = this;
         self = GetComponent<PlayerController>();
+
+        // Set Default Type:
+        CraftMech(DefaultType);
     }
 
     // Update is called once per frame
@@ -52,11 +70,13 @@ public class PlayerController : MobileEntity
 
     void HandleCrafting()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        if (Input.GetKeyDown(CRAFT))
         {
-            if (GameManager.ResourceManager.HandleCraft(GameManager.ResourceManager.CheckCraftable()))
+            ResourceManager.Resource resource = GameManager.ResourceManager.CheckCraftable();
+            if (resource != ResourceManager.Resource.Invalid)
             {
-                SetTier(tier + 1);
+                GameManager.ResourceManager.HandleCraft(resource);
+                CraftMech((MechType)resource);
             }
         }
     }
@@ -65,13 +85,19 @@ public class PlayerController : MobileEntity
 
     void HandleEjecting()
     {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(EJECT))
         {
+            int tier = GetTier();
             if (tier > 0)
             {
                 Instantiate(ejectShells[tier], trfm.position, Quaternion.identity);
-                SetTier(tier - 1);
                 SetYVelocity(valRef[tier].ejectPower);
+
+                HP = GetTier();
+                activeMechs.RemoveAt(activeMechs.Count - 1);
+                OnTypeChange();
+
+                LevelManager.OnEject();
             }
         }
     }
@@ -82,90 +108,129 @@ public class PlayerController : MobileEntity
 
     void HandleSizeKeys()
     {
+        // Duplicate current outmost shell:
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            if (type == GUNNER) { SetType(REAPER); }
-            else if (type == REAPER) { SetType(GUNNER); }
+            CraftMech(GetOuterType());
         }
-
+        // Add new outer shell:
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            SetTier(0);
+            activeMechs.RemoveAt(activeMechs.Count - 1);
+            CraftMech(MechType.GUNNER);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            SetTier(1);
+            activeMechs.RemoveAt(activeMechs.Count - 1);
+            CraftMech(MechType.REAPER);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            SetTier(2);
+            activeMechs.RemoveAt(activeMechs.Count - 1);
+            CraftMech(MechType.CONTROLLER);
         }
     }
+    private void CraftMech(MechType type)
+    {
+        if (type == MechType.INVALID)
+        {
+            type = (MechType)ResourceManager.GetRandom();
+        }
+        // Add outer shell of type if possible:
+        int tier = GetTier();
+        if (tier < 2)
+        {
+            activeMechs.Add(type);
+            OnTypeChange();
+        }
 
+        HP = Mathf.Max(Tier * 2, 1);
+    }
+    private void OnTypeChange()
+    {
+        // Update abilities based on outer shell:
+        int tier = GetTier();
+        base.Tier = tier;
+        MechType type = GetOuterType();
+        SetTier(tier);
+        SetType(type);
+    }
+
+
+    #region Utils
     void SetTier(int pTier)
     {
-        tier = pTier;
-        transform.localScale = Vector3.one * valRef[tier].scale;
-        CameraManager.SetSize(valRef[tier].cameraSize);
+        if (pTier > 2) { pTier = 2; return; }
+        Tier = pTier;
+        transform.localScale = Vector3.one * valRef[Tier].scale;
+        CameraManager.SetSize(valRef[Tier].cameraSize);
 
         primaryCD = 0;
         secondaryCD = 0;
         secondaryTimer = 0;
     }
-
-    void SetType(int newType)
+    void SetType(MechType newType)
     {
-        if (type != newType)
+        // Disable old sprites:
+        for (int i = 0; i < gunnerObjs.Length; i++)
         {
-            if (type == GUNNER)
-            {
-                for (int i = 0; i < gunnerObjs.Length; i++)
-                {
-                    gunnerObjs[i].SetActive(false);
-                }
-            }
-
-            if (type == REAPER)
-            {
-                for (int i = 0; i < reaperObjs.Length; i++)
-                {
-                    reaperObjs[i].SetActive(false);
-                }
-            }
-
-
-
-            if (newType == GUNNER)
-            {
-                for (int i = 0; i < gunnerObjs.Length; i++)
-                {
-                    gunnerObjs[i].SetActive(true);
-                }
-            }
-
-            if (newType == REAPER)
-            {
-                for (int i = 0; i < reaperObjs.Length; i++)
-                {
-                    reaperObjs[i].SetActive(true);
-                }
-            }
-
-            type = newType;
+            gunnerObjs[i].SetActive(false);
         }
+        for (int i = 0; i < reaperObjs.Length; i++)
+        {
+            reaperObjs[i].SetActive(false);
+        }
+        for (int i = 0; i < controllerObjs.Length; i++)
+        {
+            controllerObjs[i].SetActive(false);
+        }
+        // Enable new:
+        if (newType == MechType.GUNNER)
+        {
+            for (int i = 0; i < gunnerObjs.Length; i++)
+            {
+                gunnerObjs[i].SetActive(true);
+            }
+        }
+        if (newType == MechType.REAPER)
+        {
+            for (int i = 0; i < reaperObjs.Length; i++)
+            {
+                reaperObjs[i].SetActive(true);
+            }
+        }
+        if (newType == MechType.CONTROLLER)
+        {
+            for (int i = 0; i < controllerObjs.Length; i++)
+            {
+                controllerObjs[i].SetActive(true);
+            }
+        }
+        //
+        capsuleSprite.color = GameManager.ResourceManager.GetResourceColor((ResourceManager.Resource)newType);
+    }
+    private MechType GetOuterType()
+    {
+        // Gets type of the outmost shell:
+        return activeMechs[activeMechs.Count - 1];
+    }
+    private int GetTier()
+    {
+        return activeMechs.Count - 1; // tiers are 0 - 2.
     }
 
+    #endregion Utils
     #endregion
 
     #region AIMING
 
     [SerializeField] Transform turretTrfm;
-    Vector3 mousePos;
+    public Vector3 mousePos;
     bool turretFacingLeft;
     void HandleAiming()
     {
         //turretTrfm.right = mousePos - turretTrfm.position;
-        Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed);
+        Tools.LerpRotation(turretTrfm, mousePos, valRef[Tier].aimSpeed);
 
         return;
 
@@ -185,42 +250,54 @@ public class PlayerController : MobileEntity
         return;
         if (trfm.position.x < mousePos.x)
         {
-            Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed);
+            Tools.LerpRotation(turretTrfm, mousePos, valRef[Tier].aimSpeed);
         }
         else
         {
-            Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed, 180);
+            Tools.LerpRotation(turretTrfm, mousePos, valRef[Tier].aimSpeed, 180);
         }
     }
 
     public static float GetRelativeScaleFactor()
     {
-        return self.valRef[self.tier].scale / self.valRef[0].scale;
+        return self.valRef[self.Tier].scale / self.valRef[0].scale;
     }
 
     public static float GetDamageMultiplier()
     {
-        return self.valRef[self.tier].damageMultiplier;
+        return self.valRef[self.Tier].damageMultiplier;
     }
 
     [SerializeField] Transform firepointTrfm;
     int primaryCD, secondaryCD;
     int secondaryTimer;
+
+    Vector2 REAPER_blinkTargetPos;
+    List<HPEntity> REAPER_blinkHits = new List<HPEntity>();
+    public override bool IsInvulnerable => (GetOuterType() == MechType.REAPER && secondaryTimer > 0);
+
     void HandleAttackInput()
     {
-        if (primaryCD < 0)
+        MechType type = GetOuterType();
+        if (primaryCD < 1)
         {
             if (Input.GetMouseButton(0))
             {
-                if (type == GUNNER)
+                if (GetOuterType() == MechType.GUNNER)
                 {
-                    Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
-                    CameraManager.SetTrauma(1);
+                    Instantiate(gatlingBullets[Tier], firepointTrfm.position, firepointTrfm.rotation);
+                    CameraManager.SetTrauma(10);
                     primaryCD = 4;
                 }
-                else
+                else if (GetOuterType() == MechType.CONTROLLER)
                 {
-
+                    Instantiate(flameObjs[Tier], firepointTrfm.position, firepointTrfm.rotation);
+                    primaryCD = 5;
+                }
+                else if (GetOuterType() == MechType.REAPER)
+                {
+                    Instantiate(slashes[Tier], firepointTrfm.position, firepointTrfm.rotation);
+                    primaryCD = 15;
                 }
             }
         }
@@ -229,30 +306,37 @@ public class PlayerController : MobileEntity
             primaryCD--;
         }
 
-        if (secondaryCD < 0)
+        if (secondaryCD < 1)
         {
             if (Input.GetMouseButton(1))
             {
-                if (type == GUNNER)
+                if (type == MechType.GUNNER)
                 {
-                    Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    Instantiate(rockets[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     secondaryCD = 200;
                     secondaryTimer = 28;
                 }
-                else
+                else if (type == MechType.REAPER)
                 {
-                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[tier].blinkDistance, Tools.terrainMask);
+                    // Blink tp location:
+                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[Tier].blinkDistance, Tools.terrainMask);
                     if (rayHit.collider != null)
                     {
-                        trfm.position += (mousePos - trfm.position).normalized * rayHit.distance;
+                        REAPER_blinkTargetPos = (mousePos - trfm.position).normalized * rayHit.distance;
                     }
                     else
                     {
-                        trfm.position += (mousePos - trfm.position).normalized * valRef[tier].blinkDistance;
+                        REAPER_blinkTargetPos = (mousePos - trfm.position).normalized * valRef[Tier].blinkDistance;
                     }
-
-                    tpPop.Play();
+                    // Start cooldown:
+                    secondaryTimer = 7;
                     secondaryCD = 150;
+                    REAPER_blinkHits.Clear();
+                }
+                else if (type == MechType.CONTROLLER)
+                {
+                    Instantiate(forceFields[Tier], firepointTrfm.position, firepointTrfm.rotation);
+                    secondaryCD = 200;
                 }
             }
         }
@@ -270,9 +354,43 @@ public class PlayerController : MobileEntity
 
             if (secondaryTimer % 7 == 0)
             {
-                if (type == GUNNER)
+                if (GetOuterType() == MechType.GUNNER)
                 {
-                    Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    Instantiate(rockets[Tier], firepointTrfm.position, firepointTrfm.rotation);
+                }
+            }
+            if (GetOuterType() == MechType.REAPER)
+            {
+                if (secondaryTimer < 3)
+                {
+                    return; // some iframes near the end.
+                }
+                // Dash:
+                int tier = GetTier();
+                tpPop.transform.localScale = Vector3.one * 1.5f * (tier + 1);
+                tpPop.Emit(3);
+                transform.position += (Vector3)REAPER_blinkTargetPos * 0.18f;
+                SetYVelocity(0);
+                SetXVelocity(0);
+                // Get collider overlap:
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(trfm.position, 1f * (tier + 1), Tools.hurtMask);
+                // draw radius:
+                Debug.DrawLine(trfm.position, trfm.position + (1f * (tier + 1)) * Vector3.up, Color.red, 100f);
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    HPEntity hpEntity = colliders[i].GetComponent<HPEntity>();
+                    if (hpEntity != null && !REAPER_blinkHits.Contains(hpEntity))
+                    {
+                        REAPER_blinkHits.Add(hpEntity);
+                        hpEntity.TakeDamage((int)(50 * valRef[tier].damageMultiplier), 1);
+                        Debug.Log("damage!");
+                        if (hpEntity.HP <= 0)
+                        {
+                            Debug.Log("killed!");
+                            Debug.Log(hpEntity.gameObject.name);
+                            secondaryCD = secondaryTimer;
+                        }
+                    }
                 }
             }
         }
@@ -282,7 +400,6 @@ public class PlayerController : MobileEntity
     #endregion    
 
     #region MOVEMENT
-
     void HandleMovement()
     {
         HandleHorizontalMovement();
@@ -292,15 +409,15 @@ public class PlayerController : MobileEntity
     bool hasDJump;
     void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(JUMP) || Input.GetKeyDown(JUMP_ALT))
         {
             if (IsTouchingGround())
             {
-                SetYVelocity(valRef[tier].jumpPower);
+                SetYVelocity(valRef[Tier].jumpPower);
             }
             else if (hasDJump)
             {
-                SetYVelocity(valRef[tier].doubleJumpPower);
+                SetYVelocity(valRef[Tier].doubleJumpPower);
                 hasDJump = false;
             }
         }
@@ -314,14 +431,14 @@ public class PlayerController : MobileEntity
             {
                 if (IsTouchingGround())
                 {
-                    if (rb.velocity.x < valRef[tier].groundedAcceleration)
+                    if (rb.velocity.x < valRef[Tier].groundedAcceleration)
                     {
-                        AddXVelocity(-valRef[tier].groundedAcceleration, -valRef[tier].maxSpeed);
-                    }                    
+                        AddXVelocity(-valRef[Tier].groundedAcceleration, -valRef[Tier].maxSpeed);
+                    }
                 }
                 else
                 {
-                    AddXVelocity(-valRef[tier].aerialAcceleration, -valRef[tier].maxSpeed);
+                    AddXVelocity(-valRef[Tier].aerialAcceleration, -valRef[Tier].maxSpeed);
                 }
             }
         }
@@ -329,14 +446,14 @@ public class PlayerController : MobileEntity
         {
             if (IsTouchingGround())
             {
-                if (rb.velocity.x > -valRef[tier].groundedAcceleration)
+                if (rb.velocity.x > -valRef[Tier].groundedAcceleration)
                 {
-                    AddXVelocity(valRef[tier].groundedAcceleration, valRef[tier].maxSpeed);
-                }                    
+                    AddXVelocity(valRef[Tier].groundedAcceleration, valRef[Tier].maxSpeed);
+                }
             }
             else
             {
-                AddXVelocity(valRef[tier].aerialAcceleration, valRef[tier].maxSpeed);
+                AddXVelocity(valRef[Tier].aerialAcceleration, valRef[Tier].maxSpeed);
             }
         }
     }
@@ -345,12 +462,12 @@ public class PlayerController : MobileEntity
     {
         if (IsTouchingGround())
         {
-            ApplyXFriction(valRef[tier].groundedFriction);
+            ApplyXFriction(valRef[Tier].groundedFriction);
             hasDJump = true;
         }
         else
         {
-            ApplyXFriction(valRef[tier].aerialFriction);
+            ApplyXFriction(valRef[Tier].aerialFriction);
         }
     }
 
@@ -370,7 +487,7 @@ public class PlayerController : MobileEntity
 
 
     #region COLLIDING
-    public void OnEnter(Collision2D collision)
+    public void OnEnter(Collider2D collision)
     {
         // Resource Drops:
         if (collision.gameObject.layer == ResourceDrop.Layer)
@@ -386,4 +503,48 @@ public class PlayerController : MobileEntity
 
 
     #endregion COLLIDING
+
+    #region HP Entity Overrides
+    public override bool TakeDamage(int amount = 0, int sourceID = 0)
+    {
+        // Reaper dash ignores damage:
+        if (IsInvulnerable)
+        {
+            return false;
+        }
+        if (sourceID != 0 && sourceID == objectID) { return false; }
+
+        CameraManager.SetTrauma(40);
+        HP -= amount;
+
+        if (HP <= 0 && Tier < 1)
+        {
+            Instantiate(deathFX, trfm.position, Quaternion.identity);
+            Destroy(gameObject);
+        }
+        else
+        {
+            if (HP <= 0)
+            {
+                if (Tier == 1)
+                {
+                    HP = 1;
+                    activeMechs.RemoveAt(activeMechs.Count - 1);
+                    OnTypeChange();
+                }
+                else if (Tier == 2)
+                {
+                    HP = 2;
+                    activeMechs.RemoveAt(activeMechs.Count - 1);
+                    OnTypeChange();
+                }
+            }
+
+            Instantiate(damageFX, trfm.position, Quaternion.identity);
+        }
+
+        return true;
+    }
+
+    #endregion HP Entity Overrides
 }

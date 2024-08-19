@@ -646,6 +646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
+  PlayerPrefab: {fileID: 4485768158809220435, guid: fab7b901457c5894ea683c3850dade9f, type: 3}
 --- !u!1 &3660798371876155504
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +891,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
   FollowSpeed: 0.2
+  shakeStrength: 0.0001
 --- !u!1 &6756559264328409539
 GameObject:
   m_ObjectHideFlags: 0

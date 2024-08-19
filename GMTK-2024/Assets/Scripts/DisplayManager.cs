@@ -30,7 +30,6 @@ public class DisplayManager : MonoBehaviour
     private Queue<Action> _pendingAnimations = new Queue<Action>();
     private bool _isAnimating = false;
     private ResourceManager.Resource[] _inventory = new ResourceManager.Resource[0];
-    private static WaitForSeconds _delay = new WaitForSeconds(0.02f);
     private void FixedUpdate()
     {
         if (!_isAnimating && _pendingAnimations.Count > 0)
@@ -39,7 +38,7 @@ public class DisplayManager : MonoBehaviour
             _pendingAnimations.Dequeue().Invoke();
         }
     }
-    private IEnumerator AddResource(int oldLength, int newLength, ResourceManager.Resource resource, Vector2 pos)
+    private IEnumerator AddResourceAnimation(int oldLength, int newLength, ResourceManager.Resource resource, Vector2 pos)
     {
         // Create resource:
         Image newResource = Instantiate(_resourcePrefab, pos, Quaternion.identity, _hotbar);
@@ -63,7 +62,7 @@ public class DisplayManager : MonoBehaviour
                 _resources[0].anchoredPosition = Vector2.Lerp(_resources[0].anchoredPosition, _resources[0].anchoredPosition + new Vector2(0, -50), 0.2f);
             }
             timer++;
-            yield return _delay;
+            yield return new WaitForSeconds(0.02f / Mathf.Max(_pendingAnimations.Count * 4, 1));
         }
         // Update refs:
         if (newLength == oldLength)
@@ -78,19 +77,66 @@ public class DisplayManager : MonoBehaviour
         _resources[index] = newResource.rectTransform;
         _isAnimating = false;
     }
-    private IEnumerator CraftMech(int r1, int r2)
+    private IEnumerator CraftMechAnimation(int r1, int r2, ResourceManager.Resource[] inventory)
     {
+        RectTransform rect1 = _resources[r1];
+        RectTransform rect2 = _resources[r2];
+        r2 = r2 - 1; // correct for the shift after r1.
+        int timer = 0;
+        // Shift first:
+        for (int i = 0; i < _inventory.Length; i++)
+        {
+            if (i == r1)
+            {
+                for (int j = i; j < _inventory.Length - 1; j++)
+                {
+                    _resources[j] = _resources[j + 1];
+                }
+            }
+        }
+        // Shift second:
+        for (int i = 0; i < _inventory.Length; i++)
+        {
+            if (i == r2)
+            {
+                for (int j = i; j < _inventory.Length - 1; j++)
+                {
+                    _resources[j] = _resources[j + 1];
+                }
+            }
+        }
+        _resources[_inventory.Length - 1] = null;
+        _resources[_inventory.Length - 2] = null;
+        while (timer < 20)
+        {
+            // Crafted Resource => Player:
+            Vector2 playerPos = Camera.main.WorldToScreenPoint(GameManager.Instance.Player.transform.position);
+            rect1.position = Vector2.Lerp(rect1.position, playerPos, 0.2f);
+            rect2.position = Vector2.Lerp(rect2.position, playerPos, 0.2f);
+            rect1.localScale = Vector3.Lerp(rect1.localScale, Vector3.zero, 0.1f);
+            rect2.localScale = Vector3.Lerp(rect2.localScale, Vector3.zero, 0.1f);
 
+
+            // Other Resources => Shift left:
+            for (int i = 0; i < _inventory.Length; i++)
+            {
+                if (_resources[i] == null) continue;
+                _resources[i].anchoredPosition = Vector2.Lerp(_resources[i].anchoredPosition, _resourceAnchors[i].anchoredPosition, 0.2f);
+            }
+            timer++;
+            yield return new WaitForSeconds(0.02f / Mathf.Max(_pendingAnimations.Count * 4, 1));
+        }
         // Update refs:
+        Destroy(rect1.gameObject);
+        Destroy(rect2.gameObject);
         _isAnimating = false;
-        yield return null;
     }
     public void AddResource(ResourceManager.Resource[] inventory, ResourceManager.Resource newResource, Vector2 worldPos)
     {
         Vector2 screenPos = Camera.main.WorldToScreenPoint(worldPos);
         Action action = () =>
         {
-            StartCoroutine(AddResource(_inventory.Length, inventory.Length, newResource, screenPos));
+            StartCoroutine(AddResourceAnimation(_inventory.Length, inventory.Length, newResource, screenPos));
             _inventory = inventory;
         };
         if (_isAnimating)
@@ -103,9 +149,22 @@ public class DisplayManager : MonoBehaviour
             action.Invoke();
         }
     }
-    public void CraftMech(int r1, int r2, ResourceManager.Resource[] inventory)
+    public void CraftMech(int r1, int r2, ResourceManager.Resource[] beforeCraft, ResourceManager.Resource[] afterCraft)
     {
-        Debug.Log(r1 + " " + r2 + " ");
+        Action action = () =>
+        {
+            StartCoroutine(CraftMechAnimation(r1, r2, beforeCraft));
+            _inventory = afterCraft;
+        };
+        if (_isAnimating)
+        {
+            _pendingAnimations.Enqueue(action);
+        }
+        else
+        {
+            _isAnimating = true; // set back to false inside animation; can't do inside action due to scoping issues
+            action.Invoke();
+        }
     }
 
 

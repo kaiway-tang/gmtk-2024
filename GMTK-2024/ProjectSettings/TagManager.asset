@@ -16,7 +16,8 @@ TagManager:
   - Terrain
   - GroundDetect
   - ResourceDrop
-  - 
+  - Pathfinding
+  - ResourceCollider
   - 
   - 
   - 

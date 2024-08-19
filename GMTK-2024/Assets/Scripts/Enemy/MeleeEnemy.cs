@@ -24,8 +24,16 @@ public class MeleeEnemy : Enemy
     // Update is called once per frame
     void Update()
     {
-        navigation.SetDestination(target.position);
-        transform.up = (transform.position - prevPos).normalized;
-        prevPos = transform.position;
+        if (!IsStunned())
+        {
+            navigation.SetDestination(target.position);
+            transform.up = (transform.position - prevPos).normalized;
+            prevPos = transform.position;
+        }        
+    }
+
+    private new void FixedUpdate()
+    {
+        base.FixedUpdate();
     }
 }

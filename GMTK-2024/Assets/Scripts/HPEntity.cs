@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HPEntity : MonoBehaviour
@@ -7,11 +5,15 @@ public class HPEntity : MonoBehaviour
     public int HP;
 
     [SerializeField] protected Transform trfm;
-    [SerializeField] int objectID;
+    [SerializeField] protected int objectID;
+    [SerializeField] int deathTrauma = 40;
 
-    public int tier;
+    public virtual bool IsInvulnerable => _isInvulnerable;
+    private bool _isInvulnerable = false;
 
-    [SerializeField] GameObject damageFX, deathFX;
+    public int Tier;
+
+    [SerializeField] protected GameObject damageFX, deathFX;
 
     protected void Start()
     {
@@ -20,25 +22,27 @@ public class HPEntity : MonoBehaviour
 
     protected void FixedUpdate()
     {
-        
+
     }
 
-    public bool TakeDamage(int amount = 0, int sourceID = 0)
+    public virtual bool TakeDamage(int amount = 0, int sourceID = 0)
     {
         if (sourceID != 0 && sourceID == objectID) { return false; }
+        if (IsInvulnerable) { return false; }
 
         HP -= amount;
 
         if (HP <= 0)
         {
-            if (tier < 1)
+            if (Tier < 1)
             {
                 Instantiate(deathFX, trfm.position, Quaternion.identity);
+                CameraManager.SetTrauma(deathTrauma);
                 Destroy(gameObject);
             }
             else
             {
-                tier--;
+                Tier--;
                 HP = 1;
             }
         }

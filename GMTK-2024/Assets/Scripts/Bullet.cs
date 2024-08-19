@@ -38,9 +38,11 @@ public class Bullet : MonoBehaviour, IAttack
             hitEntity = col.GetComponent<HPEntity>();
             if (hitEntity)
             {
-                hitEntity.TakeDamage(damage, sourceID);
-            }
-            Destroy(gameObject);
+                if (hitEntity.TakeDamage(damage, sourceID))
+                {
+                    Destroy(gameObject);
+                }
+            }            
         }
     }
 }
