@@ -7,6 +7,7 @@ public class ForceField : HPEntity
     [SerializeField] float speed, knockback;
     [SerializeField] float range;
     [SerializeField] Transform shieldTrfm;
+    [SerializeField] int contactDamage;
 
     int status;
     const int TRAVELING = 0, DEPLOYING = 1, DEPLOYED = 2;
@@ -14,7 +15,9 @@ public class ForceField : HPEntity
     new void Start()
     {
         base.Start();
-        range = Vector3.Distance(Camera.main.ScreenToWorldPoint(Input.mousePosition), transform.position);
+        range = Vector3.Distance(PlayerController.self.mousePos, transform.position);
+
+        contactDamage = Mathf.RoundToInt(contactDamage * PlayerController.GetDamageMultiplier());
     }
 
     // Update is called once per frame
@@ -26,13 +29,13 @@ public class ForceField : HPEntity
         {
             transform.position += transform.up * speed;
             range -= speed;
-            if (range <= 0) { status = DEPLOYING; }
+            if (range < speed) { status = DEPLOYING; }
         }
         else if (status == DEPLOYING)
         {
             if (shieldTrfm.localScale.x < 1)
             {
-                shieldTrfm.localScale += Vector3.right * 0.04f;
+                shieldTrfm.localScale += Vector3.right * 0.08f;
             }
             else
             {
@@ -50,8 +53,8 @@ public class ForceField : HPEntity
             hitEnemy = col.GetComponent<Enemy>();
             if (hitEnemy != null)
             {
-                hitEnemy.TakeDamage(0);
-                hitEnemy.TakeKnockback(knockback);
+                hitEnemy.TakeDamage(contactDamage);
+                hitEnemy.Slow(100);
                 TakeDamage(1);
             }            
         }        

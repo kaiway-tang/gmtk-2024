@@ -34,6 +34,7 @@ public class ResourceDrop : MonoBehaviour
 
     #region Utils
     bool Standalone => (gameObject.layer == ResourceDrop.Layer);
+    bool IsQuitting = false;
     private void Start()
     {
         // Standalone drop:
@@ -64,9 +65,14 @@ public class ResourceDrop : MonoBehaviour
             }
         }
     }
+
+    void OnApplicationQuit()
+    {
+        IsQuitting = true;
+    }
     private void OnDestroy()
     {
-        if (!Standalone)
+        if (!Standalone && !IsQuitting)
         {
             // Drop resource:
             ResourceManager.Resource drop = (_resource == ResourceManager.Resource.Invalid ? ResourceManager.GetRandom() : _resource);
