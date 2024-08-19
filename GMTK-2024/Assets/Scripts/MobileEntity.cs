@@ -5,7 +5,7 @@ using UnityEngine;
 public class MobileEntity : HPEntity
 {
     [SerializeField] protected Transform reflectionTrfm;
-    [SerializeField] protected Rigidbody2D rb;
+    public Rigidbody2D rb;
     public float knockbackFactor = 1;
     public OnGround[] touchingTerrain; //0-4: ground, front, ceiling, backLow, backHigh
     protected bool facing = FACING_RIGHT;
@@ -62,7 +62,7 @@ public class MobileEntity : HPEntity
 
         rb.velocity = vect2;
     }
-    protected void SetXVelocity(float value)
+    public void SetXVelocity(float value)
     {
         vect2 = rb.velocity;
         vect2.x = value;
@@ -83,7 +83,7 @@ public class MobileEntity : HPEntity
         rb.velocity = vect2;
     }
 
-    protected void AddYVelocity(float amount, float max)
+    public void AddYVelocity(float amount, float max)
     {
         vect2 = rb.velocity;
         vect2.y += amount;
@@ -123,7 +123,7 @@ public class MobileEntity : HPEntity
 
         rb.velocity = vect2;
     }
-    protected void SetYVelocity(float value)
+    public void SetYVelocity(float value)
     {
         vect2 = rb.velocity;
         vect2.y = value;

@@ -6,8 +6,8 @@ public class Key : MonoBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] int status;
-    const int ENTRANCE = 0, SCATTERING = 1, IDLE = 2, EXIT = 3;
-    public Transform targetNode;
+    const int ENTRANCE = 0, SCATTERING = 1, IDLE = 2, GATHERING = 3, REST = 4;
+    public Transform targetNode, gatherNode;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,16 +19,35 @@ public class Key : MonoBehaviour
     {
         if (status == SCATTERING)
         {
-            transform.position += (targetNode.position - transform.position).normalized;
+            transform.position += (targetNode.position - transform.position).normalized * speed;
             if ((targetNode.position - transform.position).sqrMagnitude < 2)
             {
                 status = IDLE;
             }
         }
+        if (status == IDLE)
+        {
+            if ((PlayerController.self.transform.position - transform.position).sqrMagnitude < 1)
+            {
+                status = GATHERING;
+                LevelManager.keysCompleted++;
+            }
+        }
+        if (status == GATHERING)
+        {
+            transform.position += (gatherNode.position - transform.position).normalized * speed;
+            if ((gatherNode.position - transform.position).sqrMagnitude < 2)
+            {
+                transform.position = gatherNode.position;
+                status = REST;
+            }
+        }
     }
 
-    public void Scatter()
+    public void Scatter(Transform target, Transform gather)
     {
+        targetNode = target;
+        gatherNode = gather;
         status = SCATTERING;
     }
 }

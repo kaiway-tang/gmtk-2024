@@ -94,6 +94,8 @@ public class PlayerController : MobileEntity
                 SetYVelocity(valRef[tier].ejectPower);
                 activeMechs.RemoveAt(activeMechs.Count - 1);
                 OnTypeChange();
+
+                LevelManager.OnEject();
             }
         }
     }
