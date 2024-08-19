@@ -133,7 +133,7 @@ public class PlayerController : MobileEntity
             type = (MechType)ResourceManager.GetRandom();
         }
         // Add outer shell of type if possible:
-        int tier = GetTier();        
+        int tier = GetTier();
         if (tier < 2)
         {
             activeMechs.Add(type);
@@ -291,7 +291,7 @@ public class PlayerController : MobileEntity
                 else if (GetOuterType() == MechType.REAPER)
                 {
                     Instantiate(slashes[Tier], firepointTrfm.position, firepointTrfm.rotation);
-                    primaryCD = 5;
+                    primaryCD = 15;
                 }
             }
         }
@@ -366,7 +366,7 @@ public class PlayerController : MobileEntity
                     HPEntity hpEntity = colliders[i].GetComponent<HPEntity>();
                     if (hpEntity != null)
                     {
-                        hpEntity.TakeDamage((int)(50 * valRef[tier].damageMultiplier));
+                        hpEntity.TakeDamage((int)(50 * valRef[tier].damageMultiplier), 1);
                         if (hpEntity.HP <= 0)
                         {
                             secondaryCD = secondaryTimer;
@@ -487,15 +487,12 @@ public class PlayerController : MobileEntity
 
     #region HP Entity Overrides
     public override bool TakeDamage(int amount = 0, int sourceID = 0)
-    {        
+    {
         // Reaper dash ignores damage:
         if (GetOuterType() == MechType.REAPER && secondaryTimer > 0)
         {
             return false;
         }
-
-
-
         if (sourceID != 0 && sourceID == objectID) { return false; }
 
         CameraManager.SetTrauma(40);
