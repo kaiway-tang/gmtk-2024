@@ -14,7 +14,6 @@ public class PlayerController : MobileEntity
     public enum MechType { INVALID, GUNNER, REAPER, CONTROLLER }; // this enum corresponds 1:1 with ResourceManager.Resources.
     public List<MechType> activeMechs;
     [SerializeField] public MechType DefaultType;
-    public override int Tier => GetTier();
 
     public PlayerValues[] valRef;
 
@@ -144,6 +143,7 @@ public class PlayerController : MobileEntity
     {
         // Update abilities based on outer shell:
         int tier = GetTier();
+        base.Tier = tier;
         MechType type = GetOuterType();
         SetTier(tier);
         SetType(type);

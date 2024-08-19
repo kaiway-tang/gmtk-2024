@@ -7,8 +7,7 @@ public class HPEntity : MonoBehaviour
     [SerializeField] protected Transform trfm;
     [SerializeField] int objectID;
 
-    public virtual int Tier => _tier;
-    private int _tier;
+    public int Tier;
 
     [SerializeField] GameObject damageFX, deathFX;
 
