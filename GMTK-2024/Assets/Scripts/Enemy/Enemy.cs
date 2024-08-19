@@ -15,6 +15,7 @@ public class Enemy : HPEntity
     Rigidbody2D rb;
     protected int stunned, slowed;
     [SerializeField] protected float speed, baseSpeed;
+    [SerializeField] ParticleSystem firePtcls;
 
     protected new void Start()
     {
@@ -54,7 +55,13 @@ public class Enemy : HPEntity
             if (burnStacks > 0)
             {
                 TakeDamage(burnStacks);
-                burnStacks--;
+                burnStacks -= 4;
+                SetPtclSize();
+                if (burnStacks <= 0)
+                {
+                    burnStacks = 0;
+                    firePtcls.Stop();
+                }
                 burnTick = 25;
             }
         }        
@@ -80,13 +87,20 @@ public class Enemy : HPEntity
         SetSpeed(0.1f);
     }
 
-    int burnStacks, burnTick;
+    [SerializeField] int burnStacks, burnTick;
     public void Burn(int intensity)
     {
-        if (burnStacks < intensity * 8)
+        if (burnStacks == 0) { firePtcls.Play(); }
+        if (burnStacks < intensity * 10)
         {
             burnStacks += intensity;
-        }        
+        }
+        SetPtclSize();
+    }
+
+    void SetPtclSize()
+    {
+        firePtcls.startSize = burnStacks / 15f + 0.5f;
     }
 
     public void Stun(int ticks)

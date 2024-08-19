@@ -111,14 +111,17 @@ public class PlayerController : MobileEntity
         // Add new outer shell:
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            activeMechs.RemoveAt(activeMechs.Count - 1);
             CraftMech(MechType.GUNNER);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
+            activeMechs.RemoveAt(activeMechs.Count - 1);
             CraftMech(MechType.REAPER);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
+            activeMechs.RemoveAt(activeMechs.Count - 1);
             CraftMech(MechType.CONTROLLER);
         }
     }
@@ -273,9 +276,10 @@ public class PlayerController : MobileEntity
                     CameraManager.SetTrauma(1);
                     primaryCD = 4;
                 }
-                else
+                else if (GetOuterType() == MechType.CONTROLLER)
                 {
-
+                    Instantiate(flameObjs[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    primaryCD = 5;
                 }
             }
         }
