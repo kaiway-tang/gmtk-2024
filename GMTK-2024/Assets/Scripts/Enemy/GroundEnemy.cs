@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundEnemy : MonoBehaviour, ISmartEnemy
+public class GroundEnemy : HPEntity, ISmartEnemy
 {
     public enum EnemyState
     {
@@ -31,8 +31,10 @@ public class GroundEnemy : MonoBehaviour, ISmartEnemy
     protected PathNode targetNode; 
 
     // Start is called before the first frame update
-    void Start()
+    protected new void Start()
     {
+        base.Start();
+
         nextId = startingNodeId;
         state = EnemyState.Idling;
         if (targetNodeId > 0)
