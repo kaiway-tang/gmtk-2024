@@ -5,6 +5,7 @@ public class PlayerController : MobileEntity
 {
     [SerializeField] GameObject[] gatlingBullets;
     [SerializeField] GameObject[] rockets;
+    [SerializeField] GameObject[] slashes;
 
     [SerializeField] GameObject[] flameObjs;
     [SerializeField] GameObject[] forceFields;
@@ -287,6 +288,11 @@ public class PlayerController : MobileEntity
                     Instantiate(flameObjs[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     primaryCD = 5;
                 }
+                else if (GetOuterType() == MechType.REAPER)
+                {
+                    Instantiate(slashes[Tier], firepointTrfm.position, firepointTrfm.rotation);
+                    primaryCD = 5;
+                }
             }
         }
         else
@@ -348,19 +354,19 @@ public class PlayerController : MobileEntity
             {
                 // Dash:
                 int tier = GetTier();
-                tpPop.transform.localScale = Vector3.one * (tier + 1);
+                tpPop.transform.localScale = Vector3.one * 1.5f * (tier + 1);
                 tpPop.Emit(3);
-                transform.position += (Vector3)REAPER_blinkTargetPos * 0.2f;
+                transform.position += (Vector3)REAPER_blinkTargetPos * 0.18f;
                 SetYVelocity(0);
                 SetXVelocity(0);
                 // Get collider overlap:
-                Collider2D[] colliders = Physics2D.OverlapCircleAll(trfm.position, 1.5f * tier, Tools.hurtMask);
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(trfm.position, 2f * tier, Tools.hurtMask);
                 for (int i = 0; i < colliders.Length; i++)
                 {
                     HPEntity hpEntity = colliders[i].GetComponent<HPEntity>();
                     if (hpEntity != null)
                     {
-                        hpEntity.TakeDamage((int)(30 * valRef[tier].damageMultiplier));
+                        hpEntity.TakeDamage((int)(50 * valRef[tier].damageMultiplier));
                         if (hpEntity.HP <= 0)
                         {
                             secondaryCD = secondaryTimer;

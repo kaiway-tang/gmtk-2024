@@ -5334,6 +5334,10 @@ MonoBehaviour:
   - {fileID: 3553913288691531171, guid: dd3a81afd20004f409f2e471a2de07aa, type: 3}
   - {fileID: 5014600565230215634, guid: 3bdd4d3a8f5a9334fa6b28857d159e09, type: 3}
   - {fileID: 1638193306209273922, guid: 058a2df40da13b24e9910a7ef384ed1f, type: 3}
+  slashes:
+  - {fileID: 2613231889025347985, guid: a7db2354b80684b48bdf84989850f69a, type: 3}
+  - {fileID: 2613231889025347985, guid: a7db2354b80684b48bdf84989850f69a, type: 3}
+  - {fileID: 2613231889025347985, guid: a7db2354b80684b48bdf84989850f69a, type: 3}
   flameObjs:
   - {fileID: 2939374058720994300, guid: 2b92a8cb1e7071b4f80d5ff66e6aa6ff, type: 3}
   - {fileID: 5922210135078604530, guid: eddcabfd4991c0243bf1fd457121f1f3, type: 3}
