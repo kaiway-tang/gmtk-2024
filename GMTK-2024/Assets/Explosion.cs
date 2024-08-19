@@ -20,7 +20,7 @@ public class Explosion : MonoBehaviour
             damage = Mathf.RoundToInt(damage * PlayerController.GetDamageMultiplier());            
             transform.localScale *= PlayerController.GetRelativeScaleFactor();
         }
-        //CameraManager.SetTrauma(30 + Mathf.RoundToInt(damage * 0.02f));
+        CameraManager.SetTrauma(30 + Mathf.RoundToInt(damage * 0.02f));
     }
 
     // Update is called once per frame

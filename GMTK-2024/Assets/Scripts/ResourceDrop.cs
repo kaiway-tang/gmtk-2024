@@ -72,7 +72,7 @@ public class ResourceDrop : MonoBehaviour
     }
     private void OnDestroy()
     {
-        if (!Standalone && !IsQuitting)
+        if (!Standalone && !IsQuitting && Random.Range(0,2) == 1)
         {
             // Drop resource:
             ResourceManager.Resource drop = (_resource == ResourceManager.Resource.Invalid ? ResourceManager.GetRandom() : _resource);

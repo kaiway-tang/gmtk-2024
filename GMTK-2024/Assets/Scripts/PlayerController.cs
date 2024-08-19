@@ -277,7 +277,7 @@ public class PlayerController : MobileEntity
         {
             if (Input.GetMouseButton(0))
             {
-                if (type == MechType.GUNNER)
+                if (GetOuterType() == MechType.GUNNER)
                 {
                     Instantiate(gatlingBullets[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     CameraManager.SetTrauma(5);
@@ -327,7 +327,7 @@ public class PlayerController : MobileEntity
                 else if (type == MechType.CONTROLLER)
                 {
                     Instantiate(forceFields[Tier], firepointTrfm.position, firepointTrfm.rotation);
-                    secondaryCD = 20;
+                    secondaryCD = 200;
                 }
             }
         }
@@ -487,8 +487,7 @@ public class PlayerController : MobileEntity
 
     #region HP Entity Overrides
     public override bool TakeDamage(int amount = 0, int sourceID = 0)
-    {
-        CameraManager.SetTrauma(40);
+    {        
         // Reaper dash ignores damage:
         if (GetOuterType() == MechType.REAPER && secondaryTimer > 0)
         {
@@ -499,6 +498,7 @@ public class PlayerController : MobileEntity
 
         if (sourceID != 0 && sourceID == objectID) { return false; }
 
+        CameraManager.SetTrauma(40);
         HP -= amount;
 
         if (HP <= 0 && Tier < 1)
