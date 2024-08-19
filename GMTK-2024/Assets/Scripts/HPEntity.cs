@@ -5,11 +5,11 @@ public class HPEntity : MonoBehaviour
     public int HP;
 
     [SerializeField] protected Transform trfm;
-    [SerializeField] int objectID;
+    [SerializeField] protected int objectID;
 
     public int Tier;
 
-    [SerializeField] GameObject damageFX, deathFX;
+    [SerializeField] protected GameObject damageFX, deathFX;
 
     protected void Start()
     {
