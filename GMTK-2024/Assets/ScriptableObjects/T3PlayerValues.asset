@@ -24,4 +24,4 @@ MonoBehaviour:
   ejectPower: 28
   aimSpeed: 0.07
   damageMultiplier: 4
-  blinkDistance: 6
+  blinkDistance: 10

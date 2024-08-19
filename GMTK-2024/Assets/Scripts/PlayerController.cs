@@ -14,6 +14,7 @@ public class PlayerController : MobileEntity
     public enum MechType { INVALID, GUNNER, REAPER, CONTROLLER }; // this enum corresponds 1:1 with ResourceManager.Resources.
     public List<MechType> activeMechs;
     [SerializeField] public MechType DefaultType;
+    public override int Tier => GetTier();
 
     public PlayerValues[] valRef;
 
@@ -153,9 +154,9 @@ public class PlayerController : MobileEntity
     void SetTier(int pTier)
     {
         if (pTier > 2) { pTier = 2; return; }
-        tier = pTier;
-        transform.localScale = Vector3.one * valRef[tier].scale;
-        CameraManager.SetSize(valRef[tier].cameraSize);
+        Tier = pTier;
+        transform.localScale = Vector3.one * valRef[Tier].scale;
+        CameraManager.SetSize(valRef[Tier].cameraSize);
 
         primaryCD = 0;
         secondaryCD = 0;
@@ -212,7 +213,6 @@ public class PlayerController : MobileEntity
     }
 
     #endregion Utils
-
     #endregion
 
     #region AIMING
@@ -223,7 +223,7 @@ public class PlayerController : MobileEntity
     void HandleAiming()
     {
         //turretTrfm.right = mousePos - turretTrfm.position;
-        Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed);
+        Tools.LerpRotation(turretTrfm, mousePos, valRef[Tier].aimSpeed);
 
         return;
 
@@ -243,42 +243,46 @@ public class PlayerController : MobileEntity
         return;
         if (trfm.position.x < mousePos.x)
         {
-            Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed);
+            Tools.LerpRotation(turretTrfm, mousePos, valRef[Tier].aimSpeed);
         }
         else
         {
-            Tools.LerpRotation(turretTrfm, mousePos, valRef[tier].aimSpeed, 180);
+            Tools.LerpRotation(turretTrfm, mousePos, valRef[Tier].aimSpeed, 180);
         }
     }
 
     public static float GetRelativeScaleFactor()
     {
-        return self.valRef[self.tier].scale / self.valRef[0].scale;
+        return self.valRef[self.Tier].scale / self.valRef[0].scale;
     }
 
     public static float GetDamageMultiplier()
     {
-        return self.valRef[self.tier].damageMultiplier;
+        return self.valRef[self.Tier].damageMultiplier;
     }
 
     [SerializeField] Transform firepointTrfm;
     int primaryCD, secondaryCD;
     int secondaryTimer;
+
+    Vector2 REAPER_blinkTargetPos;
+
     void HandleAttackInput()
     {
+        MechType type = GetOuterType();
         if (primaryCD < 0)
         {
             if (Input.GetMouseButton(0))
             {
-                if (GetOuterType() == MechType.GUNNER)
+                if (type == MechType.GUNNER)
                 {
-                    Instantiate(gatlingBullets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    Instantiate(gatlingBullets[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     CameraManager.SetTrauma(1);
                     primaryCD = 4;
                 }
                 else if (GetOuterType() == MechType.CONTROLLER)
                 {
-                    Instantiate(flameObjs[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    Instantiate(flameObjs[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     primaryCD = 5;
                 }
             }
@@ -292,30 +296,29 @@ public class PlayerController : MobileEntity
         {
             if (Input.GetMouseButton(1))
             {
-                if (GetOuterType() == MechType.GUNNER)
+                if (type == MechType.GUNNER)
                 {
-                    Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    Instantiate(rockets[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     secondaryCD = 200;
                     secondaryTimer = 28;
                 }
-                else if (GetOuterType() == MechType.REAPER)
+                else if (type == MechType.REAPER)
                 {
-                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[tier].blinkDistance, Tools.terrainMask);
+                    RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[Tier].blinkDistance, Tools.terrainMask);
                     if (rayHit.collider != null)
                     {
-                        trfm.position += (mousePos - trfm.position).normalized * rayHit.distance;
+                        REAPER_blinkTargetPos = (mousePos - trfm.position).normalized * rayHit.distance;
                     }
                     else
                     {
-                        trfm.position += (mousePos - trfm.position).normalized * valRef[tier].blinkDistance;
+                        REAPER_blinkTargetPos = (mousePos - trfm.position).normalized * valRef[Tier].blinkDistance;
                     }
-
-                    tpPop.Play();
+                    secondaryTimer = 5;
                     secondaryCD = 150;
                 }
-                else if (GetOuterType() == MechType.CONTROLLER)
+                else if (type == MechType.CONTROLLER)
                 {
-                    Instantiate(forceFields[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    Instantiate(forceFields[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     secondaryCD = 20;
                 }
             }
@@ -336,7 +339,31 @@ public class PlayerController : MobileEntity
             {
                 if (GetOuterType() == MechType.GUNNER)
                 {
-                    Instantiate(rockets[tier], firepointTrfm.position, firepointTrfm.rotation);
+                    Instantiate(rockets[Tier], firepointTrfm.position, firepointTrfm.rotation);
+                }
+            }
+            if (GetOuterType() == MechType.REAPER)
+            {
+                // Dash:
+                int tier = GetTier();
+                tpPop.transform.localScale = Vector3.one * (tier + 1);
+                tpPop.Emit(3);
+                transform.position += (Vector3)REAPER_blinkTargetPos * 0.2f;
+                SetYVelocity(0);
+                SetXVelocity(0);
+                // Get collider overlap:
+                Collider2D[] colliders = Physics2D.OverlapCircleAll(trfm.position, 1.5f * tier, Tools.hurtMask);
+                for (int i = 0; i < colliders.Length; i++)
+                {
+                    HPEntity hpEntity = colliders[i].GetComponent<HPEntity>();
+                    if (hpEntity != null)
+                    {
+                        hpEntity.TakeDamage((int)(30 * valRef[tier].damageMultiplier));
+                        if (hpEntity.HP <= 0)
+                        {
+                            secondaryCD = secondaryTimer;
+                        }
+                    }
                 }
             }
         }
@@ -359,11 +386,11 @@ public class PlayerController : MobileEntity
         {
             if (IsTouchingGround())
             {
-                SetYVelocity(valRef[tier].jumpPower);
+                SetYVelocity(valRef[Tier].jumpPower);
             }
             else if (hasDJump)
             {
-                SetYVelocity(valRef[tier].doubleJumpPower);
+                SetYVelocity(valRef[Tier].doubleJumpPower);
                 hasDJump = false;
             }
         }
@@ -377,14 +404,14 @@ public class PlayerController : MobileEntity
             {
                 if (IsTouchingGround())
                 {
-                    if (rb.velocity.x < valRef[tier].groundedAcceleration)
+                    if (rb.velocity.x < valRef[Tier].groundedAcceleration)
                     {
-                        AddXVelocity(-valRef[tier].groundedAcceleration, -valRef[tier].maxSpeed);
+                        AddXVelocity(-valRef[Tier].groundedAcceleration, -valRef[Tier].maxSpeed);
                     }
                 }
                 else
                 {
-                    AddXVelocity(-valRef[tier].aerialAcceleration, -valRef[tier].maxSpeed);
+                    AddXVelocity(-valRef[Tier].aerialAcceleration, -valRef[Tier].maxSpeed);
                 }
             }
         }
@@ -392,14 +419,14 @@ public class PlayerController : MobileEntity
         {
             if (IsTouchingGround())
             {
-                if (rb.velocity.x > -valRef[tier].groundedAcceleration)
+                if (rb.velocity.x > -valRef[Tier].groundedAcceleration)
                 {
-                    AddXVelocity(valRef[tier].groundedAcceleration, valRef[tier].maxSpeed);
+                    AddXVelocity(valRef[Tier].groundedAcceleration, valRef[Tier].maxSpeed);
                 }
             }
             else
             {
-                AddXVelocity(valRef[tier].aerialAcceleration, valRef[tier].maxSpeed);
+                AddXVelocity(valRef[Tier].aerialAcceleration, valRef[Tier].maxSpeed);
             }
         }
     }
@@ -408,12 +435,12 @@ public class PlayerController : MobileEntity
     {
         if (IsTouchingGround())
         {
-            ApplyXFriction(valRef[tier].groundedFriction);
+            ApplyXFriction(valRef[Tier].groundedFriction);
             hasDJump = true;
         }
         else
         {
-            ApplyXFriction(valRef[tier].aerialFriction);
+            ApplyXFriction(valRef[Tier].aerialFriction);
         }
     }
 
@@ -449,4 +476,18 @@ public class PlayerController : MobileEntity
 
 
     #endregion COLLIDING
+
+    #region HP Entity Overrides
+    public override bool TakeDamage(int amount = 0, int sourceID = 0)
+    {
+        CameraManager.SetTrauma(4);
+        // Reaper dash ignores damage:
+        if (GetOuterType() == MechType.REAPER && secondaryTimer > 0)
+        {
+            return false;
+        }
+        return base.TakeDamage(amount, sourceID);
+    }
+
+    #endregion HP Entity Overrides
 }

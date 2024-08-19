@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HPEntity : MonoBehaviour
@@ -9,7 +7,8 @@ public class HPEntity : MonoBehaviour
     [SerializeField] protected Transform trfm;
     [SerializeField] protected int objectID;
 
-    public int tier;
+    public virtual int Tier => _tier;
+    private int _tier;
 
     [SerializeField] protected GameObject damageFX, deathFX;
 
@@ -20,7 +19,7 @@ public class HPEntity : MonoBehaviour
 
     protected void FixedUpdate()
     {
-        
+
     }
 
     public virtual bool TakeDamage(int amount = 0, int sourceID = 0)
@@ -31,14 +30,14 @@ public class HPEntity : MonoBehaviour
 
         if (HP <= 0)
         {
-            if (tier < 1)
+            if (Tier < 1)
             {
                 Instantiate(deathFX, trfm.position, Quaternion.identity);
                 Destroy(gameObject);
             }
             else
             {
-                tier--;
+                Tier--;
                 HP = 1;
             }
         }
