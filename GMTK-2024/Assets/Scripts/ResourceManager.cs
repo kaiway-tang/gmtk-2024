@@ -44,11 +44,11 @@ public class ResourceManager : MonoBehaviour
 
     public Resource CheckCraftable()
     {
-        foreach (KeyValuePair<Resource, int> resCount in numMats)
+        foreach (Resource resource in materialQueue)
         {
-            if (resCount.Value >= CRAFT_REQUIREMENT)
+            if (numMats.ContainsKey(resource) && numMats[resource] >= CRAFT_REQUIREMENT)
             {
-                return resCount.Key;
+                return resource;
             }
         }
         return Resource.Invalid;
