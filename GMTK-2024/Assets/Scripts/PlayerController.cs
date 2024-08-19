@@ -271,6 +271,8 @@ public class PlayerController : MobileEntity
     int secondaryTimer;
 
     Vector2 REAPER_blinkTargetPos;
+    List<HPEntity> REAPER_blinkHits = new List<HPEntity>();
+    [SerializeField] Collider2D REAPER_dashCollider;
 
     void HandleAttackInput()
     {
@@ -314,6 +316,7 @@ public class PlayerController : MobileEntity
                 }
                 else if (type == MechType.REAPER)
                 {
+                    // Blink tp location:
                     RaycastHit2D rayHit = Physics2D.Raycast(trfm.position, mousePos - trfm.position, valRef[Tier].blinkDistance, Tools.terrainMask);
                     if (rayHit.collider != null)
                     {
@@ -323,8 +326,40 @@ public class PlayerController : MobileEntity
                     {
                         REAPER_blinkTargetPos = (mousePos - trfm.position).normalized * valRef[Tier].blinkDistance;
                     }
+                    // Start cooldown:
                     secondaryTimer = 5;
                     secondaryCD = 150;
+                    REAPER_blinkHits.Clear();
+                    // Blink trail damage:
+                    //Collider2D[] unique;
+                    //Collider2D[] hits = new Collider2D[3];
+                    //int tier = GetTier();
+                    //Physics2D.OverlapCircleNonAlloc(trfm.position, 2f * tier, hits, Tools.hurtMask);
+                    //for (int i = 0; i < colliders.Length; i++)
+                    //{
+                    //    HPEntity hpEntity = colliders[i].GetComponent<HPEntity>();
+                    //    if (hpEntity != null)
+                    //    {
+                    //        hpEntity.TakeDamage((int)(50 * valRef[tier].damageMultiplier), 1);
+                    //        if (hpEntity.HP <= 0)
+                    //        {
+                    //            secondaryCD = secondaryTimer;
+                    //        }
+                    //    }
+                    //}
+                    //RaycastHit2D[] hits = Physics2D.BoxCastAll(trfm.position, new Vector2(4, valRef[Tier].blinkDistance / 2f), 0, REAPER_blinkTargetPos, REAPER_blinkTargetPos.magnitude, Tools.hurtMask);
+                    //for (int i = 0; i < hits.Length; i++)
+                    //{
+                    //    HPEntity hpEntity = hits[i].collider.GetComponent<HPEntity>();
+                    //    if (hpEntity != null)
+                    //    {
+                    //        hpEntity.TakeDamage((int)(50 * valRef[Tier].damageMultiplier), 1);
+                    //        if (hpEntity.HP <= 0)
+                    //        {
+                    //            secondaryCD = secondaryTimer;
+                    //        }
+                    //    }
+                    //}
                 }
                 else if (type == MechType.CONTROLLER)
                 {
@@ -366,15 +401,28 @@ public class PlayerController : MobileEntity
                 for (int i = 0; i < colliders.Length; i++)
                 {
                     HPEntity hpEntity = colliders[i].GetComponent<HPEntity>();
-                    if (hpEntity != null)
+                    if (hpEntity != null && !REAPER_blinkHits.Contains(hpEntity))
+                    //if (hpEntity != null)
                     {
+                        REAPER_blinkHits.Add(hpEntity);
                         hpEntity.TakeDamage((int)(50 * valRef[tier].damageMultiplier), 1);
+                        Debug.Log("damage!");
                         if (hpEntity.HP <= 0)
                         {
+                            Debug.Log("killed!");
                             secondaryCD = secondaryTimer;
                         }
                     }
                 }
+                //foreach (HPEntity hpEntity in REAPER_blinkHits)
+                //{
+                //    if (hpEntity == null) continue;
+                //    hpEntity.TakeDamage((int)(60 * valRef[tier].damageMultiplier), 1);
+                //    if (hpEntity.HP <= 0)
+                //    {
+                //        secondaryCD = 0;
+                //    }
+                //}
             }
         }
 

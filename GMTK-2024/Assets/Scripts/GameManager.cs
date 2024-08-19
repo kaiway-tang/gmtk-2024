@@ -34,10 +34,15 @@ public class GameManager : MonoBehaviour
 
     // Player:
     [SerializeField] public PlayerController Player; // set by player upon Start
+    [SerializeField] private GameObject PlayerPrefab;
+    [SerializeField] public Vector2 SpawnPos;
 
     // Update is called once per frame
     void Update()
     {
-
+        if (Player == null && Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Instantiate(PlayerPrefab, SpawnPos, Quaternion.identity);
+        }
     }
 }

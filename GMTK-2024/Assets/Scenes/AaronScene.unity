@@ -132,6 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 264774921}
   - component: {fileID: 264774920}
+  - component: {fileID: 264774922}
   m_Layer: 0
   m_Name: TestSpawner
   m_TagString: Untagged
@@ -146,7 +147,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264774919}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c124cfde5c681de4abf44d71b3b274d0, type: 3}
   m_Name: 
@@ -166,6 +167,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &264774922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264774919}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d9d31471a332a14b9c4dfcbb981dcb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemy: {fileID: 9038853616964939775, guid: 58414691c31826640a873a46b1bc01ac, type: 3}
+  spawnPoints:
+  - {fileID: 264774921}
+  spawnRate: 100
 --- !u!1 &518541178
 GameObject:
   m_ObjectHideFlags: 0
