@@ -55,6 +55,7 @@ public class EnemyPathfinder : MonoBehaviour
         nodesMap = new List<PathNode>[40, 40];  // 40 x 10 = 400 long & wide spatial hash map. If we go past +- 200 there will be issues :wokege:
         IdentifyPositions();
         PrecomputePaths();
+        Debug.Log("Initialization Complete");
     }
 
     // Start is called before the first frame update
@@ -319,7 +320,7 @@ public class EnemyPathfinder : MonoBehaviour
         {
             for (int yoff = -1; yoff < 2; yoff++)
             {
-                if (xind + xoff < 0 || yind + yoff < 0 || xind + xoff >= 40 || yind + yoff >= 40)
+                if (xind + xoff < 0 || yind + yoff < 0 || xind + xoff >= 40 || yind + yoff >= 40 || nodesMap[xind + xoff, yind + yoff] == null)
                 {
                     continue;
                 }
@@ -354,18 +355,6 @@ public class EnemyPathfinder : MonoBehaviour
                 }
             }
         }
-
-        //for (int x = 0; x < nodes.Length; x++)
-        //{
-        //    for (int y = 0; y < nodes.LongLength / nodes.Length; y++)
-        //    {
-        //        if (nodes[x, y] != null && nodes[x, y].leftNode != null)
-        //        {
-        //            Gizmos.color = Color.cyan;
-        //            Gizmos.DrawLine(nodes[x,y].position, nodes[x,y].leftNode.position);
-        //        }
-        //    }
-        //}
 
         foreach (PathNode pn in nodes)
         {
