@@ -15,7 +15,7 @@ public class Slash : MonoBehaviour, IAttack
 
     private void Start()
     {
-        Destroy(gameObject, 2);
+        Destroy(gameObject, 0.3f);
         damage = Mathf.RoundToInt(damage * PlayerController.GetDamageMultiplier());
         _maxLocalScale = transform.localScale * PlayerController.GetRelativeScaleFactor();
         transform.localScale = Vector2.zero;

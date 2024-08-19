@@ -6,6 +6,7 @@ public class HPEntity : MonoBehaviour
 
     [SerializeField] protected Transform trfm;
     [SerializeField] protected int objectID;
+    [SerializeField] int deathTrauma = 40;
 
     public int Tier;
 
@@ -32,6 +33,7 @@ public class HPEntity : MonoBehaviour
             if (Tier < 1)
             {
                 Instantiate(deathFX, trfm.position, Quaternion.identity);
+                CameraManager.SetTrauma(deathTrauma);
                 Destroy(gameObject);
             }
             else

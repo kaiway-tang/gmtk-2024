@@ -15,7 +15,7 @@ public class Enemy : HPEntity
     Rigidbody2D rb;
     protected int stunned, slowed;
     [SerializeField] protected float speed, baseSpeed;
-    [SerializeField] ParticleSystem firePtcls;
+    [SerializeField] ParticleSystem firePtcls;    
 
     protected new void Start()
     {

@@ -273,14 +273,14 @@ public class PlayerController : MobileEntity
     void HandleAttackInput()
     {
         MechType type = GetOuterType();
-        if (primaryCD < 0)
+        if (primaryCD < 1)
         {
             if (Input.GetMouseButton(0))
             {
                 if (GetOuterType() == MechType.GUNNER)
                 {
                     Instantiate(gatlingBullets[Tier], firepointTrfm.position, firepointTrfm.rotation);
-                    CameraManager.SetTrauma(5);
+                    CameraManager.SetTrauma(10);
                     primaryCD = 4;
                 }
                 else if (GetOuterType() == MechType.CONTROLLER)
@@ -300,7 +300,7 @@ public class PlayerController : MobileEntity
             primaryCD--;
         }
 
-        if (secondaryCD < 0)
+        if (secondaryCD < 1)
         {
             if (Input.GetMouseButton(1))
             {

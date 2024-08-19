@@ -83,7 +83,7 @@ public class CameraManager : MonoBehaviour
     {
         if (_trauma > 0)
         {
-            _trauma--;
+            _trauma -= 2;
             translateVect = Random.insideUnitCircle.normalized * _trauma * _trauma * shakeStrength;
             translateVect.z = 0;
             _camera.position += translateVect;
