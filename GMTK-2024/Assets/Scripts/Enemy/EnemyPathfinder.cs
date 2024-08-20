@@ -26,6 +26,7 @@ public class EnemyPathfinder : MonoBehaviour
 {
     [SerializeField] Tilemap tilemap;
     [SerializeField] GameObject markerPrefab;
+    [SerializeField] float jumpRange = 6.5f;
 
     Dictionary<int, List<PathNode>> platformLinks;
     Dictionary<int, PathNode> nodeDict;
@@ -226,7 +227,7 @@ public class EnemyPathfinder : MonoBehaviour
             {
                 // circle cast for all other points in a range
                 LayerMask mask = LayerMask.GetMask("Pathfinding");
-                RaycastHit2D[] targets = Physics2D.CircleCastAll(new Vector2(edge.position.x, edge.position.y), 6.5f, Vector2.up, 0.1f, mask);
+                RaycastHit2D[] targets = Physics2D.CircleCastAll(new Vector2(edge.position.x, edge.position.y), jumpRange, Vector2.up, 0.1f, mask);
                 int leftModifier = edge.leftEdge ? 1 : -1;
                 foreach (RaycastHit2D targ in targets)
                 {
