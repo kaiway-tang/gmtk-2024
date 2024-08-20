@@ -40,7 +40,7 @@ public class SpotterBullet : MonoBehaviour
     {
         for (int i = 0; i < strikeCount; i++)
         {
-            Vector3 deviationVec = new Vector3(Random.Range(-1, 1), Random.Range(-1, 1), 0).normalized * deviation;
+            Vector3 deviationVec = Random.insideUnitCircle * Random.Range(0,deviation);
             Instantiate(ammo, transform.position + deviationVec, Quaternion.identity);
             yield return new WaitForSeconds(fireInterval);
         }
