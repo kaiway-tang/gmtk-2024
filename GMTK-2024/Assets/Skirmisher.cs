@@ -19,6 +19,7 @@ public class Skirmisher : Enemy
 
         status = FLEEING;
         bestRayHit.distance = 0;
+        navController.trfm.parent = null;
     }
 
     // Update is called once per frame
@@ -81,10 +82,6 @@ public class Skirmisher : Enemy
     float castScore, maxCastScore;
     int fleeCastTimer;
 
-    [SerializeField] GameObject[] pointDots;
-    [SerializeField] float[] castScores;
-    [SerializeField] float[] dotProds;
-
     Vector3 GetFleeDir()
     {
         playerDir = PlayerController.self.transform.position - trfm.position;
@@ -98,8 +95,6 @@ public class Skirmisher : Enemy
             rayHit = Physics2D.Raycast(emptyTrfm.position, emptyTrfm.up, 15, Tools.terrainMask);
 
             castScore = rayHit.distance * (Vector3.Dot(-playerDir.normalized, emptyTrfm.up) + 2);
-            castScores[i] = castScore;
-            dotProds[i] = Vector3.Dot(-playerDir.normalized, emptyTrfm.up);
             if (castScore > maxCastScore)
             {
                 maxCastScore = castScore;
@@ -107,10 +102,8 @@ public class Skirmisher : Enemy
             }
 
             emptyTrfm.Rotate(Vector3.forward * 45);
-            pointDots[i].transform.position = rayHit.point;
         }
 
-        pointDots[0].transform.position = bestRayHit.point;
         bestRayHit.distance--;
 
         return (bestRayHit.point - (Vector2)trfm.position).normalized;
