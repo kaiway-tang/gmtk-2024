@@ -25,6 +25,8 @@ public class PlayerController : MobileEntity
 
     [SerializeField] GameObject[] ejectShells;
 
+    [SerializeField] ParticleSystem jumpParticle;
+
     public static PlayerController self;
 
     // Controls:
@@ -419,6 +421,8 @@ public class PlayerController : MobileEntity
             {
                 SetYVelocity(valRef[Tier].doubleJumpPower);
                 hasDJump = false;
+                jumpParticle.transform.localScale = Vector3.one * (Tier + 1);
+                jumpParticle.Emit(2);
             }
         }
     }

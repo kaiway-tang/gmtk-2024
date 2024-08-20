@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &8244742274575222895
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 441678200099419567, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: HP
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 441678200099419567, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: maxRange
+      value: 999
+      objectReference: {fileID: 0}
+    - target: {fileID: 1576865333702639325, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: _dropMax
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1576865333702639325, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: _dropMin
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571858, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_Name
+      value: Bomb Dropper
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+--- !u!1 &620969756318734461 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8860011887313571858, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+  m_PrefabInstance: {fileID: 8244742274575222895}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8625840549815178756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620969756318734461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11104e083bdac66469b3a8036cf4ddef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _bombPrefab: {fileID: 4614770995775459223, guid: b97c92fde5d8c674f8f1875c93b6cac6, type: 3}
