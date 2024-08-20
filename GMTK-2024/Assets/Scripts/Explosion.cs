@@ -20,6 +20,10 @@ public class Explosion : MonoBehaviour
             transform.localScale *= PlayerController.GetRelativeScaleFactor();
         }
         CameraManager.SetTrauma(30 + Mathf.RoundToInt(damage * 0.02f));
+
+        float scale = transform.localScale.x;
+        float pitch = Sigmoid(scale);
+        GameManager.SoundManager.PlaySound(SoundType.EXPLOSION, pitch, pitch, 1, transform.position);
     }
 
     // Update is called once per frame
@@ -57,5 +61,17 @@ public class Explosion : MonoBehaviour
                 }
             }
         }
+    }
+
+
+    private float Sigmoid(float x)
+    {
+        // Calculate the exponential part
+        float exponent = -(x - 2);
+        // Calculate the denominator
+        float denominator = 1 + Mathf.Exp(exponent);
+        // Calculate y
+        float y = 1.2f / denominator + 0.4f;
+        return y;
     }
 }

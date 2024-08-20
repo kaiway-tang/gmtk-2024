@@ -12,12 +12,13 @@ public class SpotterBullet : MonoBehaviour
     [SerializeField] float deviation = 0.2f;
     [SerializeField] GameObject ammo;
     Rigidbody2D rb;
+    Animator anim;
     bool collided = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -33,6 +34,7 @@ public class SpotterBullet : MonoBehaviour
         collided = true;
         rb.velocity = Vector2.zero;
         rb.isKinematic = true;
+        anim.Play("SpotterBullet_Idle");
         StartCoroutine(SummonAirstrike());
     }
 

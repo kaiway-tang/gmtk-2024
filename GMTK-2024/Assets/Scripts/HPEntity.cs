@@ -42,6 +42,8 @@ public class HPEntity : MonoBehaviour
                 Instantiate(deathFX, trfm.position, Quaternion.identity);
                 CameraManager.SetTrauma(deathTrauma);
                 Destroy(gameObject);
+                //GameManager.SoundManager.PlaySound(SoundType.EXPLOSION, 0.6f, 0.6f, 1, trfm.position);
+                GameManager.SoundManager.PlaySound(SoundType.DAMAGED2, 0.9f, 1.1f, 1, trfm.position);
             }
             else
             {
@@ -51,7 +53,7 @@ public class HPEntity : MonoBehaviour
         }
         else
         {
-            if (usingHPBar) { hpBar.SetHPPercentage((float)HP / maxHP); }            
+            if (usingHPBar) { hpBar.SetHPPercentage((float)HP / maxHP); }
             Instantiate(damageFX, trfm.position, Quaternion.identity);
         }
 

@@ -398,9 +398,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 0
+  maxHP: 0
   trfm: {fileID: 0}
   objectID: 0
   deathTrauma: 40
+  hpBar: {fileID: 0}
   Tier: 0
   damageFX: {fileID: 0}
   deathFX: {fileID: 0}
@@ -663,9 +665,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 0
+  maxHP: 0
   trfm: {fileID: 0}
   objectID: 0
   deathTrauma: 40
+  hpBar: {fileID: 0}
   Tier: 0
   damageFX: {fileID: 0}
   deathFX: {fileID: 0}

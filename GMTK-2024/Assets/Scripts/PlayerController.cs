@@ -100,6 +100,7 @@ public class PlayerController : MobileEntity
             {
                 Instantiate(ejectShells[tier], trfm.position, Quaternion.identity);
                 SetYVelocity(valRef[tier].ejectPower);
+                GameManager.SoundManager.PlaySound(SoundType.EJECT, 1.1f, 1.3f, 0.3f + Tier * 0.2f, firepointTrfm.position);
 
                 HP = GetTier();
                 activeMechs.RemoveAt(activeMechs.Count - 1);
@@ -153,6 +154,11 @@ public class PlayerController : MobileEntity
         }
 
         HP = Mathf.Max(Tier * 2, 1);
+
+        if (Tier != 0)
+        {
+            GameManager.SoundManager.PlaySound(SoundType.CRAFT1, 0.6f, 0.6f, 0.3f + Tier * 0.2f, firepointTrfm.position);
+        }
     }
     private void OnTypeChange()
     {
@@ -294,6 +300,7 @@ public class PlayerController : MobileEntity
                 if (GetOuterType() == MechType.GUNNER)
                 {
                     Instantiate(gatlingBullets[Tier], firepointTrfm.position, firepointTrfm.rotation);
+                    GameManager.SoundManager.PlaySound(SoundType.GUN2, 1.1f, 1.3f, 0.1f + Tier * 0.05f, firepointTrfm.position);
                     CameraManager.SetTrauma(10);
                     primaryCD = 4;
                 }
@@ -301,11 +308,13 @@ public class PlayerController : MobileEntity
                 {
                     Instantiate(flameObjs[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     primaryCD = 5;
+                    GameManager.SoundManager.PlayContinuousSound(SoundType.FLAMETHROWER, 20);
                 }
                 else if (GetOuterType() == MechType.REAPER)
                 {
                     Instantiate(slashes[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     primaryCD = 15;
+                    GameManager.SoundManager.PlaySound(SoundType.SLASH, 1.1f, 1.3f, 0.3f + Tier * 0.2f, firepointTrfm.position);
                 }
             }
         }
@@ -340,11 +349,16 @@ public class PlayerController : MobileEntity
                     secondaryTimer = 7;
                     secondaryCD = 150;
                     REAPER_blinkHits.Clear();
+                    //
+                    GameManager.SoundManager.PlaySound(SoundType.DASH, 1.1f, 1.3f, 0.3f + Tier * 0.2f, firepointTrfm.position);
+                    GameManager.SoundManager.PlaySound(SoundType.DASH, 1, 1, 0.3f + Tier * 0.2f, firepointTrfm.position);
+                    GameManager.SoundManager.PlaySound(SoundType.DASH, 0.6f, 0.8f, 0.3f + Tier * 0.2f, firepointTrfm.position);
                 }
                 else if (type == MechType.CONTROLLER)
                 {
                     Instantiate(forceFields[Tier], firepointTrfm.position, firepointTrfm.rotation);
                     secondaryCD = 200;
+                    GameManager.SoundManager.PlaySound(SoundType.FORCEFIELD, 0.8f, 1.1f, 0.3f + Tier * 0.2f, firepointTrfm.position);
                 }
             }
         }
@@ -365,6 +379,7 @@ public class PlayerController : MobileEntity
                 if (GetOuterType() == MechType.GUNNER)
                 {
                     Instantiate(rockets[Tier], firepointTrfm.position, firepointTrfm.rotation);
+                    GameManager.SoundManager.PlaySound(SoundType.GUN2, 0.6f, 0.8f, 0.3f + Tier * 0.2f, firepointTrfm.position);
                 }
             }
             if (GetOuterType() == MechType.REAPER)
@@ -391,10 +406,8 @@ public class PlayerController : MobileEntity
                     {
                         REAPER_blinkHits.Add(hpEntity);
                         hpEntity.TakeDamage((int)(50 * valRef[tier].damageMultiplier), 1);
-                        Debug.Log("damage!");
                         if (hpEntity.HP <= 0)
                         {
-                            Debug.Log("killed!");
                             Debug.Log(hpEntity.gameObject.name);
                             secondaryCD = secondaryTimer;
                         }
@@ -422,6 +435,7 @@ public class PlayerController : MobileEntity
             if (IsTouchingGround())
             {
                 SetYVelocity(valRef[Tier].jumpPower);
+                GameManager.SoundManager.PlaySound(SoundType.JUMP, 2f, 2f, 0.1f + Tier * 0.05f, firepointTrfm.position);
             }
             else if (hasDJump)
             {
@@ -429,12 +443,14 @@ public class PlayerController : MobileEntity
                 hasDJump = false;
                 jumpParticle.transform.localScale = Vector3.one * (Tier + 1);
                 jumpParticle.Emit(2);
+                GameManager.SoundManager.PlaySound(SoundType.JUMP, 1.5f, 1.5f, 0.1f + Tier * 0.05f, firepointTrfm.position);
             }
         }
     }
 
     void HandleHorizontalMovement()
     {
+        bool isMoving = false;
         if (Input.GetKey(KeyCode.A))
         {
             if (!Input.GetKey(KeyCode.D))
@@ -445,6 +461,7 @@ public class PlayerController : MobileEntity
                     {
                         AddXVelocity(-valRef[Tier].groundedAcceleration, -valRef[Tier].maxSpeed);
                     }
+                    isMoving = true;
                 }
                 else
                 {
@@ -460,11 +477,16 @@ public class PlayerController : MobileEntity
                 {
                     AddXVelocity(valRef[Tier].groundedAcceleration, valRef[Tier].maxSpeed);
                 }
+                isMoving = true;
             }
             else
             {
                 AddXVelocity(valRef[Tier].aerialAcceleration, valRef[Tier].maxSpeed);
             }
+        }
+        if (isMoving)
+        {
+            //GameManager.SoundManager.PlaySound(SoundType.WALK, 1, 1, 0.3f + Tier * 0.2f, firepointTrfm.position);
         }
     }
 
@@ -527,6 +549,8 @@ public class PlayerController : MobileEntity
         CameraManager.SetTrauma(40);
         if (overrideOne) { amount = 1; }
         HP -= amount;
+
+        GameManager.SoundManager.PlaySound(SoundType.DAMAGED1, 0.8f, 1.2f, 0.3f + Tier * 0.2f, firepointTrfm.position);
 
         if (HP <= 0 && Tier < 1)
         {
