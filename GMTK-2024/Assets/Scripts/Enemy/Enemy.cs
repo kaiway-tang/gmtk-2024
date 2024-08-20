@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
 public interface ISmartEnemy
 {
-    public void SetTarget(Vector2 position); 
-    public int EvaluatePosition(Vector2 position);  
+    public void SetTarget(Vector2 position);
+    public int EvaluatePosition(Vector2 position);
 }
 
 public class Enemy : HPEntity
@@ -15,11 +13,11 @@ public class Enemy : HPEntity
     Rigidbody2D rb;
     protected int stunned, slowed;
     [SerializeField] protected float speed, baseSpeed;
-    [SerializeField] ParticleSystem firePtcls;    
+    [SerializeField] ParticleSystem firePtcls;
 
     protected new void Start()
     {
-        base.Start();        
+        base.Start();
         rb = GetComponent<Rigidbody2D>();
 
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -64,7 +62,7 @@ public class Enemy : HPEntity
                 }
                 burnTick = 25;
             }
-        }        
+        }
     }
 
     protected bool IsStunned()
@@ -87,7 +85,7 @@ public class Enemy : HPEntity
         SetSpeed(0.1f);
     }
 
-    [SerializeField] int burnStacks, burnTick;
+    [SerializeField] protected int burnStacks, burnTick;
     public void Burn(int intensity)
     {
         if (burnStacks == 0) { firePtcls.Play(); }
