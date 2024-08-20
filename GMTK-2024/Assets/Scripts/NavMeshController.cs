@@ -41,6 +41,7 @@ public class NavMeshController : MonoBehaviour
     void Start()
     {
         trfm = transform;
+        if (!target) { target = PlayerController.self.transform; }
         navAgent = GetComponent<NavMeshAgent>();
         navAgent.SetDestination(target.position);
         navAgent.updateRotation = false;
