@@ -177,4 +177,14 @@ public class LevelManager : MonoBehaviour
     }
 
     #endregion
+
+    #region BOMBARDING
+
+    int bombardTimer;
+    void BOMBARD_FixedUpdate()
+    {
+
+    }
+
+    #endregion
 }
