@@ -83,6 +83,7 @@ public class PlayerController : MobileEntity
             ResourceManager.Resource resource = GameManager.ResourceManager.CheckCraftable();
             if (resource != ResourceManager.Resource.Invalid)
             {
+                GameManager.SoundManager.PlaySound(SoundType.CRAFT1, 0.6f, 0.6f, 0.3f + Tier * 0.2f, firepointTrfm.position);
                 GameManager.ResourceManager.HandleCraft(resource);
                 CraftMech((MechType)resource);
             }
@@ -154,11 +155,6 @@ public class PlayerController : MobileEntity
         }
 
         HP = Mathf.Max(Tier * 2, 1);
-
-        if (Tier != 0)
-        {
-            GameManager.SoundManager.PlaySound(SoundType.CRAFT1, 0.6f, 0.6f, 0.3f + Tier * 0.2f, firepointTrfm.position);
-        }
     }
     private void OnTypeChange()
     {
@@ -448,6 +444,7 @@ public class PlayerController : MobileEntity
         }
     }
 
+    [SerializeField] bool Test;
     void HandleHorizontalMovement()
     {
         bool isMoving = false;
@@ -484,9 +481,12 @@ public class PlayerController : MobileEntity
                 AddXVelocity(valRef[Tier].aerialAcceleration, valRef[Tier].maxSpeed);
             }
         }
+        Test = isMoving;
+
         if (isMoving)
         {
-            //GameManager.SoundManager.PlaySound(SoundType.WALK, 1, 1, 0.3f + Tier * 0.2f, firepointTrfm.position);
+            Debug.Log("Playing sound");
+            GameManager.SoundManager.PlayCooldownSound(SoundType.WALK, 1.3f - Tier * 0.3f, 1.5f - Tier * 0.3f, 0.2f + Tier * 0.1f, firepointTrfm.position, 20);
         }
     }
 

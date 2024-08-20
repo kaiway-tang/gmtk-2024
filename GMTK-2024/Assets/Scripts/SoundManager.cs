@@ -21,7 +21,15 @@ public class SoundManager : MonoBehaviour
     [SerializeField] AudioSource _SFX_normal;
     [SerializeField] AudioSource _SFX_spam;
     [SerializeField] AudioSource _SFX_continuous;
+    [SerializeField] AudioSource _BGM;
 
+    private void FixedUpdate()
+    {
+        HandleContinuousSound();
+        HandleCooldownSound();
+    }
+
+    #region Normal Sound
     public void PlaySound(SoundType type, float p1, float p2, float volume, Vector2 position)
     {
         AudioSource source = (type == SoundType.GUN1 || type == SoundType.GUN2 || type == SoundType.SLASH) ? _SFX_spam : _SFX_normal;
@@ -31,6 +39,7 @@ public class SoundManager : MonoBehaviour
         source.transform.position = position;
         source.PlayOneShot(_clips[(int)type]);
     }
+    #endregion Normal Sound
 
     #region Continuous Sound (flamethrower)
     int _duration = 0;
@@ -45,7 +54,7 @@ public class SoundManager : MonoBehaviour
         }
         _queuedDuration = duration + FADE_OUT_DURATION;
     }
-    private void FixedUpdate()
+    private void HandleContinuousSound()
     {
         int queued = _queuedDuration > 0 ? 5 : 0;
         _duration = Mathf.Clamp(_duration - 1 + queued, 0, 20);
@@ -69,4 +78,31 @@ public class SoundManager : MonoBehaviour
 
 
     #endregion Singleton Sound (eject)
+
+    #region Cooldown Sound (walk)
+
+    int _cooldown = 0;
+    public void PlayCooldownSound(SoundType type, float p1, float p2, float volume, Vector2 position, int cooldown)
+    {
+        if (_cooldown == 0)
+        {
+            PlaySound(type, p1, p2, volume, position);
+            _cooldown = cooldown;
+        }
+    }
+    private void HandleCooldownSound()
+    {
+        Debug.Log(_cooldown);
+        _cooldown = Mathf.Max(_cooldown - 1, 0);
+    }
+
+    #endregion Cooldown Sound (walk)
+
+    #region Music
+    private void Start()
+    {
+        _BGM.Play();
+    }
+
+    #endregion
 }
