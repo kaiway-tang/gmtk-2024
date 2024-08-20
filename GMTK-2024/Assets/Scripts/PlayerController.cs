@@ -70,7 +70,7 @@ public class PlayerController : MobileEntity
 
     void HandleCrafting()
     {
-        if (Input.GetKeyDown(CRAFT))
+        if (Input.GetKeyDown(CRAFT) && GetTier() < 2)
         {
             ResourceManager.Resource resource = GameManager.ResourceManager.CheckCraftable();
             if (resource != ResourceManager.Resource.Invalid)

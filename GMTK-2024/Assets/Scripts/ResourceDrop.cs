@@ -7,11 +7,9 @@ public class ResourceDrop : MonoBehaviour
     [SerializeField] int FlickerTicks;
     [SerializeField] ResourceManager.Resource _resource = ResourceManager.Resource.Invalid;
     // Add tooltip description of these values:
-    [Tooltip("Drops = average + random(min)+random(max).")]
-    [SerializeField] float _dropAverage;
-    [SerializeField] float _dropChanceRange;
-    [SerializeField] float _dropChanceMin;
-    [SerializeField] float _dropChanceMax;
+    [Header("Drop rate: SpawnChance = (min+max)/2 IF (min+max)/2<1")]
+    [SerializeField] float _dropMin;
+    [SerializeField] float _dropMax;
 
     // Layers
     public static int Layer => LayerMask.NameToLayer("ResourceDrop");
@@ -81,14 +79,30 @@ public class ResourceDrop : MonoBehaviour
         if (!Standalone && !IsQuitting)
         {
             // Drop chance:
-            if (Random.Range(0f, 1f) > _dropAverage)
+            float avg = (_dropMin + _dropMax) / 2;
+            if (avg < 1)
             {
-                return;
+                int percent = Random.Range(0, 100);
+                if (percent < avg * 100)
+                {
+                    // Drop resource:
+                    ResourceManager.Resource drop = (_resource == ResourceManager.Resource.Invalid ? ResourceManager.GetRandom() : _resource);
+                    GameManager.ResourceManager.SpawnResource(drop, transform.position);
+                }
             }
-            // Drop resource:
-            ResourceManager.Resource drop = (_resource == ResourceManager.Resource.Invalid ? ResourceManager.GetRandom() : _resource);
-            GameManager.ResourceManager.SpawnResource(drop, transform.position);
+            else
+            {
+                int dropNum = Mathf.RoundToInt(Random.Range(_dropMin, _dropMax));
+                for (int i = 0; i < dropNum; i++)
+                {
+                    // Drop resource:
+                    ResourceManager.Resource drop = (_resource == ResourceManager.Resource.Invalid ? ResourceManager.GetRandom() : _resource);
+                    GameManager.ResourceManager.SpawnResource(drop, transform.position);
+                }
+            }
         }
     }
+
+
     #endregion Utils
 }

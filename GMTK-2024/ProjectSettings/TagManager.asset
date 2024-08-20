@@ -18,7 +18,7 @@ TagManager:
   - ResourceDrop
   - Pathfinding
   - ResourceCollider
-  - 
+  - HitAll
   - 
   - 
   - 
@@ -41,6 +41,24 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: VFX
-    uniqueID: 4035721457
+  - name: Background
+    uniqueID: 1034734587
+    locked: 0
+  - name: Cloudbehind
+    uniqueID: 228101955
+    locked: 0
+  - name: Buildings
+    uniqueID: 4087542767
+    locked: 0
+  - name: Ground
+    uniqueID: 3853463495
+    locked: 0
+  - name: Ontop of ground platform
+    uniqueID: 285667563
+    locked: 0
+  - name: Enemy
+    uniqueID: 3047187679
+    locked: 0
+  - name: Player
+    uniqueID: 3137573735
     locked: 0

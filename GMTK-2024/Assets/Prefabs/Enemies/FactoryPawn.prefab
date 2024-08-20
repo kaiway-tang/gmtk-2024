@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 5473329692118533826}
   - component: {fileID: 1326105639601717552}
   m_Layer: 7
-  m_Name: Pawn
+  m_Name: FactoryPawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,7 +115,7 @@ Transform:
   m_GameObject: {fileID: 9038853616964939775}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.1133616, y: 1.2628257, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6860666515992120881}
@@ -284,8 +284,10 @@ MonoBehaviour:
   LifetimeTicks: 0
   FlickerTicks: 0
   _resource: 0
-  _dropMin: 0
-  _dropMax: 0.2
+  _dropAverage: 0
+  _dropChanceRange: 0
+  _dropChanceMin: 0
+  _dropChanceMax: 0
 --- !u!1001 &5995858957212451681
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Explosion : MonoBehaviour
 {
     [SerializeField] CircleCollider2D cirCol;
     [SerializeField] int damage, activeTicks, sourceID;
+    [SerializeField] int playerDamage;
     [SerializeField] SpriteRenderer rend;
     [SerializeField] Color darkenCol, fadeCol;
 
@@ -17,7 +16,7 @@ public class Explosion : MonoBehaviour
         Destroy(gameObject, 5);
         if (autoScale)
         {
-            damage = Mathf.RoundToInt(damage * PlayerController.GetDamageMultiplier());            
+            damage = Mathf.RoundToInt(damage * PlayerController.GetDamageMultiplier());
             transform.localScale *= PlayerController.GetRelativeScaleFactor();
         }
         CameraManager.SetTrauma(30 + Mathf.RoundToInt(damage * 0.02f));
@@ -48,7 +47,14 @@ public class Explosion : MonoBehaviour
             hitEntity = col.GetComponent<HPEntity>();
             if (hitEntity)
             {
-                hitEntity.TakeDamage(damage, sourceID);
+                if (playerDamage != 0 && col.TryGetComponent<PlayerController>(out PlayerController player))
+                {
+                    player.TakeDamage(playerDamage);
+                }
+                else
+                {
+                    hitEntity.TakeDamage(damage, sourceID);
+                }
             }
         }
     }

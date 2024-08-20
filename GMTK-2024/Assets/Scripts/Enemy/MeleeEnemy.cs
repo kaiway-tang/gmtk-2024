@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,7 +5,7 @@ public class MeleeEnemy : Enemy
 {
     [SerializeField] Transform target;
 
-    NavMeshAgent navigation;
+    protected NavMeshAgent navigation;
 
     Vector3 prevPos = Vector3.zero;
     // Start is called before the first frame update
@@ -29,7 +27,7 @@ public class MeleeEnemy : Enemy
             navigation.SetDestination(target.position);
             transform.up = (transform.position - prevPos).normalized;
             prevPos = transform.position;
-        }        
+        }
     }
 
     private new void FixedUpdate()
