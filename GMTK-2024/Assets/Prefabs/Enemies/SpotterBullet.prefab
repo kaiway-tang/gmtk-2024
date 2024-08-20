@@ -121,6 +121,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
+  predictPositioning: 0
+  strikeCount: 3
+  fireInterval: 0.5
+  deviation: 2
+  ammo: {fileID: 2517458538114117191, guid: ac744a0c31e077349ba10b2467db605e, type: 3}
 --- !u!61 &700270390980849912
 BoxCollider2D:
   m_ObjectHideFlags: 0
