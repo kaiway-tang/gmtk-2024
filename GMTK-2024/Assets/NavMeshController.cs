@@ -13,6 +13,7 @@ public class NavMeshController : MonoBehaviour
     public void Recover(Vector3 pos)
     {
         transform.position = pos;
+        if (!target) { target = PlayerController.self.transform; }
     }
 
     public void Disable()
