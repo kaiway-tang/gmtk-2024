@@ -102,44 +102,44 @@ ScriptedImporter:
         rgba: 4278255615
     - name: Gun1
       guid: 37ee20d2c8e2c43409cb9220a497a00f
-      position: {x: 15.573915, y: 145.15205, z: 2}
-      rotation: {x: 0, y: 0, z: -0.7054281, w: 0.7087815}
-      length: 72.603325
+      position: {x: 15.487291, y: 118.55935, z: 2}
+      rotation: {x: 0, y: 0, z: -0.70379275, w: 0.71040535}
+      length: 46.011982
       parentId: 0
       color:
         serializedVersion: 2
         rgba: 4278255360
     - name: Gun2
       guid: 9494f1e09bec2e94186d749fadca6c26
-      position: {x: 63.184795, y: 140.35048, z: -1}
-      rotation: {x: 0, y: -0, z: -0.70989734, w: 0.7043052}
-      length: 62.43754
+      position: {x: 62.81411, y: 116.09682, z: -1}
+      rotation: {x: 0, y: -0, z: -0.7082504, w: 0.7059613}
+      length: 38.182213
       parentId: 0
       color:
         serializedVersion: 2
         rgba: 4294967040
     - name: Outleg1
       guid: b3ef3499abbd70a4d934ce4361d1d3af
-      position: {x: 159.91154, y: 147.00513, z: 3}
-      rotation: {x: 0, y: -0, z: -0.9276561, w: 0.37343562}
-      length: 61.407253
+      position: {x: 160.20935, y: 148.4645, z: 3}
+      rotation: {x: 0, y: -0, z: -0.9251132, w: 0.3796915}
+      length: 62.638813
       parentId: 0
       color:
         serializedVersion: 2
         rgba: 4294901760
     - name: Outleg2
       guid: 4e4a009fa2c73c342bf6d4a427dbe276
-      position: {x: 61.407253, y: 0.000014744624, z: 2}
-      rotation: {x: 0, y: -0, z: -0.9257924, w: 0.37803245}
-      length: 32.536934
+      position: {x: 62.638813, y: 0.0000045167744, z: 2}
+      rotation: {x: 0, y: -0, z: -0.9283239, w: 0.3717724}
+      length: 32.53693
       parentId: 4
       color:
         serializedVersion: 2
         rgba: 4294902015
     - name: Outleg3
       guid: 6069a3c50c662ae4199b13434504ab68
-      position: {x: 32.53693, y: 0.000017532839, z: 1}
-      rotation: {x: 0, y: 0, z: 0.9106061, w: 0.41327542}
+      position: {x: 32.53693, y: -0.0000028894299, z: 1}
+      rotation: {x: 0, y: 0, z: 0.91060585, w: 0.413276}
       length: 26.399628
       parentId: 5
       color:
@@ -147,26 +147,26 @@ ScriptedImporter:
         rgba: 4278223103
     - name: Backleg1
       guid: 959e90ff708950b40bae40f1e3c4cb6c
-      position: {x: 160.01181, y: 88.633286, z: -1}
-      rotation: {x: 0, y: -0, z: -0.92236197, w: 0.38632682}
-      length: 55.241737
+      position: {x: 158.55688, y: 90.0982, z: -1}
+      rotation: {x: 0, y: -0, z: -0.9149894, w: 0.40347797}
+      length: 55.303635
       parentId: 0
       color:
         serializedVersion: 2
         rgba: 4278255488
     - name: Backleg2
       guid: 40ceebc171ed473479fe69bd1dc1c8eb
-      position: {x: 55.24174, y: -0.00001548307, z: -2}
-      rotation: {x: 0, y: -0, z: -0.9456416, w: 0.3252107}
-      length: 28.638325
+      position: {x: 55.303635, y: 0.0000031976997, z: -2}
+      rotation: {x: 0, y: 0, z: -0.95154756, w: 0.30750167}
+      length: 28.63835
       parentId: 7
       color:
         serializedVersion: 2
         rgba: 4286643968
     - name: Backleg3
       guid: b998610385c42a045916f6d3840c85d6
-      position: {x: 28.638325, y: -0.0000014543872, z: -3}
-      rotation: {x: 0, y: 0, z: 0.9033945, w: 0.4288105}
+      position: {x: 28.638346, y: -0.000005547109, z: -3}
+      rotation: {x: 0, y: 0, z: 0.90339464, w: 0.42881024}
       length: 26.260286
       parentId: 8
       color:
