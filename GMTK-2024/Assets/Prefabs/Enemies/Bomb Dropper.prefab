@@ -15,6 +15,10 @@ PrefabInstance:
       propertyPath: maxRange
       value: 999
       objectReference: {fileID: 0}
+    - target: {fileID: 441678200099419567, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: minRange
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 1576865333702639325, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
       propertyPath: _dropMax
       value: 4
@@ -73,6 +77,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+--- !u!4 &620969756318734456 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8860011887313571863, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+  m_PrefabInstance: {fileID: 8244742274575222895}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &620969756318734461 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8860011887313571858, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
@@ -85,9 +94,61 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620969756318734461}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11104e083bdac66469b3a8036cf4ddef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HP: 2000
+  maxHP: 0
+  trfm: {fileID: 620969756318734456}
+  objectID: 0
+  deathTrauma: 40
+  hpBar: {fileID: 0}
+  Tier: 0
+  damageFX: {fileID: 6913746034329785171, guid: 9d19854dd9a519a44a9fcd05ab1cc466, type: 3}
+  deathFX: {fileID: 6913746034329785171, guid: d0e051912b661694c979cfa432db5f1b, type: 3}
+  reflectionTrfm: {fileID: 0}
+  rb: {fileID: 4475304342810947904}
+  knockbackFactor: 1
+  touchingTerrain: []
+  speed: 0
+  baseSpeed: 4
+  firePtcls: {fileID: 5289654053817777387}
+  burnStacks: 0
+  burnTick: 0
+  minRange: 7
+  maxRange: 999
+  fleeSpeed: 1
+  approachSpeed: 5
+  navSpeed: 10
+  status: 0
+  navController: {fileID: 8497823889902103133}
+  emptyTrfm: {fileID: 8497823888777243383}
   _bombPrefab: {fileID: 4614770995775459223, guid: b97c92fde5d8c674f8f1875c93b6cac6, type: 3}
+--- !u!50 &4475304342810947904 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 5507986990088436015, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+  m_PrefabInstance: {fileID: 8244742274575222895}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &5289654053817777387 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4252406560282686596, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+  m_PrefabInstance: {fileID: 8244742274575222895}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8497823888777243383 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 541945601128309400, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+  m_PrefabInstance: {fileID: 8244742274575222895}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8497823889902103133 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 541945602653725234, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+  m_PrefabInstance: {fileID: 8244742274575222895}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73a15d5c7bfb38b4caf54270f666f55f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

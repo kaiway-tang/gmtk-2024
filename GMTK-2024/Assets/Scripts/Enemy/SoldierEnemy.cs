@@ -6,15 +6,15 @@ public class SoldierEnemy : GroundEnemy
 {
     [SerializeField] float jumpCoefficient = 0.2f;
     Rigidbody2D rb;
-    Collider2D collider;
+    Collider2D colliderBox;
     // Start is called before the first frame update
     protected override void Initialize()
     {
         rb = GetComponent<Rigidbody2D>();
-        collider = GetComponent<Collider2D>();
+        colliderBox = GetComponent<Collider2D>();
     }
 
-    protected override void OnStateSwitch(EnemyState prevState, EnemyState newState) 
+    protected override void OnStateSwitch(EnemyState prevState, EnemyState newState)
     {
         Debug.Log("State switched!");
         if (prevState == EnemyState.Walking)
@@ -26,7 +26,7 @@ public class SoldierEnemy : GroundEnemy
 
     protected override void OnIdle() { }
 
-    protected override void OnWalk() 
+    protected override void OnWalk()
     {
         int directionMod = nextNode.position.x < transform.position.x ? -1 : 1;
         rb.velocity = new Vector2(speed * directionMod, rb.velocity.y);
@@ -34,7 +34,7 @@ public class SoldierEnemy : GroundEnemy
 
     protected override void OnJump() { }
 
-    protected override void OnNodeReached(PathNode currentNode, PathNode destinationNode) 
+    protected override void OnNodeReached(PathNode currentNode, PathNode destinationNode)
     {
         if (destinationNode == null)  // No destination 
         {
@@ -43,7 +43,8 @@ public class SoldierEnemy : GroundEnemy
             {
                 state = EnemyState.Walking;
                 nextNode = currentNode.leftNode;
-            } else if (currentNode.rightNode != null)
+            }
+            else if (currentNode.rightNode != null)
             {
                 state = EnemyState.Walking;
                 nextNode = currentNode.rightNode;
@@ -58,8 +59,8 @@ public class SoldierEnemy : GroundEnemy
         if (currentNode.leftNode == newNode || currentNode.rightNode == newNode)  // Walk node
         {
             state = EnemyState.Walking;
-            
-        } 
+
+        }
         else  // Jump node
         {
             state = EnemyState.Jumping;
@@ -72,7 +73,7 @@ public class SoldierEnemy : GroundEnemy
     {
         rb.velocity = Vector2.zero;
 
-        collider.isTrigger = true;  // Phase through colliders
+        colliderBox.isTrigger = true;  // Phase through colliders
 
         float ct = time / 10;
 
@@ -114,7 +115,7 @@ public class SoldierEnemy : GroundEnemy
             yield return new WaitForFixedUpdate();
         }
 
-        collider.isTrigger = false;
+        colliderBox.isTrigger = false;
         // Reset the gravity adjustment for this jump
         rb.gravityScale = origGrav;
     }

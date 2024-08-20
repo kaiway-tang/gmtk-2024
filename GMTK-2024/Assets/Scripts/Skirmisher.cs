@@ -1,11 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Skirmisher : Enemy
 {
-    [SerializeField] float minRange, maxRange, fleeSpeed, approachSpeed, navSpeed;
+    [SerializeField] protected float minRange, maxRange, fleeSpeed, approachSpeed, navSpeed;
 
     [SerializeField] int status;
     const int APPROACHING = 0, FLEEING = 1, REST = 2;
@@ -48,9 +45,9 @@ public class Skirmisher : Enemy
             {
                 status = APPROACHING;
                 navController.Recover(trfm.position);
-                navController.Enable(navSpeed);                
+                navController.Enable(navSpeed);
             }
-            
+
             if (status == FLEEING)
             {
                 LerpFacePlayer(trfm, 0.1f);

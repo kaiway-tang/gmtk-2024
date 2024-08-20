@@ -8,15 +8,17 @@ public class GroundEnemy : HPEntity, ISmartEnemy
     {
         Walking,
         Jumping,
-        Idling
+        Idling,
+        Recovering
     }
     [SerializeField] int targetNodeId;
     [SerializeField] int startingNodeId;
     [SerializeField] protected float speed = 5f;
     public int nextId = -1;
 
-    protected EnemyState state {
-        get 
+    protected EnemyState state
+    {
+        get
         {
             return _state;
         }
@@ -25,10 +27,10 @@ public class GroundEnemy : HPEntity, ISmartEnemy
             OnStateSwitch(_state, value);
         }
     }
-    EnemyState _state = EnemyState.Idling;
+    [SerializeField] EnemyState _state = EnemyState.Idling;
     protected PathNode nearestNode;
     protected PathNode nextNode;
-    protected PathNode targetNode; 
+    protected PathNode targetNode;
 
     // Start is called before the first frame update
     protected new void Start()
@@ -43,7 +45,7 @@ public class GroundEnemy : HPEntity, ISmartEnemy
         }
         Initialize();
     }
-    
+
     protected virtual void Initialize() { }
 
     // Update is called once per frame
@@ -60,23 +62,23 @@ public class GroundEnemy : HPEntity, ISmartEnemy
                 break;
             case EnemyState.Jumping:
                 OnJump();
-                break; 
+                break;
         }
 
         if (targetNode != null && nextNode == null && nearestNode != null)
         {
             nextNode = nearestNode;
-            
+
         }
-        if (nextNode != null && Vector2.SqrMagnitude(nextNode.position - transform.position) < 0.1f)  // Close enough to target
+        if (nextNode != null && Vector2.SqrMagnitude(nextNode.position - transform.position) < Time.deltaTime)  // Close enough to target
         {
-            nearestNode = nextNode; 
+            nearestNode = nextNode;
             // nextNode = nextNode.optimalPaths[targetNode.slotId].Item1;
             OnNodeReached(nearestNode, targetNode);
         }
     }
 
-    protected virtual void OnStateSwitch(EnemyState prevState, EnemyState newState) 
+    protected virtual void OnStateSwitch(EnemyState prevState, EnemyState newState)
     {
         _state = newState;
     }
@@ -84,7 +86,7 @@ public class GroundEnemy : HPEntity, ISmartEnemy
     protected virtual void OnIdle() { }
 
     protected virtual void OnWalk() { }
-    
+
     protected virtual void OnJump() { }
 
     protected virtual void OnNodeReached(PathNode currentNode, PathNode destinationNode) { }
@@ -98,6 +100,7 @@ public class GroundEnemy : HPEntity, ISmartEnemy
             return;
         }
         targetNode = node;
+        OnNodeReached(nearestNode, targetNode);
         //if (nearestNode != null)
         //{
         //    nextNode = nearestNode;
@@ -118,7 +121,10 @@ public class GroundEnemy : HPEntity, ISmartEnemy
         {
             Debug.Log("Nearest updated");
             nearestNode = waypoint.pathNode;
-            OnNodeReached(nearestNode, targetNode);
+            if (state == EnemyState.Recovering)
+            {
+                OnNodeReached(nearestNode, targetNode);
+            }
         }
 
     }
