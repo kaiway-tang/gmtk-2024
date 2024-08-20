@@ -61,7 +61,7 @@ public class Enemy : MobileEntity
             if (burnStacks > 0)
             {
                 TakeDamage(burnStacks);
-                burnStacks -= 4;
+                burnStacks -= 6;
                 SetPtclSize();
                 if (burnStacks <= 0)
                 {
@@ -106,7 +106,7 @@ public class Enemy : MobileEntity
 
     void SetPtclSize()
     {
-        firePtcls.startSize = burnStacks / 15f + 0.5f;
+        firePtcls.startSize = burnStacks / 22f + 0.5f;
     }
 
     public void Stun(int ticks)

@@ -18,7 +18,7 @@ public class AirStrike : MonoBehaviour
         timer++;
         if (timer < 25)
         {
-            rend.color += Color.black * 0.04f;
+            rend.color += Color.black * 0.05f;
         }
         if (timer == 50)
         {

@@ -117,7 +117,7 @@ Transform:
   m_GameObject: {fileID: 9038853616964939775}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.1133616, y: 1.2628257, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6860666515992120881}
@@ -240,10 +240,8 @@ MonoBehaviour:
   LifetimeTicks: 0
   FlickerTicks: 0
   _resource: 0
-  _dropAverage: 0
-  _dropChanceRange: 0
-  _dropChanceMin: 0
-  _dropChanceMax: 0
+  _dropMin: 0
+  _dropMax: 0
 --- !u!114 &2058763392178664668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,12 +255,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 1
+  maxHP: 0
   trfm: {fileID: 9038853616964939770}
   objectID: 0
   deathTrauma: 60
+  hpBar: {fileID: 0}
   Tier: 0
   damageFX: {fileID: 6913746034329785171, guid: 9d19854dd9a519a44a9fcd05ab1cc466, type: 3}
   deathFX: {fileID: 6091240594104898565, guid: ac7ba9fa48e631e469482c9d97d0527a, type: 3}
+  reflectionTrfm: {fileID: 0}
+  rb: {fileID: 0}
+  knockbackFactor: 1
+  touchingTerrain: []
   speed: 2
   baseSpeed: 10
   firePtcls: {fileID: 4361443337452112745}

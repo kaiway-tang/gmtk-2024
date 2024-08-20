@@ -200,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27d10c904155ed1408d6b8ea7bcbfddd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  intensity: 4
+  intensity: 6
   scale: 0.04
   time: 0.6
   speed: 0.3

@@ -35,8 +35,8 @@ public class Landmine : MonoBehaviour
         }
         if (other.gameObject.layer == 6)
         {
+            StartCoroutine(Explode());
             Instantiate(_sparks, transform.position, Quaternion.identity);
-            Destroy(gameObject);
         }
     }
 

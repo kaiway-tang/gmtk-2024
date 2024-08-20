@@ -45,7 +45,7 @@ public class EnemyPathfinder : MonoBehaviour
     {
         if (Instance != null)
         {
-            Destroy(this);
+            //Destroy(this);
         }
         Instance = this;
         platformLinks = new Dictionary<int, List<PathNode>>();

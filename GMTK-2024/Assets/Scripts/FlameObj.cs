@@ -20,6 +20,7 @@ public class FlameObj : MonoBehaviour
         transform.position += transform.up * speed;
     }
 
+    HPEntity hpScript;
     Enemy hitEnemy;
     private void OnTriggerEnter2D(Collider2D col)
     {
@@ -29,6 +30,14 @@ public class FlameObj : MonoBehaviour
             if (hitEnemy)
             {
                 hitEnemy.Burn(intensity);
+            }
+            else
+            {
+                hpScript = col.GetComponent<HPEntity>();
+                if (hpScript)
+                {
+                    hpScript.TakeDamage(intensity * 2);
+                }
             }
         }
     }

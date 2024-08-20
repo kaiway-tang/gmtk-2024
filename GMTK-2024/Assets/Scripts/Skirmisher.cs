@@ -4,13 +4,13 @@ public class Skirmisher : Enemy
 {
     [SerializeField] protected float minRange, maxRange, fleeSpeed, approachSpeed, navSpeed;
 
-    [SerializeField] int status;
-    const int APPROACHING = 0, FLEEING = 1, REST = 2;
+    [SerializeField] protected int status;
+    protected const int APPROACHING = 0, FLEEING = 1, REST = 2, HARD_FLEE = 3;
     [SerializeField] NavMeshController navController;
 
     Vector3 prevPos;
     // Start is called before the first frame update
-    new void Start()
+    protected new void Start()
     {
         base.Start();
 
@@ -20,7 +20,7 @@ public class Skirmisher : Enemy
     }
 
     // Update is called once per frame
-    new void FixedUpdate()
+    protected new void FixedUpdate()
     {
         base.FixedUpdate();
         sqrDist = (transform.position - PlayerController.self.transform.position).sqrMagnitude;
@@ -48,7 +48,7 @@ public class Skirmisher : Enemy
                 navController.Enable(navSpeed);
             }
 
-            if (status == FLEEING)
+            if (status == FLEEING || status == HARD_FLEE)
             {
                 LerpFacePlayer(trfm, 0.1f);
 
@@ -61,7 +61,7 @@ public class Skirmisher : Enemy
 
                 rb.velocity += (Vector2)fleeDir * fleeSpeed;
 
-                if (!WithinDist(minRange) || !PlayerVisible())
+                if (!WithinDist(minRange) || (!PlayerVisible() && status != HARD_FLEE))
                 {
                     status = REST;
                 }

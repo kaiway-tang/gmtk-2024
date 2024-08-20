@@ -7,7 +7,10 @@ using UnityEngine.AI;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] Key[] keys;
+
     [SerializeField] Transform[] keyNodes;
+    [SerializeField] Transform[] factoryNodes;
+
     [SerializeField] Level startLevel;
     [SerializeField] GameObject[] levels;
     // Start is called before the first frame update
@@ -28,7 +31,7 @@ public class LevelManager : MonoBehaviour
         self = GetComponent<LevelManager>();
         currentLevel = startLevel;
         navSurface.BuildNavMeshAsync();
-        baseBombTime = Mathf.RoundToInt(baseBombTime / 0.9f);
+        //baseBombTime = Mathf.RoundToInt(baseBombTime / 0.9f);
 
         Invoke("InitStart", 1);
     }
@@ -77,7 +80,7 @@ public class LevelManager : MonoBehaviour
 
     #region SPAWNING
 
-    [SerializeField] GameObject enemy;
+    [SerializeField] GameObject basicEnemy, pawnFactory, rocketFactory, landminer;
     [SerializeField] Transform[] spawnPoints;
     [SerializeField] int spawnRate, levelSpawnRate, spawnTimer;
     // Start is called before the first frame update
@@ -103,7 +106,7 @@ public class LevelManager : MonoBehaviour
                 SetInvalidSpawn();
                 for (int i = 0; i < enemyQueCount; i++)
                 {
-                    SpawnEnemy();
+                    SpawnBasicEnemy();
                 }
                 enemyQueCount -= targetQue;
                 targetQue = Random.Range(Mathf.RoundToInt(levelTargetQue * 0.8f), Mathf.RoundToInt(levelTargetQue * 1.2f));
@@ -134,12 +137,23 @@ public class LevelManager : MonoBehaviour
     }
 
     int spawnPointID;
-    void SpawnEnemy()
+    void SpawnBasicEnemy()
     {
         do { spawnPointID = Random.Range(0, spawnPoints.Length); }
         while (spawnPointID == invalidSpawnPointID);
-        Instantiate(enemy, spawnPoints[spawnPointID].position, Quaternion.identity);
+        Instantiate(basicEnemy, spawnPoints[spawnPointID].position, Quaternion.identity);
     }
+
+    bool[] factoryNodeUsed;
+    void SpawnFactory(GameObject factory)
+    {
+        int selectedID = 0;
+        do { selectedID = Random.Range(0, factoryNodes.Length); }
+        while (factoryNodeUsed[selectedID]);
+        Instantiate(factory, factoryNodes[selectedID].position, Quaternion.identity);
+        factoryNodeUsed[selectedID] = true;
+    }
+
     #endregion
 
     #region LEVEL_TRANSITION
@@ -187,7 +201,7 @@ public class LevelManager : MonoBehaviour
         for (int i = 0; i < keys.Length; i++)
         {
             keys[i].transform.position = currentLevel.keyPos.position;
-            if (i < levelsCompleted)
+            if (i * 4 < levelsCompleted)
             {
                 keys[i].UseKeyBox();
             }
@@ -198,15 +212,14 @@ public class LevelManager : MonoBehaviour
     HashSet<int> keyPosIDs = new HashSet<int>();
     void StartLevel(Level level)
     {
-        self.levelRunning = true;
+        self.levelRunning = true;        
 
         spawnRate = levelSpawnRate;
         levelSpawnRate = Mathf.RoundToInt(levelSpawnRate * 0.9f);
         enemyQueCount = levelTargetQue - 2;
         targetQue = levelTargetQue;
 
-        bombardTimer = 0;
-        baseBombTime = Mathf.RoundToInt(baseBombTime * 0.9f);
+        bombardTimer = 0;        
         bombTime = baseBombTime;
 
         keyPosIDs.Clear();
@@ -219,6 +232,41 @@ public class LevelManager : MonoBehaviour
             while (keyPosIDs.Contains(selectedNode));
             keys[i].Scatter(keyNodes[selectedNode], level.gatherNodes[0]);
             keyPosIDs.Add(selectedNode);
+        }
+
+        //per-level spawns
+
+        if (levelsCompleted > 0)
+        {
+            factoryNodes = level.factoryNodes;
+            factoryNodeUsed = new bool[factoryNodes.Length];
+
+            float rocketFactoryChance = (levelsCompleted - 2) * 0.5f;
+            if (rocketFactoryChance < 0) { rocketFactoryChance = 0; }
+            int factoryCount = 1;
+
+            if (levelsCompleted > 5)
+            {
+                factoryCount = 3;
+                baseBombTime = Mathf.RoundToInt(baseBombTime * 0.9f);
+            }
+            else if (levelsCompleted > 1)
+            {
+                factoryCount = 2;
+            }
+
+            for (int i = 0; i < factoryCount; i+=2)
+            {
+                if (Random.Range(0f, 1f) < rocketFactoryChance)
+                {
+                    rocketFactoryChance -= 1;
+                    SpawnFactory(rocketFactory);
+                }
+                else
+                {
+                    SpawnFactory(pawnFactory);
+                }                
+            }
         }
     }
 

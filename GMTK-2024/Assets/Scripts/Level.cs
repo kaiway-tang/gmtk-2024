@@ -8,6 +8,7 @@ public class Level : MonoBehaviour
 
     public Transform[] keyNodes;
     public Transform[] gatherNodes;
+    public Transform[] factoryNodes;
     public Transform topBound, keyPos;
 
     public Transform[] doors;
@@ -48,6 +49,17 @@ public class Level : MonoBehaviour
             clearBarCol.a = Mathf.Sin(clearBarTimer) * 0.25f + 0.5f;
             clearBarRend.color = clearBarCol;
         }
+        else
+        {
+            for (int i = 0; i < hazardStripes.Length; i++)
+            {
+                hazardStripes[i].position += Vector3.right * stripeSpeed;
+                if (hazardStripes[i].localPosition.x > 45.5f)
+                {
+                    hazardStripes[i].localPosition -= Vector3.right * 30.97f * 3;
+                }
+            }
+        }
 
         if (doorTimer > 0)
         {
@@ -56,13 +68,6 @@ public class Level : MonoBehaviour
             doors[1].position -= Vector3.right * 0.15f;
         }
 
-        for (int i = 0; i < hazardStripes.Length; i++)
-        {
-            hazardStripes[i].position += Vector3.right * stripeSpeed;
-            if (hazardStripes[i].localPosition.x > 45.5f)
-            {
-                hazardStripes[i].localPosition -= Vector3.right * 30.97f * 3;
-            }
-        }
+        
     }
 }
