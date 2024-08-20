@@ -15,6 +15,10 @@ PrefabInstance:
       propertyPath: maxRange
       value: 999
       objectReference: {fileID: 0}
+    - target: {fileID: 441678200099419567, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+      propertyPath: minRange
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 1576865333702639325, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
       propertyPath: _dropMax
       value: 4
@@ -71,8 +75,7 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 441678200099419567, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
 --- !u!4 &620969756318734456 stripped
 Transform:
@@ -91,7 +94,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620969756318734461}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 11104e083bdac66469b3a8036cf4ddef, type: 3}
   m_Name: 
@@ -106,7 +109,7 @@ MonoBehaviour:
   damageFX: {fileID: 6913746034329785171, guid: 9d19854dd9a519a44a9fcd05ab1cc466, type: 3}
   deathFX: {fileID: 6913746034329785171, guid: d0e051912b661694c979cfa432db5f1b, type: 3}
   reflectionTrfm: {fileID: 0}
-  rb: {fileID: 0}
+  rb: {fileID: 4475304342810947904}
   knockbackFactor: 1
   touchingTerrain: []
   speed: 0
@@ -123,6 +126,11 @@ MonoBehaviour:
   navController: {fileID: 8497823889902103133}
   emptyTrfm: {fileID: 8497823888777243383}
   _bombPrefab: {fileID: 4614770995775459223, guid: b97c92fde5d8c674f8f1875c93b6cac6, type: 3}
+--- !u!50 &4475304342810947904 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 5507986990088436015, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
+  m_PrefabInstance: {fileID: 8244742274575222895}
+  m_PrefabAsset: {fileID: 0}
 --- !u!198 &5289654053817777387 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 4252406560282686596, guid: c30c7cd07135ef643a20119c4950df32, type: 3}
