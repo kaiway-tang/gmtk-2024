@@ -8,8 +8,10 @@ public class SpotterEnemy : GroundEnemy
     [SerializeField] float acceptableRange = 0.5f;
     [SerializeField] float timeUntilRecovery = 2f;
     [SerializeField] float fireDelay = 3f;
+    [SerializeField] float gunOffset = 0.8f;
     [SerializeField] GameObject bullet;
     [SerializeField] Transform gunRef;
+    [SerializeField] Transform spriteRef;
     [SerializeField] Transform playerOverride;
 
     float timeCounter = 0f;
@@ -17,13 +19,13 @@ public class SpotterEnemy : GroundEnemy
     float fireCounter = 0f; 
 
     Rigidbody2D rb;
-    Collider2D colliderBox;
+    [SerializeField] Collider2D colliderBox;
     Transform playerTrfm;
     // Start is called before the first frame update
     protected override void Initialize()
     {
         rb = GetComponent<Rigidbody2D>();
-        colliderBox = GetComponent<Collider2D>();
+        // colliderBox = GetComponent<Collider2D>();
         if (playerOverride == null)
         {
             playerTrfm = GameManager.Instance.Player.transform;
@@ -36,7 +38,7 @@ public class SpotterEnemy : GroundEnemy
 
     protected override void OnStateSwitch(EnemyState prevState, EnemyState newState)
     {
-        Debug.Log($"State switched! Now: {newState}");
+        // Debug.Log($"State switched! Now: {newState}");
         if (prevState == EnemyState.Walking)
         {
             rb.velocity = new Vector2(0f, rb.velocity.y);
@@ -63,20 +65,34 @@ public class SpotterEnemy : GroundEnemy
 
     protected override void OnIdle() 
     {
-        if (fireCounter > 0)
-        {
-            fireCounter -= Time.deltaTime;
-            return;
-        }
         if (timeCounter > 3f)
         {
             QueryNewNode();
             timeCounter = 0;
             return;
         }
+        // Face player 
+        float xscale = playerTrfm.position.x < transform.position.x ? 1 : -1;
+        if (playerTrfm.position.x != transform.position.x)
+            spriteRef.localScale = new Vector3(xscale, 1, 1);
+
         // Raycast towards player
-        Vector3 gunPos = transform.position + Vector3.up * 0.5f;
+        Vector3 gunPos = transform.position + Vector3.up * gunOffset;
         LayerMask mask = ~LayerMask.GetMask("Pathfinding");  // All but the Pathfinding layer 
+        gunRef.up = Vector3.Lerp(gunRef.up, (playerTrfm.position - gunPos).normalized, 0.4f);
+        if (gunRef.rotation.eulerAngles.z > 180)
+        {
+            gunRef.localScale = new Vector3(-1, 1, 1);  // Not the best idea but works
+        } else
+        {
+            gunRef.localScale = new Vector3(1, 1, 1);
+        }
+
+        if (fireCounter > 0)
+        {
+            fireCounter -= Time.deltaTime;
+            return;
+        }
 
         // RaycastHit2D hit = Physics2D.CircleCast(gunPos, 0.05f, (playerTrfm.position - gunPos).normalized, Mathf.Infinity, mask);
         RaycastHit2D hit = Physics2D.Linecast(gunPos, playerTrfm.position, Tools.terrainMask);
@@ -103,6 +119,7 @@ public class SpotterEnemy : GroundEnemy
     {
         int directionMod = nextNode.position.x < transform.position.x ? -1 : 1;
         rb.velocity = new Vector2(speed * directionMod, rb.velocity.y);
+        transform.localScale = new Vector3(directionMod, transform.localScale.y, transform.localScale.z);
         lastArrivalTime += Time.deltaTime;
         if (lastArrivalTime > timeUntilRecovery)
         {
