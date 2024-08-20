@@ -62,3 +62,6 @@ TagManager:
   - name: Player
     uniqueID: 3137573735
     locked: 0
+  - name: VFX
+    uniqueID: 1812600565
+    locked: 0

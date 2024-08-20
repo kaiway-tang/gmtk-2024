@@ -28,13 +28,16 @@ public class LevelManager : MonoBehaviour
         self = GetComponent<LevelManager>();
         currentLevel = startLevel;
         navSurface.BuildNavMeshAsync();
-        Invoke("Init", 1);
+        baseBombTime = Mathf.RoundToInt(baseBombTime / 0.9f);
+
+        Invoke("InitStart", 1);
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        //SPAWNING_FixedUpdate();
+        SPAWNING_FixedUpdate();
+        BOMBARD_FixedUpdate();
 
         if (ejectNextTimer > 0)
         {
@@ -51,7 +54,7 @@ public class LevelManager : MonoBehaviour
             if (ejectNextTimer == 10) { currentLevel.CloseDoors(); }
             if (ejectNextTimer == 0)
             {
-                ScatterKeys(currentLevel);                
+                StartLevel(currentLevel);                
             }
 
             if (ejectNextTimer < 30)
@@ -137,9 +140,9 @@ public class LevelManager : MonoBehaviour
         self.timeInLevel = 0;
     }
 
-    void Init()
+    void InitStart()
     {
-        ScatterKeys(startLevel);
+        StartLevel(startLevel);
     }
 
     Level currentLevel;
@@ -161,8 +164,12 @@ public class LevelManager : MonoBehaviour
 
     
     HashSet<int> keyPosIDs = new HashSet<int>();
-    void ScatterKeys(Level level)
+    void StartLevel(Level level)
     {
+        bombardTimer = 0;
+        baseBombTime = Mathf.RoundToInt(baseBombTime * 0.9f);
+        bombTime = baseBombTime;
+
         keyPosIDs.Clear();
         keyNodes = level.keyNodes;
         int selectedNode = -1;
@@ -180,10 +187,19 @@ public class LevelManager : MonoBehaviour
 
     #region BOMBARDING
 
-    int bombardTimer;
+    [SerializeField] GameObject airStrike;
+    [SerializeField] int baseBombTime, bombTime;
+    [SerializeField] int bombardTimer;
     void BOMBARD_FixedUpdate()
     {
-
+        bombardTimer++;
+        if (bombardTimer >= bombTime)
+        {            
+            bombTime = bombTime / 2;
+            if (bombTime < 50) { bombTime = 50; }
+            bombardTimer = 0;
+            Instantiate(airStrike, PlayerController.self.posTracker.PredictedPosition(1), Quaternion.identity);
+        }
     }
 
     #endregion

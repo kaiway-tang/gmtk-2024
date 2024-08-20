@@ -188,12 +188,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HP: 300
+  maxHP: 0
   trfm: {fileID: 9038853616964939770}
   objectID: 0
   deathTrauma: 40
+  hpBar: {fileID: 0}
   Tier: 0
   damageFX: {fileID: 6913746034329785171, guid: 9d19854dd9a519a44a9fcd05ab1cc466, type: 3}
   deathFX: {fileID: 6913746034329785171, guid: d0e051912b661694c979cfa432db5f1b, type: 3}
+  reflectionTrfm: {fileID: 0}
+  rb: {fileID: 0}
+  knockbackFactor: 1
+  touchingTerrain: []
   speed: 0
   baseSpeed: 4
   firePtcls: {fileID: 4361443337452112745}
@@ -285,7 +291,7 @@ MonoBehaviour:
   FlickerTicks: 0
   _resource: 0
   _dropMin: 0
-  _dropMax: 0.2
+  _dropMax: 1
 --- !u!1001 &5995858957212451681
 PrefabInstance:
   m_ObjectHideFlags: 0

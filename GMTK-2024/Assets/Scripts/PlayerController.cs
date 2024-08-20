@@ -27,6 +27,8 @@ public class PlayerController : MobileEntity
 
     [SerializeField] ParticleSystem jumpParticle;
 
+    public PositionTracker posTracker;
+
     public static PlayerController self;
 
     // Controls:
