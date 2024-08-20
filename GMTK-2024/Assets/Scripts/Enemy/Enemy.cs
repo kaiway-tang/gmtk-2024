@@ -10,7 +10,6 @@ public interface ISmartEnemy
 public class Enemy : MobileEntity
 {
     NavMeshAgent navMeshAgent;
-    Rigidbody2D rb;
     protected int stunned, slowed;
     [SerializeField] protected float speed, baseSpeed;
     [SerializeField] ParticleSystem firePtcls;

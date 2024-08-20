@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] int timeInLevel;
 
     public Transform[] mappingNodes;
-
+    [SerializeField] bool levelRunning;
     void Start()
     {
         SPAWNING_Start();
@@ -48,8 +48,7 @@ public class LevelManager : MonoBehaviour
             }
             if (ejectNextTimer == 30)
             {
-                InstantiateRandomLevel(PlayerController.self.transform.position + Vector3.up * 15);
-                
+                InstantiateRandomLevel(PlayerController.self.transform.position + Vector3.up * 15);                
             }
             if (ejectNextTimer == 10) { currentLevel.CloseDoors(); }
             if (ejectNextTimer == 0)
@@ -80,25 +79,36 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] GameObject enemy;
     [SerializeField] Transform[] spawnPoints;
-    [SerializeField] int spawnRate;
-    int spawnTimer;
+    [SerializeField] int spawnRate, levelSpawnRate, spawnTimer;
     // Start is called before the first frame update
     void SPAWNING_Start()
     {
-        spawnRate = 125;
+        
     }
 
+    [SerializeField] int enemyQueCount, targetQue, levelTargetQue;
     // Update is called once per frame
     void SPAWNING_FixedUpdate()
     {
-        if (ejectNextTimer > 0) { return; }
+        if (ejectNextTimer > 0 || !levelRunning) { return; }
         if (spawnTimer > 0)
         {
             spawnTimer--;
         }
         else
         {
-            SpawnEnemy();
+            enemyQueCount++;
+            if (enemyQueCount >= targetQue)
+            {
+                SetInvalidSpawn();
+                for (int i = 0; i < enemyQueCount; i++)
+                {
+                    SpawnEnemy();
+                }
+                enemyQueCount -= targetQue;
+                targetQue = Random.Range(Mathf.RoundToInt(levelTargetQue * 0.8f), Mathf.RoundToInt(levelTargetQue * 1.2f));
+            }
+
             if (spawnRate > 30)
             {
                 spawnRate--;
@@ -107,9 +117,28 @@ public class LevelManager : MonoBehaviour
         }
     }
 
+    int invalidSpawnPointID;
+    void SetInvalidSpawn()
+    {
+        float min = 99999999;
+        float sqrMag;
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            sqrMag = (spawnPoints[i].position - PlayerController.self.transform.position).sqrMagnitude;
+            if (sqrMag < min)
+            {
+                min = sqrMag;
+                invalidSpawnPointID = i;
+            }
+        }
+    }
+
+    int spawnPointID;
     void SpawnEnemy()
     {
-        Instantiate(enemy, spawnPoints[Random.Range(0, spawnPoints.Length)].position, Quaternion.identity);
+        do { spawnPointID = Random.Range(0, spawnPoints.Length); }
+        while (spawnPointID == invalidSpawnPointID);
+        Instantiate(enemy, spawnPoints[spawnPointID].position, Quaternion.identity);
     }
     #endregion
 
@@ -131,13 +160,16 @@ public class LevelManager : MonoBehaviour
             EjectFromLevel();
             keysCompleted = 0;
             levelsCompleted++;
+            self.timeInLevel = 0;
+
+            self.levelRunning = false;
+            self.levelTargetQue += 2;
         }
     }
 
     public static void EjectFromLevel()
     {
-        self.ejectNextTimer = 100;
-        self.timeInLevel = 0;
+        self.ejectNextTimer = 100;        
     }
 
     void InitStart()
@@ -166,6 +198,13 @@ public class LevelManager : MonoBehaviour
     HashSet<int> keyPosIDs = new HashSet<int>();
     void StartLevel(Level level)
     {
+        self.levelRunning = true;
+
+        spawnRate = levelSpawnRate;
+        levelSpawnRate = Mathf.RoundToInt(levelSpawnRate * 0.9f);
+        enemyQueCount = levelTargetQue - 2;
+        targetQue = levelTargetQue;
+
         bombardTimer = 0;
         baseBombTime = Mathf.RoundToInt(baseBombTime * 0.9f);
         bombTime = baseBombTime;
@@ -192,6 +231,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] int bombardTimer;
     void BOMBARD_FixedUpdate()
     {
+        if (!levelRunning) { return; }
         bombardTimer++;
         if (bombardTimer >= bombTime)
         {            

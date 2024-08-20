@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa7c14a6c51779e4695c0f28735eec39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HP: 300
+  HP: 240
   maxHP: 0
   trfm: {fileID: 9038853616964939770}
   objectID: 0
@@ -197,7 +197,7 @@ MonoBehaviour:
   damageFX: {fileID: 6913746034329785171, guid: 9d19854dd9a519a44a9fcd05ab1cc466, type: 3}
   deathFX: {fileID: 6913746034329785171, guid: d0e051912b661694c979cfa432db5f1b, type: 3}
   reflectionTrfm: {fileID: 0}
-  rb: {fileID: 0}
+  rb: {fileID: 5473329692118533826}
   knockbackFactor: 1
   touchingTerrain: []
   speed: 0

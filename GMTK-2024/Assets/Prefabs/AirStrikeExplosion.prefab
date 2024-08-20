@@ -20,6 +20,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2696867699883734797, guid: 0f38c113bbce4e34182e8ab99261457d, type: 3}
+      propertyPath: autoScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2696867699883734797, guid: 0f38c113bbce4e34182e8ab99261457d, type: 3}
       propertyPath: playerDamage
       value: 1
       objectReference: {fileID: 0}
