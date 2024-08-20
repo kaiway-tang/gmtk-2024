@@ -537,7 +537,7 @@ public class PlayerController : MobileEntity
     #endregion COLLIDING
 
     #region HP Entity Overrides
-    public override bool TakeDamage(int amount = 0, int sourceID = 0)
+    public override bool TakeDamage(int amount = 0, int sourceID = 0, bool overrideOne = false)
     {
         // Reaper dash ignores damage:
         if (IsInvulnerable)
@@ -547,6 +547,7 @@ public class PlayerController : MobileEntity
         if (sourceID != 0 && sourceID == objectID) { return false; }
 
         CameraManager.SetTrauma(40);
+        if (overrideOne) { amount = 1; }
         HP -= amount;
 
         GameManager.SoundManager.PlaySound(SoundType.DAMAGED1, 0.8f, 1.2f, 0.3f + Tier * 0.2f, firepointTrfm.position);

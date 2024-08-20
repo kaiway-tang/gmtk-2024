@@ -28,7 +28,7 @@ public class BombDropper : Skirmisher
         }
     }
 
-    public override bool TakeDamage(int amount = 0, int sourceID = 0)
+    public override bool TakeDamage(int amount = 0, int sourceID = 0, bool overrideOne = false)
     {
         _numBombs = 0;
         _running = true;

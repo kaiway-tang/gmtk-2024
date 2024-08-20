@@ -28,7 +28,7 @@ public class HPEntity : MonoBehaviour
 
     }
 
-    public virtual bool TakeDamage(int amount = 0, int sourceID = 0)
+    public virtual bool TakeDamage(int amount = 0, int sourceID = 0, bool overrideOne = false)
     {
         if (sourceID != 0 && sourceID == objectID) { return false; }
         if (IsInvulnerable) { return false; }

@@ -10,13 +10,18 @@ public class Bullet : MonoBehaviour, IAttack
     [SerializeField] int damage;
     [SerializeField] float velocity;
     [SerializeField] int sourceID;
+    [SerializeField] bool ignoreTerrain, autoScale;
 
     // Start is called before the first frame update
     protected void Start()
     {
         Destroy(gameObject, 5);
-        damage = Mathf.RoundToInt(damage * PlayerController.GetDamageMultiplier());
-        transform.localScale *= PlayerController.GetRelativeScaleFactor();
+
+        if (autoScale)
+        {
+            damage = Mathf.RoundToInt(damage * PlayerController.GetDamageMultiplier());
+            transform.localScale *= PlayerController.GetRelativeScaleFactor();
+        }        
     }
 
     // Update is called once per frame
@@ -28,7 +33,7 @@ public class Bullet : MonoBehaviour, IAttack
     HPEntity hitEntity;
     protected void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.gameObject.layer == 8)
+        if (!ignoreTerrain && col.gameObject.layer == 8)
         {
             Destroy(gameObject);
         }
@@ -38,7 +43,7 @@ public class Bullet : MonoBehaviour, IAttack
             hitEntity = col.GetComponent<HPEntity>();
             if (hitEntity)
             {
-                if (hitEntity.TakeDamage(damage, sourceID))
+                if (hitEntity.TakeDamage(damage, sourceID, true))
                 {
                     Destroy(gameObject);
                 }
