@@ -336,6 +336,7 @@ MonoBehaviour:
   airStrike: {fileID: 2517458538114117191, guid: ac744a0c31e077349ba10b2467db605e, type: 3}
   baseBombTime: 1000
   bombTime: 0
+  bombardTimer: 0
 --- !u!4 &417758345
 Transform:
   m_ObjectHideFlags: 0
@@ -598,7 +599,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 9038853616964939770, guid: 58414691c31826640a873a46b1bc01ac, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9038853616964939770, guid: 58414691c31826640a873a46b1bc01ac, type: 3}
       propertyPath: m_LocalPosition.x
@@ -747,7 +748,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1526972871 stripped
 MonoBehaviour:
