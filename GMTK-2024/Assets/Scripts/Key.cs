@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Key : MonoBehaviour
@@ -9,11 +7,6 @@ public class Key : MonoBehaviour
     [SerializeField] GameObject keyBox;
     const int ENTRANCE = 0, SCATTERING = 1, IDLE = 2, GATHERING = 3, REST = 4;
     public Transform targetNode, gatherNode;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     GameObject activeKeyBox;
     void FixedUpdate()
@@ -25,7 +18,7 @@ public class Key : MonoBehaviour
             {
                 transform.position = targetNode.position;
                 status = IDLE;
-                
+
                 if (useKeyBox)
                 {
                     activeKeyBox = Instantiate(keyBox, transform.position, Quaternion.identity);
@@ -39,6 +32,7 @@ public class Key : MonoBehaviour
                 status = GATHERING;
                 LevelManager.OnKeyCollect();
                 useKeyBox = false;
+                GameManager.SoundManager.PlaySound(SoundType.KEYCOLLECT, 0.9f, 1.1f, 1, transform.position);
             }
         }
         if (status == GATHERING)

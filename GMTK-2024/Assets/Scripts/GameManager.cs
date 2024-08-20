@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     public static DisplayManager DisplayManager;
     public static CameraManager CameraManager;
     public static ResourceManager ResourceManager;
+    public static SoundManager SoundManager;
 
 
     private void Awake()
@@ -29,6 +30,7 @@ public class GameManager : MonoBehaviour
         DisplayManager = GetComponentInChildren<DisplayManager>();
         CameraManager = GetComponentInChildren<CameraManager>();
         ResourceManager = GetComponentInChildren<ResourceManager>();
+        SoundManager = GetComponentInChildren<SoundManager>();
     }
     #endregion Singleton
 
