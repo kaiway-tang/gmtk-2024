@@ -45,4 +45,9 @@ public class GameManager : MonoBehaviour
             Instantiate(PlayerPrefab, SpawnPos, Quaternion.identity);
         }
     }
+
+    public void RestartGame()
+    {
+        LevelManager.levelsCompleted = 0;
+    }
 }

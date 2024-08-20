@@ -4827,5 +4827,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 0.5
   status: 0
+  keyBox: {fileID: 2470473772352208512, guid: 0ee996fa19d41294a9e53d208b9d56be, type: 3}
   targetNode: {fileID: 0}
   gatherNode: {fileID: 0}

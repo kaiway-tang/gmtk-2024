@@ -24,14 +24,24 @@ public class Rocket : MonoBehaviour
         trfm.position += trfm.up * speed;
     }
 
+    HPEntity hpEntity;
     private void OnTriggerEnter2D(Collider2D col)
     {
         if (!started) { Start(); }
 
-        if (col.gameObject.layer == 8 || col.gameObject.layer == 7)
+        if (col.gameObject.layer == 8)
         {
             Instantiate(explosion, trfm.position, Quaternion.identity);
             Destroy(gameObject);
+        }
+        if (col.gameObject.layer == 7)
+        {
+            hpEntity = col.GetComponent<HPEntity>();
+            if (hpEntity && hpEntity.objectID != 1)
+            {
+                Instantiate(explosion, trfm.position, Quaternion.identity);
+                Destroy(gameObject);
+            }
         }
     }
 }

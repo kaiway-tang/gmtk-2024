@@ -6,6 +6,7 @@ public class Key : MonoBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] int status;
+    [SerializeField] GameObject keyBox;
     const int ENTRANCE = 0, SCATTERING = 1, IDLE = 2, GATHERING = 3, REST = 4;
     public Transform targetNode, gatherNode;
     // Start is called before the first frame update
@@ -14,23 +15,30 @@ public class Key : MonoBehaviour
         
     }
 
-    // Update is called once per frame
+    GameObject activeKeyBox;
     void FixedUpdate()
     {
         if (status == SCATTERING)
         {
             transform.position += (targetNode.position - transform.position).normalized * speed;
-            if ((targetNode.position - transform.position).sqrMagnitude < 2)
+            if ((targetNode.position - transform.position).sqrMagnitude < 1)
             {
+                transform.position = targetNode.position;
                 status = IDLE;
+                
+                if (useKeyBox)
+                {
+                    activeKeyBox = Instantiate(keyBox, transform.position, Quaternion.identity);
+                }
             }
         }
         if (status == IDLE)
         {
-            if ((PlayerController.self.transform.position - transform.position).sqrMagnitude < 1)
+            if ((PlayerController.self.transform.position - transform.position).sqrMagnitude < 1 && !activeKeyBox)
             {
                 status = GATHERING;
                 LevelManager.OnKeyCollect();
+                useKeyBox = false;
             }
         }
         if (status == GATHERING)
@@ -42,6 +50,12 @@ public class Key : MonoBehaviour
                 status = REST;
             }
         }
+    }
+
+    bool useKeyBox;
+    public void UseKeyBox()
+    {
+        useKeyBox = true;
     }
 
     public void Scatter(Transform target, Transform gather)

@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class HPEntity : MonoBehaviour
 {
-    public int HP;
+    public int HP, maxHP;
 
     [SerializeField] protected Transform trfm;
-    [SerializeField] protected int objectID;
+    public int objectID;
     [SerializeField] int deathTrauma = 40;
+    [SerializeField] HPBar hpBar;
 
     public virtual bool IsInvulnerable => _isInvulnerable;
     private bool _isInvulnerable = false;
@@ -15,9 +16,11 @@ public class HPEntity : MonoBehaviour
 
     [SerializeField] protected GameObject damageFX, deathFX;
 
+    bool usingHPBar;
     protected void Start()
     {
-
+        if (maxHP == 0) { maxHP = HP; }
+        if (hpBar) { usingHPBar = true; }
     }
 
     protected void FixedUpdate()
@@ -48,6 +51,7 @@ public class HPEntity : MonoBehaviour
         }
         else
         {
+            if (usingHPBar) { hpBar.SetHPPercentage((float)HP / maxHP); }            
             Instantiate(damageFX, trfm.position, Quaternion.identity);
         }
 

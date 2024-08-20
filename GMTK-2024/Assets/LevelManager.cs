@@ -14,8 +14,12 @@ public class LevelManager : MonoBehaviour
     [SerializeField] int ejectNextTimer;
     public static LevelManager self;
 
-    public static int keysCompleted;
+    public static int keysCompleted, levelsCompleted;
     [SerializeField] NavMeshSurface navSurface;
+
+    [SerializeField] int timeInLevel;
+
+    public Transform[] mappingNodes;
 
     void Start()
     {
@@ -30,7 +34,7 @@ public class LevelManager : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        SPAWNING_FixedUpdate();
+        //SPAWNING_FixedUpdate();
 
         if (ejectNextTimer > 0)
         {
@@ -42,12 +46,7 @@ public class LevelManager : MonoBehaviour
             if (ejectNextTimer == 30)
             {
                 InstantiateRandomLevel(PlayerController.self.transform.position + Vector3.up * 15);
-                navSurface.BuildNavMeshAsync();
-                spawnPoints = currentLevel.spawnPoints;
-                for (int i = 0; i < keys.Length; i++)
-                {
-                    keys[i].transform.position = currentLevel.keyPos.position;
-                }
+                
             }
             if (ejectNextTimer == 10) { currentLevel.CloseDoors(); }
             if (ejectNextTimer == 0)
@@ -66,6 +65,10 @@ public class LevelManager : MonoBehaviour
                     PlayerController.self.SetYVelocity(24);
                 }
             }
+        }
+        else
+        {
+            timeInLevel++;
         }
     }
 
@@ -124,12 +127,14 @@ public class LevelManager : MonoBehaviour
         {
             EjectFromLevel();
             keysCompleted = 0;
+            levelsCompleted++;
         }
     }
 
     public static void EjectFromLevel()
     {
         self.ejectNextTimer = 100;
+        self.timeInLevel = 0;
     }
 
     void Init()
@@ -141,6 +146,17 @@ public class LevelManager : MonoBehaviour
     public void InstantiateRandomLevel(Vector3 pos)
     {
         currentLevel = Instantiate(levels[Random.Range(0,levels.Length)], pos, Quaternion.identity).GetComponent<Level>();
+        navSurface.BuildNavMeshAsync();
+
+        spawnPoints = currentLevel.spawnPoints;
+        for (int i = 0; i < keys.Length; i++)
+        {
+            keys[i].transform.position = currentLevel.keyPos.position;
+            if (i < levelsCompleted)
+            {
+                keys[i].UseKeyBox();
+            }
+        }
     }
 
     

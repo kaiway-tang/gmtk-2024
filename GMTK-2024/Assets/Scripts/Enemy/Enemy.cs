@@ -9,7 +9,7 @@ public interface ISmartEnemy
     public int EvaluatePosition(Vector2 position);  
 }
 
-public class Enemy : HPEntity
+public class Enemy : MobileEntity
 {
     NavMeshAgent navMeshAgent;
     Rigidbody2D rb;
@@ -32,6 +32,15 @@ public class Enemy : HPEntity
     protected new void FixedUpdate()
     {
         base.FixedUpdate();
+        if (usePlayerVisible)
+        {
+            if (playerVisibleTimer > 0) { playerVisibleTimer--; }
+            else
+            {
+                playerVisibleTimer = 5;
+                lastPlayerVisible = !Physics2D.Linecast(trfm.position, PlayerController.self.transform.position, Tools.terrainMask);
+            }
+        }
         if (stunned > 0)
         {
             stunned--;
@@ -118,5 +127,22 @@ public class Enemy : HPEntity
         if (navMeshAgent) { navMeshAgent.enabled = false; }
         stunned = Mathf.RoundToInt(power * stunKnockbackFactor);
         rb.velocity = trfm.forward * -power;
+    }
+
+    public void LerpFacePlayer(Transform pTrfm, float rate)
+    {
+        Tools.LerpRotation(pTrfm, PlayerController.self.transform.position, rate);
+    }
+
+    int playerVisibleTimer;
+    bool usePlayerVisible, lastPlayerVisible;
+    public bool PlayerVisible(bool oneOff = false)
+    {
+        if (!usePlayerVisible && !oneOff)
+        {
+            usePlayerVisible = true;
+            return !Physics2D.Linecast(trfm.position, PlayerController.self.transform.position, Tools.terrainMask);
+        }
+        return lastPlayerVisible;
     }
 }
