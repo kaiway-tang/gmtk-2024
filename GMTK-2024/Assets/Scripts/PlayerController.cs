@@ -38,11 +38,15 @@ public class PlayerController : MobileEntity
     private KeyCode CRAFT = KeyCode.Q;
 
     // Start is called before the first frame update
+
+    private void Awake()
+    {
+        GameManager.Instance.Player = this;
+        self = GetComponent<PlayerController>();
+    }
     new void Start()
     {
         base.Start();
-        GameManager.Instance.Player = this;
-        self = GetComponent<PlayerController>();
 
         // Set Default Type:
         CraftMech(DefaultType);

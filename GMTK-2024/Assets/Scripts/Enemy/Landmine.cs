@@ -13,9 +13,21 @@ public class Landmine : MonoBehaviour
     {
         _sprites = GetComponentsInChildren<SpriteRenderer>();
     }
-
+    int _timer = 0;
+    private void FixedUpdate()
+    {
+        _timer++;
+        if (_timer > 40) return;
+        foreach (var sprite in _sprites)
+        {
+            Color color = sprite.color;
+            color.a *= 0.96f;
+            sprite.color = color;
+        }
+    }
     void OnTriggerEnter2D(Collider2D other)
     {
+        if (_timer <= 10) return;
         if (other.gameObject.layer == 7 && other.gameObject.TryGetComponent<PlayerController>(out PlayerController player))
         {
             StartCoroutine(Explode());
@@ -37,11 +49,11 @@ public class Landmine : MonoBehaviour
     private IEnumerator Explode()
     {
         int timer = 0;
-        while (timer < 15)
+        while (timer < 20)
         {
             foreach (var sprite in _sprites)
             {
-                sprite.color = Color.Lerp(sprite.color, Color.white, 0.033f);
+                sprite.color = Color.Lerp(sprite.color, Color.white, 0.025f);
             }
             timer++;
             yield return new WaitForSeconds(0.02f);
